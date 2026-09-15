@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Environment
+.env
+
+# Large datasets and generated data
+data/raw/
+data/canonical/
+data/features/
+data/graph/
+data/evaluation/
+data/derived/
+
+# Generated model artifacts
+models/selected/
+models/benchmark/
+
+# Generated report artifacts
+reports/benchmark/
+reports/dataset/
+reports/final/
+
+# Frontend dependencies/build output
+frontend/node_modules/
+frontend/dist/
+
+# Logs/runtime
+*.log
+logs/
+runtime/
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
