@@ -1,0 +1,51 @@
+{
+  "source_root": "data\\external\\elipticpp",
+  "file_count": 9,
+  "files": [
+    {
+      "path": "actor/AddrAddr_edgelist.csv",
+      "size_bytes": 200631481,
+      "sha256": "ffba894458e262a691e5e4d006f5dc1d0e069fabfe828f443fd157bf7f8393f2"
+    },
+    {
+      "path": "actor/AddrTx_edgelist.csv",
+      "size_bytes": 21248388,
+      "sha256": "f5f903f752387f66a1bccaeff54e293b2e8470fcddf5eb56b88aa06fd23a8f3b"
+    },
+    {
+      "path": "actor/TxAddr_edgelist.csv",
+      "size_bytes": 36702878,
+      "sha256": "9f5afbdde7bc3d91fb7a4655be55799d6504cd0063ae55a0753a5a41189932b8"
+    },
+    {
+      "path": "actor/wallets_classes.csv",
+      "size_bytes": 30421134,
+      "sha256": "4e5132c99f941666bf1fefd4100a1428d339c9252ec6987909e1adf8eac902f9"
+    },
+    {
+      "path": "actor/wallets_features.csv",
+      "size_bytes": 606463522,
+      "sha256": "317daca2810c355ddfdb8c0dab34cf11d1aa90567fe975090c7e5a901386eb77"
+    },
+    {
+      "path": "actor/wallets_features_classes_combined.csv",
+      "size_bytes": 609000048,
+      "sha256": "99bf27f7b76d6578ad59e0a61ec225ecd656fef6ae6958f29435ab286be2cc7d"
+    },
+    {
+      "path": "transactions/txs_classes.csv",
+      "size_bytes": 2361914,
+      "sha256": "013a11742969071a906878ded0319571df0657f9b7133e5c6cdb36217bf0d240"
+    },
+    {
+      "path": "transactions/txs_edgelist.csv",
+      "size_bytes": 4470584,
+      "sha256": "a35053ba68a98e4382cae2ba65b9d9e36b23b6439e02dff084971b1b72a5156e"
+    },
+    {
+      "path": "transactions/txs_features.csv",
+      "size_bytes": 694789588,
+      "sha256": "2db326ec8ddb68f1d810c1834e1ff62e0a8300378f0984a1e3b2ca82a439821b"
+    }
+  ]
+}
