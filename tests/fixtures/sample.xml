@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<records>
+  <record>
+    <timestamp>2026-01-01T00:00:00Z</timestamp>
+    <src_ip>10.0.0.1</src_ip>
+    <src_port>8333</src_port>
+    <dst_ip>10.0.0.2</dst_ip>
+    <dst_port>8333</dst_port>
+    <txid>12345</txid>
+    <input_wallets>wallet_in_1</input_wallets>
+    <output_wallets>wallet_out_1</output_wallets>
+    <input_amount>1.5</input_amount>
+    <output_amount>1.49</output_amount>
+    <fee>0.01</fee>
+    <script_type>P2PKH</script_type>
+    <geo_country>IN</geo_country>
+    <asn>AS12345</asn>
+  </record>
+  <record>
+    <timestamp>2026-01-01T00:01:00Z</timestamp>
+    <src_ip>10.0.0.3</src_ip>
+    <src_port>8333</src_port>
+    <dst_ip>10.0.0.4</dst_ip>
+    <dst_port>8333</dst_port>
+    <txid>67890</txid>
+    <input_wallets>wallet_in_2</input_wallets>
+    <output_wallets>wallet_out_2</output_wallets>
+    <input_amount>2.0</input_amount>
+    <output_amount>1.98</output_amount>
+    <fee>0.02</fee>
+    <script_type>P2WPKH</script_type>
+    <geo_country>US</geo_country>
+    <asn>AS67890</asn>
+  </record>
+</records>

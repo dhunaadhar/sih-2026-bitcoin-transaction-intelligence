@@ -1,0 +1,34 @@
+[
+  {
+    "timestamp": "2026-01-01T00:00:00Z",
+    "src_ip": "10.0.0.1",
+    "src_port": 8333,
+    "dst_ip": "10.0.0.2",
+    "dst_port": 8333,
+    "txid": 12345,
+    "input_wallets": ["wallet_in_1"],
+    "output_wallets": ["wallet_out_1"],
+    "input_amount": 1.5,
+    "output_amount": 1.49,
+    "fee": 0.01,
+    "script_type": "P2PKH",
+    "geo_country": "IN",
+    "asn": "AS12345"
+  },
+  {
+    "timestamp": "2026-01-01T00:01:00Z",
+    "src_ip": "10.0.0.3",
+    "src_port": 8333,
+    "dst_ip": "10.0.0.4",
+    "dst_port": 8333,
+    "txid": 67890,
+    "input_wallets": ["wallet_in_2"],
+    "output_wallets": ["wallet_out_2"],
+    "input_amount": 2.0,
+    "output_amount": 1.98,
+    "fee": 0.02,
+    "script_type": "P2WPKH",
+    "geo_country": "US",
+    "asn": "AS67890"
+  }
+]
