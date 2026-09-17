@@ -6,6 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import pandas as pd
+from pydantic import BaseModel
 from fastapi import (
     FastAPI,
     File,
@@ -84,6 +85,137 @@ MAX_WALLET_SEARCH_RESULTS = 50
 MAX_IMPORT_SIZE_BYTES = (
     100 * 1024 * 1024
 )
+
+
+# ============================================================================
+# API response contracts
+# ============================================================================
+
+class RootResponse(BaseModel):
+    application: str
+    version: str
+    mode: str
+    status: str
+    dashboard: str
+    api_docs: str
+
+
+class HealthResponse(BaseModel):
+    status: str
+    mode: str
+    version: str
+    artifacts: dict[str, bool]
+
+
+class TransactionSummary(BaseModel):
+    total: int
+    unique_txids: int
+
+
+class RiskSummary(BaseModel):
+    mean: float
+    median: float
+    min: float
+    max: float
+
+
+class AlertSummary(BaseModel):
+    active: int
+    high_and_very_high: int
+    priority_distribution: dict[str, int]
+
+
+class EvidenceSummary(BaseModel):
+    mean_behavioral_signal: float
+    mean_entity_signal: float
+    mean_network_signal: float
+    mean_anomaly_signal: float
+    mean_evidence_channels: float
+
+
+class TopQueueSummary(BaseModel):
+    size: int
+    top_1000_mean_risk: float
+
+
+class SummaryResponse(BaseModel):
+    status: str
+    transactions: TransactionSummary
+    risk: RiskSummary
+    alerts: AlertSummary
+    evidence: EvidenceSummary
+    top_queue: TopQueueSummary
+
+
+class AlertsResponse(BaseModel):
+    page: int
+    page_size: int
+    total: int
+    pages: int
+    filters: dict[str, Any]
+    alerts: list[dict[str, Any]]
+    transactions: list[dict[str, Any]]
+
+
+class TransactionInvestigationResponse(BaseModel):
+    txid: str
+    alert: dict[str, Any]
+    risk: dict[str, Any]
+    temporal_entity_evidence: list[dict[str, Any]]
+    shap: list[dict[str, Any]]
+
+
+class TemporalStep(BaseModel):
+    time_step: int
+    transaction_count: int
+    mean_risk: float
+    median_risk: float
+    high_alert_count: int
+    very_high_alert_count: int
+    active_alert_count: int
+    top_queue_count: int
+
+
+class TemporalResponse(BaseModel):
+    start_time_step: int
+    end_time_step: int
+    time_steps: list[TemporalStep]
+
+
+class GraphInvestigationResponse(BaseModel):
+    txid: str
+    transaction: dict[str, Any]
+    connected_node_count: int
+    nodes: list[dict[str, Any]]
+    edges: list[dict[str, Any]]
+    limitation: str
+
+
+class WalletInvestigationResponse(BaseModel):
+    address: str
+    entity_type: str
+    investigation: dict[str, Any]
+    offline: bool
+    limitation: str
+
+
+class WalletSearchResponse(BaseModel):
+    query: str
+    total: int
+    wallets: list[dict[str, Any]]
+
+
+class TopRiskResponse(BaseModel):
+    limit: int
+    transactions: list[dict[str, Any]]
+
+
+class ImportResponse(BaseModel):
+    status: str
+    filename: str
+    data_type: str
+    result: dict[str, Any]
+    offline: bool
 
 
 app = FastAPI(
@@ -413,6 +545,7 @@ def _find_risk(
 
 @app.get(
     "/",
+    response_model=RootResponse,
     tags=["system"],
 )
 def root() -> dict[str, Any]:
@@ -433,6 +566,7 @@ def root() -> dict[str, Any]:
 
 @app.get(
     "/api/health",
+    response_model=HealthResponse,
     tags=["system"],
 )
 def health() -> dict[str, Any]:
@@ -505,6 +639,7 @@ def health() -> dict[str, Any]:
 
 @app.get(
     "/api/summary",
+    response_model=SummaryResponse,
     tags=["dashboard"],
 )
 def summary() -> dict[str, Any]:
@@ -643,6 +778,7 @@ def summary() -> dict[str, Any]:
 
 @app.get(
     "/api/alerts",
+    response_model=AlertsResponse,
     tags=["alerts"],
 )
 def alerts(
@@ -865,6 +1001,7 @@ def alerts(
 
 @app.get(
     "/api/alerts/{txid}",
+    response_model=TransactionInvestigationResponse,
     tags=["investigation"],
 )
 def transaction_investigation(
@@ -986,6 +1123,7 @@ def transaction_investigation(
 
 @app.get(
     "/api/temporal",
+    response_model=TemporalResponse,
     tags=["analytics"],
 )
 def temporal(
@@ -1131,6 +1269,7 @@ def temporal(
 
 @app.get(
     "/api/graph/{txid}",
+    response_model=GraphInvestigationResponse,
     tags=["graph"],
 )
 def graph_investigation(
@@ -1219,6 +1358,7 @@ def graph_investigation(
 
 @app.get(
     "/api/wallet/{address}",
+    response_model=WalletInvestigationResponse,
     tags=["wallet"],
 )
 def wallet_investigation(
@@ -1285,6 +1425,7 @@ def wallet_investigation(
 
 @app.get(
     "/api/wallets/search",
+    response_model=WalletSearchResponse,
     tags=["wallet"],
 )
 def wallet_search(
@@ -1391,6 +1532,7 @@ def wallet_search(
 
 @app.get(
     "/api/top-risk",
+    response_model=TopRiskResponse,
     tags=["alerts"],
 )
 def top_risk(
@@ -1485,6 +1627,7 @@ def top_risk(
 
 @app.post(
     "/api/import",
+    response_model=ImportResponse,
     tags=["import"],
 )
 async def investigator_import(
@@ -1638,9 +1781,11 @@ async def investigator_import(
         if temporary_path is not None:
 
             try:
+
                 temporary_path.unlink(
                     missing_ok=True
                 )
+
             except OSError:
                 pass
 
