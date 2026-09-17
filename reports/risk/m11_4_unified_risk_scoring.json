@@ -1,0 +1,80 @@
+{
+  "module": "M11.4",
+  "status": "PASS",
+  "purpose": "Fuse supervised-model confidence, anomaly evidence, behavioral evidence, temporal entity evidence and network evidence into a bounded investigative priority score.",
+  "score_semantics": "Investigative priority score in [0,100]. It is not a probability of illicit activity and does not establish identity, ownership, authorship or criminal activity.",
+  "class_semantics": "Elliptic++ class IDs remain numeric. No class is assumed to represent illicit or legitimate activity.",
+  "weights": {
+    "ml": 0.15,
+    "anomaly": 0.2,
+    "behavioral": 0.3,
+    "entity": 0.2,
+    "network": 0.15
+  },
+  "agreement_bonus": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.02,
+    "3": 0.04,
+    "4": 0.06,
+    "5": 0.08
+  },
+  "risk_bands": {
+    "VERY_HIGH": "80-100",
+    "HIGH": "60-79.999",
+    "MODERATE": "40-59.999",
+    "GUARDED": "20-39.999",
+    "LOW": "0-19.999"
+  },
+  "validation": {
+    "status": "PASS",
+    "rows": 203769,
+    "unique_txids": 203769,
+    "min_risk_score": 11.070451436401708,
+    "max_risk_score": 86.5932530703231,
+    "mean_risk_score": 30.11366453264282,
+    "median_risk_score": 27.564156886454544,
+    "network_positive_transactions": 1,
+    "very_high_count": 46,
+    "high_count": 5777,
+    "moderate_count": 29028,
+    "guarded_count": 135729,
+    "low_count": 33189,
+    "mean_ml_signal": 0.8889990410783442,
+    "mean_anomaly_signal": 0.5000024537589133,
+    "mean_behavioral_signal": 0.15249301905589174,
+    "mean_entity_signal": 0.04258798053297577,
+    "mean_network_signal": 1.6023438305139644e-06,
+    "mean_evidence_channels": 3.225461183987751,
+    "m7_transformed_features": 124,
+    "m8_transformed_features": 124
+  },
+  "preprocessing": {
+    "m7_raw_features": 87,
+    "m7_transformed_features": 124,
+    "m7_preprocessing": "Saved SimpleImputer(add_indicator=True, strategy='median')",
+    "m8_raw_features": 87,
+    "m8_transformed_features": 124,
+    "m8_preprocessing": "Saved SimpleImputer(add_indicator=True, strategy='median')"
+  },
+  "network_coverage_warning": "Current network evidence is based on the supplied synthetic validation fixture and therefore has extremely low coverage.",
+  "double_counting_controls": [
+    "Behavioral score is consumed as one composite channel; peeling and mixing are retained only for explanation.",
+    "Entity score is consumed as one normalized channel; raw entity features are explanatory.",
+    "Network score is consumed as one normalized channel; raw network features are explanatory.",
+    "ML confidence is not interpreted as a class-risk probability."
+  ],
+  "model_artifacts": {
+    "xgboost_model": "D:\\Hackathons\\SIH 2026\\final\\models\\production_xgboost\\model.joblib",
+    "isolation_forest_model": "D:\\Hackathons\\SIH 2026\\final\\models\\production_isolation_forest\\model.joblib"
+  },
+  "input_artifacts": {
+    "normalized_evidence": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\normalized_evidence.parquet",
+    "temporal_safe_features": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_features_temporal_safe.parquet",
+    "behavioral_evidence": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\behavioral_evidence.parquet",
+    "temporal_entity_evidence": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\temporal_transaction_entity_evidence.parquet",
+    "network_transaction_features": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\network_transaction_features.parquet"
+  },
+  "output": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_risk_scores.parquet",
+  "output_sha256": "e78da77df485ce51cbfaae89d44f8fc8f60369d1601732f68f084310960e1e48"
+}

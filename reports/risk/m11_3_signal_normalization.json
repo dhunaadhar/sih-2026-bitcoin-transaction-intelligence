@@ -1,0 +1,66 @@
+{
+  "module": "M11.3",
+  "status": "PASS",
+  "purpose": "Normalize independent behavioral, temporal entity, and network evidence channels into bounded [0,1] signals for subsequent evidence fusion.",
+  "inputs": {
+    "behavioral": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\behavioral_evidence.parquet",
+    "temporal_entity": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\temporal_transaction_entity_evidence.parquet",
+    "network": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\network_transaction_features.parquet"
+  },
+  "input_rows": {
+    "behavioral": 203769,
+    "temporal_entity": 203769,
+    "network": 203769
+  },
+  "output": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\normalized_evidence.parquet",
+  "output_sha256": "4b2913d3ec3962cbc80b433700331564bb1a9b7d2a3895f360565d70bec2a0f0",
+  "output_rows": 203769,
+  "output_unique_txids": 203769,
+  "signal_definitions": {
+    "peeling_signal": "Bounded M9 peeling-chain evidence.",
+    "mixing_signal": "Bounded M9 mixing-pattern evidence.",
+    "behavioral_signal": "Bounded M9 combined behavioral evidence.",
+    "behavioral_agreement_signal": "Bounded M9 agreement between behavioral channels.",
+    "behavioral_interaction_signal": "Bounded M9 peeling/mixing interaction evidence.",
+    "entity_signal": "Equal-weight fusion of robustly normalized temporal-safe historical entity indicators.",
+    "network_signal": "M10 temporal network contextual evidence; zero when no supplied network observation exists."
+  },
+  "entity_normalization": {
+    "components": [
+      "entity_repeated_cosponsor_signal",
+      "entity_repeated_degree_signal",
+      "entity_shared_transaction_signal",
+      "entity_cluster_diversity_signal",
+      "entity_cluster_size_signal",
+      "entity_historical_address_signal"
+    ],
+    "method": "Robust empirical quantile normalization followed by equal-weight component averaging.",
+    "quantiles": {
+      "lower": 0.01,
+      "upper": 0.99
+    },
+    "temporal_safety": "Uses M6 temporal-safe entity evidence only."
+  },
+  "validation": {
+    "status": "PASS",
+    "rows": 203769,
+    "unique_txids": 203769,
+    "behavioral_positive_transactions": 197902,
+    "entity_positive_transactions": 51808,
+    "network_positive_transactions": 1,
+    "network_observation_coverage": 4.907517826558505e-06,
+    "max_available_evidence_channels": 3,
+    "mean_behavioral_signal": 0.15249301905589174,
+    "mean_entity_signal": 0.04258798053297577,
+    "mean_network_signal": 1.6023438305139644e-06
+  },
+  "ml_signal_status": "Not included yet. M7 production inference outputs will be attached in a later M11 stage.",
+  "anomaly_signal_status": "Not included yet. M8 anomaly inference outputs will be attached in a later M11 stage.",
+  "semantic_constraints": [
+    "Normalized evidence values are not probabilities of illicit activity.",
+    "No wallet ownership or real-world identity inference is performed.",
+    "No criminality or guilt inference is performed.",
+    "Temporal entity evidence uses M6 causal historical features rather than globally computed M5 graph features.",
+    "Network absence means no supplied network observation, not proof of no network activity."
+  ]
+}

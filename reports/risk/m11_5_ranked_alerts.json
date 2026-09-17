@@ -1,0 +1,48 @@
+{
+  "module": "M11.5",
+  "status": "PASS",
+  "purpose": "Convert M11.4 unified risk scores into a deterministic ranked and explainable investigation queue.",
+  "score_semantics": "Investigative priority. Not a probability of illicit activity and not proof of identity, ownership, authorship or criminal activity.",
+  "class_semantics": "Numeric class IDs are preserved without assigning semantic meanings not established by the project.",
+  "ranking_order": [
+    "risk_score descending",
+    "effective_evidence_channel_count descending",
+    "behavioral_signal descending",
+    "entity_signal descending",
+    "anomaly_signal descending",
+    "network_signal descending",
+    "time_step ascending",
+    "txid ascending"
+  ],
+  "alert_thresholds": {
+    "VERY_HIGH": 80.0,
+    "HIGH": 60.0,
+    "MODERATE": 40.0,
+    "GUARDED": 20.0,
+    "LOW": 0.0
+  },
+  "top_alert_count": 1000,
+  "validation": {
+    "status": "PASS",
+    "rows": 203769,
+    "unique_txids": 203769,
+    "active_alert_count": 34851,
+    "watch_count": 135729,
+    "informational_count": 33189,
+    "top_alert_queue_count": 1000,
+    "very_high_count": 46,
+    "high_count": 5777,
+    "moderate_count": 29028,
+    "guarded_count": 135729,
+    "low_count": 33189,
+    "highest_risk_score": 86.5932530703231,
+    "lowest_risk_score": 11.070451436401708
+  },
+  "input": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_risk_scores.parquet",
+  "output": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\ranked_alerts.parquet",
+  "output_sha256": "a301e19657cb10af5a8e977d9bd046d07f106206ce259ac3c5e27ddc0a83fe64",
+  "network_coverage_note": "Current network evidence remains based on the synthetic validation fixture and therefore has very low coverage.",
+  "identity_inference": false,
+  "ownership_inference": false,
+  "illicit_activity_inference": false
+}
