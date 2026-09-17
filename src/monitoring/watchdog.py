@@ -5,17 +5,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from src.monitoring.health_monitor import (
-    run_health_check,
-)
+from src.monitoring.health_monitor import run_health_check
+from src.monitoring.failure_notification import notify_system_failure
 
 
 ROOT = Path(__file__).resolve().parents[2]
 REPORT_DIR = ROOT / "reports" / "monitoring"
 
-WATCHDOG_REPORT = (
-    REPORT_DIR / "watchdog_status.json"
-)
+WATCHDOG_REPORT = REPORT_DIR / "watchdog_status.json"
 
 
 def utc_now() -> str:
@@ -35,20 +32,41 @@ def run_watchdog() -> dict[str, Any]:
         else "degraded"
     )
 
-    result = {
+    failed_checks = health["failed_required_checks"]
+
+    result: dict[str, Any] = {
         "status": status,
         "timestamp_utc": utc_now(),
         "mode": "offline",
         "health_status": health["status"],
-        "failed_checks": health[
-            "failed_required_checks"
-        ],
+        "failed_checks": failed_checks,
         "watchdog_action": (
             "NO_ACTION_REQUIRED"
             if status == "healthy"
             else "INVESTIGATION_REQUIRED"
         ),
     }
+
+    # Trigger the controlled failure workflow whenever the
+    # watchdog detects a degraded/failed health state.
+    if status != "healthy":
+        failure_reason = (
+            "Required health checks failed: "
+            + ", ".join(failed_checks)
+        )
+
+        failure_result = notify_system_failure(
+            component="SIH-System",
+            failure_reason=failure_reason,
+            severity="HIGH",
+            evidence={
+                "source": "local_watchdog",
+                "health_status": health["status"],
+                "failed_checks": failed_checks,
+            },
+        )
+
+        result["failure_notification"] = failure_result
 
     REPORT_DIR.mkdir(
         parents=True,
