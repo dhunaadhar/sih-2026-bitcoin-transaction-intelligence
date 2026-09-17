@@ -63,6 +63,7 @@ TIME_COLUMN = "time_step"
 
 FAN_IN_THRESHOLD = 5
 FAN_OUT_THRESHOLD = 5
+
 HIGH_PARTICIPANT_THRESHOLD = 10
 EXTREME_PARTICIPANT_THRESHOLD = 25
 
@@ -90,6 +91,9 @@ def normalize_txid(value) -> str:
     if not text:
         return ""
 
+    if text.lower() == "nan":
+        return ""
+
     try:
         numeric = float(text)
 
@@ -99,10 +103,32 @@ def normalize_txid(value) -> str:
         if numeric.is_integer():
             return str(int(numeric))
 
-        return format(numeric, ".15g")
+        return format(
+            numeric,
+            ".15g",
+        )
 
-    except (ValueError, TypeError):
+    except (
+        ValueError,
+        TypeError,
+    ):
         return text
+
+
+def normalize_address(value) -> str:
+
+    if pd.isna(value):
+        return ""
+
+    text = str(value).strip()
+
+    if not text:
+        return ""
+
+    if text.lower() == "nan":
+        return ""
+
+    return text
 
 
 def load_data() -> tuple[
@@ -110,19 +136,23 @@ def load_data() -> tuple[
     pd.DataFrame,
     pd.DataFrame,
 ]:
+
     if not CANONICAL_FILE.exists():
         raise FileNotFoundError(
-            f"Canonical dataset not found: {CANONICAL_FILE}"
+            f"Canonical dataset not found: "
+            f"{CANONICAL_FILE}"
         )
 
     if not ADDR_TX_FILE.exists():
         raise FileNotFoundError(
-            f"AddrTx edge list not found: {ADDR_TX_FILE}"
+            f"AddrTx edge list not found: "
+            f"{ADDR_TX_FILE}"
         )
 
     if not TX_ADDR_FILE.exists():
         raise FileNotFoundError(
-            f"TxAddr edge list not found: {TX_ADDR_FILE}"
+            f"TxAddr edge list not found: "
+            f"{TX_ADDR_FILE}"
         )
 
     transactions = pd.read_parquet(
@@ -167,8 +197,8 @@ def validate_source_data(
 
     if missing:
         raise ValueError(
-            "Canonical dataset missing required columns: "
-            f"{sorted(missing)}"
+            "Canonical dataset missing required "
+            f"columns: {sorted(missing)}"
         )
 
     required_addr_tx = {
@@ -176,10 +206,15 @@ def validate_source_data(
         "txId",
     }
 
-    if required_addr_tx - set(addr_tx.columns):
+    missing_addr_tx = (
+        required_addr_tx
+        - set(addr_tx.columns)
+    )
+
+    if missing_addr_tx:
         raise ValueError(
-            "AddrTx edge list must contain: "
-            f"{sorted(required_addr_tx)}"
+            "AddrTx edge list missing required "
+            f"columns: {sorted(missing_addr_tx)}"
         )
 
     required_tx_addr = {
@@ -187,20 +222,33 @@ def validate_source_data(
         "output_address",
     }
 
-    if required_tx_addr - set(tx_addr.columns):
+    missing_tx_addr = (
+        required_tx_addr
+        - set(tx_addr.columns)
+    )
+
+    if missing_tx_addr:
         raise ValueError(
-            "TxAddr edge list must contain: "
-            f"{sorted(required_tx_addr)}"
+            "TxAddr edge list missing required "
+            f"columns: {sorted(missing_tx_addr)}"
         )
 
-    if transactions[TXID_COLUMN].duplicated().any():
+    if transactions[
+        TXID_COLUMN
+    ].duplicated().any():
+
         raise ValueError(
-            "Duplicate TXIDs found in canonical dataset."
+            "Duplicate TXIDs found in "
+            "canonical dataset."
         )
 
-    if transactions[TXID_COLUMN].isna().any():
+    if transactions[
+        TXID_COLUMN
+    ].isna().any():
+
         raise ValueError(
-            "Null TXIDs found in canonical dataset."
+            "Null TXIDs found in "
+            "canonical dataset."
         )
 
 
@@ -213,23 +261,54 @@ def normalize_source_txids(
     pd.DataFrame,
     pd.DataFrame,
 ]:
+
     transactions = transactions.copy()
     addr_tx = addr_tx.copy()
     tx_addr = tx_addr.copy()
 
-    transactions[TXID_COLUMN] = (
-        transactions[TXID_COLUMN]
+    transactions[
+        TXID_COLUMN
+    ] = (
+        transactions[
+            TXID_COLUMN
+        ]
         .map(normalize_txid)
     )
 
-    addr_tx["txId"] = (
-        addr_tx["txId"]
+    addr_tx[
+        "txId"
+    ] = (
+        addr_tx[
+            "txId"
+        ]
         .map(normalize_txid)
     )
 
-    tx_addr["txId"] = (
-        tx_addr["txId"]
+    tx_addr[
+        "txId"
+    ] = (
+        tx_addr[
+            "txId"
+        ]
         .map(normalize_txid)
+    )
+
+    addr_tx[
+        "input_address"
+    ] = (
+        addr_tx[
+            "input_address"
+        ]
+        .map(normalize_address)
+    )
+
+    tx_addr[
+        "output_address"
+    ] = (
+        tx_addr[
+            "output_address"
+        ]
+        .map(normalize_address)
     )
 
     return (
@@ -244,6 +323,7 @@ def validate_txid_alignment(
     addr_tx: pd.DataFrame,
     tx_addr: pd.DataFrame,
 ) -> dict:
+
     canonical_ids = set(
         transactions[
             TXID_COLUMN
@@ -327,9 +407,37 @@ def build_edge_counts(
         .drop_duplicates()
     )
 
+    input_edges = input_edges[
+        (
+            input_edges[
+                "input_address"
+            ] != ""
+        )
+        & (
+            input_edges[
+                "txId"
+            ] != ""
+        )
+    ]
+
+    output_edges = output_edges[
+        (
+            output_edges[
+                "output_address"
+            ] != ""
+        )
+        & (
+            output_edges[
+                "txId"
+            ] != ""
+        )
+    ]
+
     input_counts = (
         input_edges
-        .groupby("txId")[
+        .groupby(
+            "txId"
+        )[
             "input_address"
         ]
         .nunique()
@@ -339,7 +447,9 @@ def build_edge_counts(
 
     output_counts = (
         output_edges
-        .groupby("txId")[
+        .groupby(
+            "txId"
+        )[
             "output_address"
         ]
         .nunique()
@@ -366,7 +476,7 @@ def safe_ratio(
     )
 
 
-def calculate_mixing_evidence(
+def calculate_balance_metrics(
     input_count: int,
     output_count: int,
 ) -> dict:
@@ -374,6 +484,22 @@ def calculate_mixing_evidence(
     total_participants = (
         input_count
         + output_count
+    )
+
+    if input_count > 0:
+        input_output_ratio = (
+            output_count
+            / input_count
+        )
+    else:
+        input_output_ratio = 0.0
+
+    balanced = (
+        input_count > 0
+        and output_count > 0
+        and BALANCED_RATIO_MIN
+        <= input_output_ratio
+        <= BALANCED_RATIO_MAX
     )
 
     fan_in = (
@@ -396,29 +522,80 @@ def calculate_mixing_evidence(
         >= EXTREME_PARTICIPANT_THRESHOLD
     )
 
-    if input_count > 0:
-        input_output_ratio = (
-            output_count
-            / input_count
-        )
-    else:
-        input_output_ratio = 0.0
+    return {
+        "fan_in": fan_in,
+        "fan_out": fan_out,
+        "balanced": balanced,
+        "high_participant": (
+            high_participant
+        ),
+        "extreme_participant": (
+            extreme_participant
+        ),
+        "input_output_ratio": (
+            float(
+                input_output_ratio
+            )
+        ),
+        "total_participants": (
+            total_participants
+        ),
+    }
 
-    balanced = (
-        input_count > 0
-        and output_count > 0
-        and BALANCED_RATIO_MIN
-        <= input_output_ratio
-        <= BALANCED_RATIO_MAX
+
+def calculate_mixing_evidence(
+    input_count: int,
+    output_count: int,
+) -> dict:
+
+    metrics = calculate_balance_metrics(
+        input_count,
+        output_count,
     )
 
+    fan_in = metrics[
+        "fan_in"
+    ]
+
+    fan_out = metrics[
+        "fan_out"
+    ]
+
+    balanced = metrics[
+        "balanced"
+    ]
+
+    high_participant = metrics[
+        "high_participant"
+    ]
+
+    extreme_participant = metrics[
+        "extreme_participant"
+    ]
+
+    total_participants = metrics[
+        "total_participants"
+    ]
+
+    # The hardened candidate definition requires every
+    # structural condition explicitly.
+    mixing_pattern_candidate = (
+        fan_in
+        and fan_out
+        and balanced
+        and high_participant
+    )
+
+    # Evidence score is deliberately based on relatively
+    # independent structural properties. The candidate
+    # decision itself is NOT derived from the score.
     evidence_score = 0.0
 
     if fan_in:
-        evidence_score += 0.20
+        evidence_score += 0.25
 
     if fan_out:
-        evidence_score += 0.20
+        evidence_score += 0.25
 
     if balanced:
         evidence_score += 0.20
@@ -427,10 +604,14 @@ def calculate_mixing_evidence(
         evidence_score += 0.15
 
     if extreme_participant:
-        evidence_score += 0.15
-
-    if fan_in and fan_out:
         evidence_score += 0.10
+
+    if (
+        fan_in
+        and fan_out
+        and balanced
+    ):
+        evidence_score += 0.05
 
     evidence_score = min(
         evidence_score,
@@ -453,9 +634,10 @@ def calculate_mixing_evidence(
         and balanced
     )
 
-    mixing_pattern_candidate = (
-        balanced_fan_pattern
-        and high_participant
+    participant_excess = max(
+        total_participants
+        - HIGH_PARTICIPANT_THRESHOLD,
+        0,
     )
 
     return {
@@ -472,14 +654,21 @@ def calculate_mixing_evidence(
         "extreme_participant_count": (
             extreme_participant
         ),
-        "input_output_ratio": float(
-            input_output_ratio
+        "input_output_ratio": (
+            metrics[
+                "input_output_ratio"
+            ]
+        ),
+        "participant_excess": (
+            participant_excess
         ),
         "mixing_pattern_candidate": (
             mixing_pattern_candidate
         ),
         "mixing_evidence_score": (
-            evidence_score
+            float(
+                evidence_score
+            )
         ),
     }
 
@@ -510,31 +699,25 @@ def build_indicators(
             row.txid
         )
 
-        source_input_count = int(
+        input_count = int(
             input_counts.get(
                 txid,
                 0,
             )
         )
 
-        source_output_count = int(
+        output_count = int(
             output_counts.get(
                 txid,
                 0,
             )
         )
 
-        input_count = (
-            source_input_count
-        )
-
-        output_count = (
-            source_output_count
-        )
-
-        evidence = calculate_mixing_evidence(
-            input_count,
-            output_count,
+        evidence = (
+            calculate_mixing_evidence(
+                input_count,
+                output_count,
+            )
         )
 
         total_participants = (
@@ -570,21 +753,27 @@ def build_indicators(
                     participant_density
                 ),
                 "input_btc_total": (
-                    float(row.input_btc_total)
+                    float(
+                        row.input_btc_total
+                    )
                     if pd.notna(
                         row.input_btc_total
                     )
                     else np.nan
                 ),
                 "output_btc_total": (
-                    float(row.output_btc_total)
+                    float(
+                        row.output_btc_total
+                    )
                     if pd.notna(
                         row.output_btc_total
                     )
                     else np.nan
                 ),
                 "total_btc": (
-                    float(row.total_btc)
+                    float(
+                        row.total_btc
+                    )
                     if pd.notna(
                         row.total_btc
                     )
@@ -612,7 +801,9 @@ def validate_output(
             "canonical transaction count."
         )
 
-    if result["txid"].duplicated().any():
+    if result[
+        "txid"
+    ].duplicated().any():
         raise ValueError(
             "Duplicate TXIDs in mixing indicators."
         )
@@ -624,8 +815,9 @@ def validate_output(
     )
 
     result_ids = set(
-        result["txid"]
-        .map(normalize_txid)
+        result[
+            "txid"
+        ].map(normalize_txid)
     )
 
     if canonical_ids != result_ids:
@@ -668,18 +860,114 @@ def validate_output(
             "Non-finite input/output ratios."
         )
 
+    # Explicit candidate invariant.
+    candidate_mask = (
+        result[
+            "mixing_pattern_candidate"
+        ]
+    )
+
+    expected_candidate = (
+        result[
+            "fan_in"
+        ]
+        & result[
+            "fan_out"
+        ]
+        & result[
+            "balanced_fan_pattern"
+        ]
+        & result[
+            "high_participant_count"
+        ]
+    )
+
+    candidate_mismatch = (
+        candidate_mask
+        != expected_candidate
+    )
+
+    if candidate_mismatch.any():
+        raise ValueError(
+            "Mixing candidate flag violates "
+            "the hardened candidate definition."
+        )
+
+    # Every candidate must satisfy all four conditions.
+    if (
+        result.loc[
+            candidate_mask,
+            "input_address_count",
+        ]
+        < FAN_IN_THRESHOLD
+    ).any():
+
+        raise ValueError(
+            "Candidate found below fan-in threshold."
+        )
+
+    if (
+        result.loc[
+            candidate_mask,
+            "output_address_count",
+        ]
+        < FAN_OUT_THRESHOLD
+    ).any():
+
+        raise ValueError(
+            "Candidate found below fan-out threshold."
+        )
+
+    if (
+        result.loc[
+            candidate_mask,
+            "total_participant_count",
+        ]
+        < HIGH_PARTICIPANT_THRESHOLD
+    ).any():
+
+        raise ValueError(
+            "Candidate found below participant threshold."
+        )
+
+    candidate_ratios = result.loc[
+        candidate_mask,
+        "input_output_ratio",
+    ]
+
+    if (
+        (
+            candidate_ratios
+            < BALANCED_RATIO_MIN
+        )
+        | (
+            candidate_ratios
+            > BALANCED_RATIO_MAX
+        )
+    ).any():
+
+        raise ValueError(
+            "Candidate found outside balanced ratio range."
+        )
+
     return {
         "rows": int(
             len(result)
         ),
         "unique_txids": int(
-            result["txid"].nunique()
+            result[
+                "txid"
+            ].nunique()
         ),
         "fan_in_count": int(
-            result["fan_in"].sum()
+            result[
+                "fan_in"
+            ].sum()
         ),
         "fan_out_count": int(
-            result["fan_out"].sum()
+            result[
+                "fan_out"
+            ].sum()
         ),
         "balanced_fan_pattern_count": int(
             result[
@@ -722,7 +1010,10 @@ def validate_output(
 def main() -> None:
 
     print("=" * 72)
-    print("M9.2 MIXING / FAN-IN-FAN-OUT DETECTOR")
+    print(
+        "M9.2 MIXING / FAN-IN-FAN-OUT "
+        "DETECTOR"
+    )
     print("=" * 72)
 
     transactions, addr_tx, tx_addr = (
@@ -751,7 +1042,7 @@ def main() -> None:
     )
 
     print(
-        "\nNormalizing TXID representations..."
+        "\nNormalizing TXID and address representations..."
     )
 
     (
@@ -786,12 +1077,12 @@ def main() -> None:
     )
 
     print(
-        f"Canonical ↔ AddrTx overlap: "
+        f"Canonical ∩ AddrTx overlap: "
         f"{alignment['canonical_input_overlap']:,}"
     )
 
     print(
-        f"Canonical ↔ TxAddr overlap: "
+        f"Canonical ∩ TxAddr overlap: "
         f"{alignment['canonical_output_overlap']:,}"
     )
 
@@ -801,7 +1092,9 @@ def main() -> None:
     )
 
     if (
-        alignment["canonical_both_input_output_overlap"]
+        alignment[
+            "canonical_both_input_output_overlap"
+        ]
         == 0
     ):
         raise ValueError(
@@ -814,11 +1107,12 @@ def main() -> None:
         "\nBuilding transaction participant counts..."
     )
 
-    input_counts, output_counts = (
-        build_edge_counts(
-            addr_tx,
-            tx_addr,
-        )
+    (
+        input_counts,
+        output_counts,
+    ) = build_edge_counts(
+        addr_tx,
+        tx_addr,
     )
 
     print(
@@ -832,7 +1126,7 @@ def main() -> None:
     )
 
     print(
-        "\nBuilding structural indicators..."
+        "\nBuilding hardened structural indicators..."
     )
 
     result = build_indicators(
@@ -867,6 +1161,13 @@ def main() -> None:
         "detector": (
             "mixing_fan_in_fan_out"
         ),
+        "hardened": True,
+        "candidate_definition": {
+            "requires_fan_in": True,
+            "requires_fan_out": True,
+            "requires_high_participant_count": True,
+            "requires_balanced_ratio": True,
+        },
         "thresholds": {
             "fan_in_threshold": (
                 FAN_IN_THRESHOLD
@@ -892,22 +1193,28 @@ def main() -> None:
             "participant_counts": (
                 "Unique transaction input/output "
                 "addresses from AddrTx and TxAddr "
-                "edge lists."
+                "edge lists after duplicate removal."
+            ),
+            "candidate_logic": (
+                "A mixing-pattern candidate must "
+                "simultaneously satisfy fan-in, fan-out, "
+                "high participant count, and balanced "
+                "input/output ratio conditions."
+            ),
+            "evidence_score": (
+                "Structural evidence score in [0,1]. "
+                "It is an evidence-strength measure and "
+                "not a probability of illicit activity."
             ),
             "txid_normalization": (
-                "Numeric TXID representations are "
-                "normalized so integer and floating-point "
-                "representations of the same TXID align."
-            ),
-            "duplicate_handling": (
-                "Duplicate source relationships are "
-                "deduplicated before counting."
+                "Integer and floating-point representations "
+                "of equivalent TXIDs are normalized."
             ),
             "amount_limitation": (
                 "The source edge lists do not provide "
                 "individual address-level BTC amounts. "
-                "Therefore the detector does not infer "
-                "address-level value allocation."
+                "Therefore no address-level value allocation "
+                "is inferred."
             ),
         },
         "validation": validation,
@@ -922,24 +1229,32 @@ def main() -> None:
         "interpretation_note": (
             "Fan-in/fan-out structure can be compatible "
             "with mixing-like transaction behavior, but "
-            "structure alone does not establish the use "
-            "of a mixer or illicit activity."
+            "structural evidence alone does not establish "
+            "mixer usage, illicit activity, ownership, "
+            "identity, intent, or guilt."
         ),
     }
 
     with REPORT_FILE.open(
         "w",
         encoding="utf-8",
-    ) as f:
+    ) as file:
+
         json.dump(
             report,
-            f,
+            file,
             indent=2,
         )
 
-    print("\n" + "-" * 72)
-    print("MIXING / STRUCTURAL SUMMARY")
-    print("-" * 72)
+    print(
+        "\n" + "-" * 72
+    )
+    print(
+        "HARDENED MIXING SUMMARY"
+    )
+    print(
+        "-" * 72
+    )
 
     print(
         f"Transactions processed: "
@@ -991,9 +1306,17 @@ def main() -> None:
         f"{validation['max_evidence_score']:.4f}"
     )
 
-    print("\n" + "=" * 72)
-    print("M9.2 COMPLETE")
-    print("=" * 72)
+    print(
+        "\n" + "=" * 72
+    )
+
+    print(
+        "M9.2 HARDENED DETECTOR COMPLETE"
+    )
+
+    print(
+        "=" * 72
+    )
 
     print(
         f"Indicators: {OUTPUT_FILE}"

@@ -1,0 +1,51 @@
+{
+  "component": "offline_network_intelligence",
+  "input": {
+    "network_feature_rows": 203769,
+    "network_feature_unique_txids": 203769
+  },
+  "limitations": [
+    "The current M10 transaction-level network artifact contains aggregate network features and does not retain individual source/destination IP addresses.",
+    "The current synthetic network fixture provides only one transaction with network observations.",
+    "No VPN, proxy, or Tor status is inferred without an explicit offline intelligence source.",
+    "Network classification does not establish wallet ownership, real-world identity, intent, or illicit activity."
+  ],
+  "methodology": {
+    "classification_is_identity": false,
+    "classification_is_illicitness_probability": false,
+    "offline_only": true,
+    "purpose": "Interpret supplied IP-level network intelligence without fabricating VPN, proxy, or Tor classifications.",
+    "unknown_when_insufficient_evidence": true
+  },
+  "milestone": "M13.1",
+  "offline_feed": {
+    "available": false,
+    "path": "D:\\Hackathons\\SIH 2026\\final\\data\\raw\\network\\network_intelligence_feed.csv",
+    "reason": "No offline intelligence feed supplied.",
+    "rows": 0
+  },
+  "output": {
+    "classification_distribution": {
+      "UNKNOWN": 203769
+    },
+    "intelligence_available_transactions": 0,
+    "proxy_classifications": 0,
+    "rows": 203769,
+    "tor_related_classifications": 0,
+    "unique_txids": 203769,
+    "vpn_classifications": 0
+  },
+  "status": "PASS",
+  "validation": {
+    "checks": {
+      "confidence_finite": true,
+      "confidence_range": true,
+      "finite_evidence": true,
+      "row_count_match": true,
+      "txid_coverage": true,
+      "unique_txids": true,
+      "valid_classifications": true
+    },
+    "status": "PASS"
+  }
+}

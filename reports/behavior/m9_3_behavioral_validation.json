@@ -1,0 +1,128 @@
+{
+  "milestone": "M9.3",
+  "validation_type": "independent_behavioral_evidence_validation",
+  "status": "PASS",
+  "checks": {
+    "peeling_integrity": true,
+    "mixing_integrity": true,
+    "behavioral_integrity": true,
+    "peeling_mixing_txid_sets_match": true,
+    "peeling_behavioral_txid_sets_match": true,
+    "mixing_behavioral_txid_sets_match": true,
+    "time_alignment_pass": true,
+    "peeling_evidence_score_finite": true,
+    "mixing_evidence_score_finite": true,
+    "behavioral_evidence_score_finite": true,
+    "peeling_mixing_interaction_finite": true,
+    "peeling_evidence_score_in_range": true,
+    "mixing_evidence_score_in_range": true,
+    "behavioral_evidence_score_in_range": true,
+    "fusion_formula_correct": true,
+    "signal_count_correct": true,
+    "multiple_signal_flag_correct": true,
+    "agreement_flag_correct": true,
+    "interaction_formula_correct": true,
+    "level_logic_correct": true,
+    "peeling_candidate_preserved": true,
+    "mixing_candidate_preserved": true,
+    "peeling_score_preserved": true,
+    "mixing_score_preserved": true,
+    "time_step_finite": true,
+    "time_step_range_valid": true
+  },
+  "input_integrity": {
+    "peeling_integrity": true,
+    "mixing_integrity": true,
+    "behavioral_integrity": true,
+    "peeling_rows": 203769,
+    "mixing_rows": 203769,
+    "behavioral_rows": 203769
+  },
+  "txid_alignment": {
+    "peeling_mixing_txid_sets_match": true,
+    "peeling_behavioral_txid_sets_match": true,
+    "mixing_behavioral_txid_sets_match": true,
+    "aligned_txids": 203769
+  },
+  "time_alignment": {
+    "peeling_behavioral_mismatches": 0,
+    "mixing_behavioral_mismatches": 0,
+    "time_alignment_pass": true
+  },
+  "score_validation": {
+    "peeling_evidence_score_finite": true,
+    "mixing_evidence_score_finite": true,
+    "behavioral_evidence_score_finite": true,
+    "peeling_mixing_interaction_finite": true,
+    "peeling_evidence_score_in_range": true,
+    "mixing_evidence_score_in_range": true,
+    "behavioral_evidence_score_in_range": true,
+    "mean_peeling_score": 0.08267253605798724,
+    "mean_mixing_score": 0.21977337082676954,
+    "mean_behavioral_score": 0.1512229534423784,
+    "median_behavioral_score": 0.1,
+    "maximum_behavioral_score": 1.0
+  },
+  "fusion_validation": {
+    "peeling_weight": 0.5,
+    "mixing_weight": 0.5,
+    "weight_sum": 1.0,
+    "fusion_formula_correct": true
+  },
+  "signal_validation": {
+    "signal_count_correct": true,
+    "multiple_signal_flag_correct": true,
+    "agreement_flag_correct": true,
+    "peeling_candidates": 12018,
+    "mixing_candidates": 1497,
+    "dual_candidate_count": 141,
+    "positive_evidence_agreement_count": 27993
+  },
+  "interaction_validation": {
+    "interaction_formula_correct": true,
+    "mean_interaction": 0.019827451673218203,
+    "maximum_interaction": 1.0
+  },
+  "evidence_level_validation": {
+    "level_logic_correct": true,
+    "distribution": {
+      "HIGH": 11418,
+      "LOW": 162012,
+      "MODERATE": 29907,
+      "VERY_HIGH": 432
+    }
+  },
+  "source_consistency": {
+    "peeling_candidate_preserved": true,
+    "mixing_candidate_preserved": true,
+    "peeling_score_preserved": true,
+    "mixing_score_preserved": true
+  },
+  "time_range_validation": {
+    "time_step_finite": true,
+    "time_step_range_valid": true,
+    "minimum_time_step": 1,
+    "maximum_time_step": 49,
+    "unique_time_steps": 49
+  },
+  "summary": {
+    "rows": 203769,
+    "peeling_candidates": 12018,
+    "mixing_candidates": 1497,
+    "dual_candidate_count": 141,
+    "positive_evidence_agreement_count": 27993,
+    "mean_behavioral_score": 0.1512229534423784,
+    "median_behavioral_score": 0.1,
+    "maximum_behavioral_score": 1.0
+  },
+  "interpretation": "The behavioral layer combines two independently generated structural evidence channels. The resulting score is an evidence-prioritization measure, not a probability of illicit activity and not proof of identity, ownership, intent, mixer usage, or guilt.",
+  "limitations": {
+    "peeling": "Peeling-chain value reduction uses transaction-level output BTC because the source address relationship files do not contain address-level BTC allocations.",
+    "mixing": "Mixing detection is based on observable fan-in/fan-out participant structure and does not establish actual mixer usage."
+  },
+  "offline_processing": true,
+  "artifacts": {
+    "behavioral_evidence": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\behavioral_evidence.parquet",
+    "validation_report": "D:\\Hackathons\\SIH 2026\\final\\reports\\behavior\\m9_3_behavioral_validation.json"
+  }
+}

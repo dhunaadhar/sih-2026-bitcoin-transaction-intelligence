@@ -1,7 +1,8 @@
 {
   "milestone": "M9.3",
   "status": "PASS",
-  "purpose": "Combine independently generated peeling-chain and mixing/fan-in-fan-out structural evidence into an auditable behavioral evidence layer.",
+  "detector": "behavioral_evidence_fusion",
+  "purpose": "Combine independently generated peeling-chain and mixing-pattern structural evidence into a single auditable behavioral evidence layer.",
   "source_artifacts": {
     "peeling": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\peeling_chain_indicators.parquet",
     "mixing": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\mixing_pattern_indicators.parquet"
@@ -9,11 +10,12 @@
   "methodology": {
     "peeling_weight": 0.5,
     "mixing_weight": 0.5,
-    "combined_score": "0.5 * peeling evidence + 0.5 * mixing evidence",
+    "combined_score": "0.50 * peeling evidence + 0.50 * mixing evidence",
     "independent_channels_preserved": true,
-    "identity_claim": false,
-    "illicit_activity_claim": false,
-    "interpretation": "Behavioral signals represent structural evidence for downstream risk analysis. They do not establish mixer usage, illicit activity, ownership, or identity."
+    "candidate_channels_preserved": true,
+    "interaction_feature": "peeling evidence multiplied by mixing evidence",
+    "agreement_definition": "Both independent evidence scores are strictly greater than zero.",
+    "multiple_signal_definition": "Both peeling-chain and mixing-pattern candidate flags are true."
   },
   "validation": {
     "rows": 203769,
@@ -23,21 +25,28 @@
       "max": 49,
       "unique": 49
     },
-    "peeling_candidates": 19232,
+    "peeling_candidates": 12018,
     "mixing_candidates": 1497,
-    "multiple_behavioral_signals": 249,
+    "multiple_behavioral_signals": 141,
     "behavioral_signal_agreement": 27993,
-    "mean_peeling_score": 0.08930308339345042,
-    "mean_mixing_score": 0.21568295471833301,
-    "mean_behavioral_score": 0.15249301905589174,
-    "max_behavioral_score": 1.0,
+    "mean_peeling_score": 0.08267253605798724,
+    "mean_mixing_score": 0.21977337082676954,
+    "mean_behavioral_score": 0.1512229534423784,
+    "median_behavioral_score": 0.1,
+    "maximum_behavioral_score": 1.0,
     "evidence_level_distribution": {
-      "HIGH": 8679,
-      "LOW": 169332,
-      "MODERATE": 25200,
-      "VERY_HIGH": 558
+      "HIGH": 11418,
+      "LOW": 162012,
+      "MODERATE": 29907,
+      "VERY_HIGH": 432
     }
   },
+  "interpretation": "Behavioral evidence is structural investigative evidence for downstream prioritization. It is not a probability of illicit activity and does not establish mixer usage, ownership, identity, intent, or guilt.",
+  "source_limitations": {
+    "peeling": "The source address relationship data do not provide individual address-level BTC amounts. Peeling value-reduction evidence therefore uses transaction-level output BTC reduction.",
+    "mixing": "The source AddrTx and TxAddr edge lists provide address/transaction relationships but not individual address-level BTC allocations or equal-denomination output information."
+  },
+  "offline_processing": true,
   "artifacts": {
     "behavioral_evidence": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\behavioral_evidence.parquet",
     "report": "D:\\Hackathons\\SIH 2026\\final\\reports\\behavior\\m9_3_behavioral_evidence.json"

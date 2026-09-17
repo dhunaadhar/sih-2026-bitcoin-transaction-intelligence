@@ -1,0 +1,51 @@
+{
+  "component": "ip_level_network_intelligence_correlation",
+  "inputs": {
+    "intelligence_feed_rows": 4,
+    "intelligence_feed_unique_ips": 4,
+    "network_correlation_rows": 3
+  },
+  "limitations": [
+    "The current M10 network fixture is synthetic and contains only three network observations.",
+    "A classification describes the supplied network intelligence for an IP; it does not establish ownership or identity.",
+    "VPN/proxy/Tor evidence is dependent on the quality and temporal validity of the offline feed."
+  ],
+  "methodology": {
+    "best_record_selection": "Highest-confidence intelligence record for each observed IP.",
+    "confidence_preserved": true,
+    "identity_inference": false,
+    "illicitness_inference": false,
+    "ip_level_matching": true,
+    "offline_only": true,
+    "source_attribution_preserved": true
+  },
+  "milestone": "M13.3",
+  "outputs": {
+    "classification_distribution": {
+      "TOR_EXIT": 1,
+      "VPN": 1
+    },
+    "classified_transactions": 2,
+    "hosting_transactions": 1,
+    "observation_rows": 3,
+    "proxy_transactions": 1,
+    "tor_transactions": 1,
+    "transaction_rows": 2,
+    "vpn_transactions": 1
+  },
+  "status": "PASS",
+  "validation": {
+    "checks": {
+      "confidence_range": true,
+      "evidence_finite": true,
+      "evidence_range": true,
+      "observation_rows_match": true,
+      "observation_txid_subset": true,
+      "transaction_rows_positive": true,
+      "transaction_txid_subset": true,
+      "unique_transaction_txids": true,
+      "valid_evidence_levels": true
+    },
+    "status": "PASS"
+  }
+}

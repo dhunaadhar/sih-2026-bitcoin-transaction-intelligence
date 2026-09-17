@@ -1,0 +1,78 @@
+{
+  "component": "offline_network_intelligence_feed",
+  "ingestion": {
+    "conflicting_ip_classification_groups": 0,
+    "duplicate_records_removed": 0,
+    "input_path": "D:\\Hackathons\\SIH 2026\\final\\data\\raw\\network\\network_intelligence_feed.csv",
+    "network_type_distribution": {
+      "DATACENTER": 1,
+      "PROXY": 1,
+      "TOR_EXIT": 1,
+      "VPN": 1
+    },
+    "normalized_rows": 4,
+    "raw_rows": 4,
+    "status": "PASS",
+    "unique_ips": 4
+  },
+  "limitations": [
+    "The feed is an intelligence source and does not prove that a transaction is illicit.",
+    "VPN, proxy, and Tor classifications depend on the quality, provenance, temporal validity, and coverage of the supplied offline intelligence source.",
+    "Multiple intelligence records for the same IP are retained rather than silently selecting a classification."
+  ],
+  "methodology": {
+    "confidence_range": [
+      0.0,
+      1.0
+    ],
+    "identity_inference": false,
+    "illicitness_inference": false,
+    "offline_only": true,
+    "source_attribution_required": true
+  },
+  "milestone": "M13.2",
+  "schema": {
+    "allowed_network_types": [
+      "DATACENTER",
+      "EDUCATIONAL",
+      "GOVERNMENT",
+      "HOSTING",
+      "MOBILE",
+      "PROXY",
+      "RESIDENTIAL",
+      "TOR_EXIT",
+      "TOR_RELAY",
+      "UNKNOWN",
+      "VPN"
+    ],
+    "optional_columns": [
+      "asn",
+      "country",
+      "valid_from",
+      "valid_to"
+    ],
+    "required_columns": [
+      "confidence",
+      "ip",
+      "network_type",
+      "provider",
+      "source"
+    ]
+  },
+  "status": "PASS",
+  "validation": {
+    "checks": {
+      "asn_values_valid": true,
+      "confidence_range": true,
+      "country_values_valid": true,
+      "providers_optional": true,
+      "required_columns": true,
+      "rows_present": true,
+      "sources_present": true,
+      "unique_record_ids": true,
+      "valid_ips": true,
+      "valid_network_types": true
+    },
+    "status": "PASS"
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "agreement_bonus": {
+    "0": 0.0,
+    "1": 0.0,
+    "2": 0.02,
+    "3": 0.04,
+    "4": 0.06,
+    "5": 0.08
+  },
+  "component": "network_intelligence_risk_integration",
+  "inputs": {
+    "m11_risk_file": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_risk_scores.parquet",
+    "m11_rows": 203769,
+    "m13_network_file": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\transaction_network_intelligence.parquet",
+    "m13_rows": 2
+  },
+  "limitations": [
+    "The current network observations originate from the synthetic M10 validation fixture.",
+    "VPN/proxy/Tor classifications depend on the quality and temporal validity of the offline intelligence feed.",
+    "Network classification does not establish real-world identity, ownership, intent, or illicit activity."
+  ],
+  "methodology": {
+    "additional_sixth_channel": false,
+    "identity_inference": false,
+    "illicitness_probability": false,
+    "m11_original_artifact_preserved": true,
+    "m13_replaces_m10_network_channel": true,
+    "network_double_counting": false,
+    "offline_only": true
+  },
+  "milestone": "M13.4",
+  "output": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_risk_scores_m13_integrated.parquet",
+  "output_sha256": "717ffa4532cc9a753b32385eb011d26abec9cec3914ee6085e2084b79d454e48",
+  "outputs": {
+    "hosting_datacenter_transactions": 1,
+    "max_integrated_score": 86.5932530703231,
+    "max_original_m11_score": 86.5932530703231,
+    "mean_integrated_score": 30.113716486425783,
+    "mean_original_m11_score": 30.11366453264282,
+    "proxy_transactions": 1,
+    "risk_scores_changed": 1,
+    "rows": 203769,
+    "tor_transactions": 0,
+    "transactions_with_m13_intelligence": 1,
+    "unique_txids": 203769,
+    "vpn_transactions": 1
+  },
+  "status": "PASS",
+  "validation": {
+    "checks": {
+      "integrated_txids_unique": true,
+      "m11_row_count_preserved": true,
+      "m11_txid_coverage_preserved": true,
+      "m13_not_separate_channel": true,
+      "m13_replaces_or_enriches_network_channel": true,
+      "m13_txids_unique": true,
+      "maximum_evidence_channels_is_five": true,
+      "network_intelligence_evidence_bounded": true,
+      "network_signal_bounded": true,
+      "no_m13_fallback_preserved": true,
+      "original_m11_score_preserved": true,
+      "risk_score_bounded": true,
+      "risk_score_finite": true
+    },
+    "status": "PASS"
+  },
+  "weights": {
+    "anomaly": 0.2,
+    "behavioral": 0.3,
+    "entity": 0.2,
+    "ml": 0.15,
+    "network": 0.15
+  }
+}

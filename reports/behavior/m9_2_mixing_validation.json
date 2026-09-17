@@ -1,0 +1,82 @@
+{
+  "milestone": "M9.2",
+  "validation_type": "independent_mixing_pattern_validation",
+  "status": "PASS",
+  "hardened_candidate_definition": {
+    "fan_in_min": 5,
+    "fan_out_min": 5,
+    "participant_min": 10,
+    "balanced_ratio_min": 0.4,
+    "balanced_ratio_max": 2.5
+  },
+  "integrity": {
+    "canonical_row_count": true,
+    "indicator_row_count": true,
+    "canonical_txids_unique": true,
+    "indicator_txids_unique": true,
+    "exact_txid_coverage": true,
+    "canonical_rows": 203769,
+    "indicator_rows": 203769,
+    "canonical_unique_txids": 203769,
+    "indicator_unique_txids": 203769
+  },
+  "participant_validation": {
+    "input_counts_finite": true,
+    "output_counts_finite": true,
+    "participant_counts_finite": true,
+    "input_counts_nonnegative": true,
+    "output_counts_nonnegative": true,
+    "participant_counts_nonnegative": true,
+    "participant_sum_consistent": true,
+    "minimum_input_count": 0,
+    "maximum_input_count": 653,
+    "minimum_output_count": 0,
+    "maximum_output_count": 13107,
+    "maximum_participant_count": 13108
+  },
+  "structural_validation": {
+    "fan_in_flag_correct": true,
+    "fan_out_flag_correct": true,
+    "pure_fan_in_flag_correct": true,
+    "pure_fan_out_flag_correct": true,
+    "balanced_flag_correct": true,
+    "high_participant_flag_correct": true,
+    "extreme_participant_flag_correct": true,
+    "fan_in_count": 11058,
+    "fan_out_count": 13805,
+    "balanced_fan_pattern_count": 1497,
+    "high_participant_count": 15328,
+    "extreme_participant_count": 5254
+  },
+  "candidate_validation": {
+    "candidate_definition_correct": true,
+    "all_candidates_have_fan_in": true,
+    "all_candidates_have_fan_out": true,
+    "all_candidates_have_high_participant_count": true,
+    "all_candidates_are_balanced": true,
+    "candidate_count": 1497,
+    "candidate_rate": 0.007346554186358082
+  },
+  "ratio_score_validation": {
+    "ratios_finite": true,
+    "ratios_nonnegative": true,
+    "scores_finite": true,
+    "scores_in_range": true,
+    "minimum_ratio": 0.0,
+    "maximum_ratio": 13107.0,
+    "mean_evidence_score": 0.21977337082676954,
+    "maximum_evidence_score": 1.0
+  },
+  "reproducibility": {
+    "recomputed_candidate_count": 1497,
+    "stored_candidate_count": 1497,
+    "candidate_flags_identical": true
+  },
+  "all_boolean_checks_pass": true,
+  "interpretation": "The detector identifies transactions whose observable fan-in/fan-out structure is compatible with a mixing-like pattern. This is structural investigative evidence and does not establish mixer usage, illicit activity, ownership, identity, intent, or guilt.",
+  "source_limitation": "AddrTx and TxAddr provide transaction/address relationships but do not provide individual address-level BTC amounts. Therefore this validator does not claim address-level value distribution or equal-denomination outputs.",
+  "artifacts": {
+    "indicators": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\mixing_pattern_indicators.parquet",
+    "validation_report": "D:\\Hackathons\\SIH 2026\\final\\reports\\behavior\\m9_2_mixing_validation.json"
+  }
+}

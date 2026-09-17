@@ -45,17 +45,66 @@ REPORT_FILE = (
     / "m9_3_behavioral_evidence.json"
 )
 
+TXID_COLUMN = "txid"
 
-def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
+PEELING_WEIGHT = 0.50
+MIXING_WEIGHT = 0.50
+
+EVIDENCE_LOW_MAX = 0.20
+EVIDENCE_MODERATE_MAX = 0.50
+EVIDENCE_HIGH_MAX = 0.75
+
+
+def normalize_txid(value) -> str:
+    """
+    Normalize TXIDs so equivalent numeric representations
+    are treated as the same identifier.
+    """
+
+    if pd.isna(value):
+        return ""
+
+    text = str(value).strip()
+
+    if not text:
+        return ""
+
+    try:
+        numeric = float(text)
+
+        if not np.isfinite(numeric):
+            return ""
+
+        if numeric.is_integer():
+            return str(int(numeric))
+
+        return format(
+            numeric,
+            ".15g",
+        )
+
+    except (
+        ValueError,
+        TypeError,
+    ):
+        return text
+
+
+def load_inputs() -> tuple[
+    pd.DataFrame,
+    pd.DataFrame,
+]:
 
     if not PEELING_FILE.exists():
         raise FileNotFoundError(
-            f"Peeling-chain artifact not found: {PEELING_FILE}"
+            "Peeling-chain artifact not found: "
+            f"{PEELING_FILE}"
         )
 
     if not MIXING_FILE.exists():
         raise FileNotFoundError(
-            f"Mixing-pattern artifact not found: {MIXING_FILE}"
+            "Mixing-pattern artifact not found: "
+            f"{MIXING_FILE}"
         )
 
     peeling = pd.read_parquet(
@@ -66,7 +115,10 @@ def load_inputs() -> tuple[pd.DataFrame, pd.DataFrame]:
         MIXING_FILE
     )
 
-    return peeling, mixing
+    return (
+        peeling,
+        mixing,
+    )
 
 
 def validate_input(
@@ -74,51 +126,25 @@ def validate_input(
     name: str,
 ) -> None:
 
-    if "txid" not in frame.columns:
+    if TXID_COLUMN not in frame.columns:
         raise ValueError(
             f"{name} does not contain txid."
         )
 
-    if frame["txid"].isna().any():
+    if frame[
+        TXID_COLUMN
+    ].isna().any():
+
         raise ValueError(
             f"{name} contains null TXIDs."
         )
 
-    if frame["txid"].duplicated().any():
+    if frame[
+        TXID_COLUMN
+    ].duplicated().any():
+
         raise ValueError(
             f"{name} contains duplicate TXIDs."
-        )
-
-
-def validate_alignment(
-    peeling: pd.DataFrame,
-    mixing: pd.DataFrame,
-) -> None:
-
-    peeling_ids = set(
-        peeling["txid"].astype(str)
-    )
-
-    mixing_ids = set(
-        mixing["txid"].astype(str)
-    )
-
-    if peeling_ids != mixing_ids:
-
-        missing_from_mixing = (
-            peeling_ids - mixing_ids
-        )
-
-        missing_from_peeling = (
-            mixing_ids - peeling_ids
-        )
-
-        raise ValueError(
-            "Behavioral artifacts have different TXID sets. "
-            f"Missing from mixing: "
-            f"{len(missing_from_mixing)}; "
-            f"missing from peeling: "
-            f"{len(missing_from_peeling)}."
         )
 
 
@@ -188,22 +214,85 @@ def validate_required_columns(
         )
 
 
+def validate_alignment(
+    peeling: pd.DataFrame,
+    mixing: pd.DataFrame,
+) -> None:
+
+    peeling_ids = set(
+        peeling[
+            TXID_COLUMN
+        ].map(normalize_txid)
+    )
+
+    mixing_ids = set(
+        mixing[
+            TXID_COLUMN
+        ].map(normalize_txid)
+    )
+
+    if peeling_ids != mixing_ids:
+
+        missing_from_mixing = (
+            peeling_ids
+            - mixing_ids
+        )
+
+        missing_from_peeling = (
+            mixing_ids
+            - peeling_ids
+        )
+
+        raise ValueError(
+            "Behavioral artifacts have different TXID sets. "
+            f"Missing from mixing: "
+            f"{len(missing_from_mixing):,}; "
+            f"missing from peeling: "
+            f"{len(missing_from_peeling):,}."
+        )
+
+
+def validate_weights() -> None:
+
+    total_weight = (
+        PEELING_WEIGHT
+        + MIXING_WEIGHT
+    )
+
+    if not np.isclose(
+        total_weight,
+        1.0,
+    ):
+        raise ValueError(
+            "Behavioral evidence weights must sum to 1.0. "
+            f"Current sum={total_weight}"
+        )
+
+
 def build_behavioral_evidence(
     peeling: pd.DataFrame,
     mixing: pd.DataFrame,
 ) -> pd.DataFrame:
 
+    validate_weights()
+
     peeling = peeling.copy()
     mixing = mixing.copy()
 
-    peeling["txid"] = (
-        peeling["txid"]
-        .astype(str)
+    peeling[
+        TXID_COLUMN
+    ] = (
+        peeling[
+            TXID_COLUMN
+        ].map(normalize_txid)
     )
 
-    mixing["txid"] = (
-        mixing["txid"]
-        .astype(str)
+    mixing[
+        TXID_COLUMN
+    ] = (
+        mixing[
+            TXID_COLUMN
+        ].map(normalize_txid)
     )
 
     peeling_columns = [
@@ -244,25 +333,35 @@ def build_behavioral_evidence(
         "mixing_evidence_score",
     ]
 
-    merged = peeling[
-        peeling_columns
-    ].merge(
-        mixing[
-            mixing_columns
-        ],
-        on="txid",
-        how="inner",
-        validate="one_to_one",
-        suffixes=(
-            "_peeling",
-            "_mixing",
-        ),
+    merged = (
+        peeling[
+            peeling_columns
+        ]
+        .merge(
+            mixing[
+                mixing_columns
+            ],
+            on=TXID_COLUMN,
+            how="inner",
+            validate="one_to_one",
+            suffixes=(
+                "_peeling",
+                "_mixing",
+            ),
+        )
     )
 
     if len(merged) != len(peeling):
         raise ValueError(
             "Behavioral merge lost transactions. "
-            f"Peeling rows={len(peeling):,}, "
+            f"Peeling rows={len(peeling):,}; "
+            f"merged rows={len(merged):,}."
+        )
+
+    if len(merged) != len(mixing):
+        raise ValueError(
+            "Behavioral merge lost transactions. "
+            f"Mixing rows={len(mixing):,}; "
             f"merged rows={len(merged):,}."
         )
 
@@ -280,14 +379,16 @@ def build_behavioral_evidence(
         .astype(int)
     )
 
-    time_mismatch = (
-        peeling_time
-        != mixing_time
-    ).sum()
+    time_mismatch = int(
+        (
+            peeling_time
+            != mixing_time
+        ).sum()
+    )
 
     if time_mismatch:
         raise ValueError(
-            f"Time-step mismatch detected for "
+            "Time-step mismatch detected for "
             f"{time_mismatch:,} transactions."
         )
 
@@ -303,62 +404,83 @@ def build_behavioral_evidence(
         inplace=True,
     )
 
-    merged[
-        "peeling_evidence_score"
-    ] = pd.to_numeric(
+    score_columns = [
+        "peeling_evidence_score",
+        "mixing_evidence_score",
+    ]
+
+    for column in score_columns:
+
+        merged[
+            column
+        ] = pd.to_numeric(
+            merged[
+                column
+            ],
+            errors="coerce",
+        )
+
+        values = merged[
+            column
+        ].to_numpy(
+            dtype=float
+        )
+
+        if not np.isfinite(
+            values
+        ).all():
+
+            raise ValueError(
+                f"Invalid non-finite values in {column}."
+            )
+
+        if (
+            (values < 0)
+            | (values > 1)
+        ).any():
+
+            raise ValueError(
+                f"{column} contains values outside [0,1]."
+            )
+
+    peeling_score = (
         merged[
             "peeling_evidence_score"
-        ],
-        errors="coerce",
+        ]
     )
 
-    merged[
-        "mixing_evidence_score"
-    ] = pd.to_numeric(
+    mixing_score = (
         merged[
             "mixing_evidence_score"
-        ],
-        errors="coerce",
+        ]
     )
 
-    if merged[
-        "peeling_evidence_score"
-    ].isna().any():
+    peeling_candidate = (
+        merged[
+            "peeling_chain_candidate"
+        ].astype(bool)
+    )
 
-        raise ValueError(
-            "Invalid peeling evidence score values."
-        )
-
-    if merged[
-        "mixing_evidence_score"
-    ].isna().any():
-
-        raise ValueError(
-            "Invalid mixing evidence score values."
-        )
+    mixing_candidate = (
+        merged[
+            "mixing_pattern_candidate"
+        ].astype(bool)
+    )
 
     merged[
         "behavioral_evidence_score"
     ] = (
-        0.50
-        * merged[
-            "peeling_evidence_score"
-        ]
-        + 0.50
-        * merged[
-            "mixing_evidence_score"
-        ]
+        PEELING_WEIGHT
+        * peeling_score
+        + MIXING_WEIGHT
+        * mixing_score
     )
 
     merged[
         "behavioral_signal_count"
     ] = (
-        merged[
-            "peeling_chain_candidate"
-        ].astype(int)
-        + merged[
-            "mixing_pattern_candidate"
-        ].astype(int)
+        peeling_candidate.astype(int)
+        + mixing_candidate.astype(int)
     )
 
     merged[
@@ -374,16 +496,12 @@ def build_behavioral_evidence(
         "behavioral_signal_agreement"
     ] = (
         (
-            merged[
-                "peeling_evidence_score"
-            ]
+            peeling_score
             > 0
         )
         &
         (
-            merged[
-                "mixing_evidence_score"
-            ]
+            mixing_score
             > 0
         )
     )
@@ -391,12 +509,8 @@ def build_behavioral_evidence(
     merged[
         "peeling_mixing_interaction"
     ] = (
-        merged[
-            "peeling_evidence_score"
-        ]
-        * merged[
-            "mixing_evidence_score"
-        ]
+        peeling_score
+        * mixing_score
     )
 
     merged[
@@ -407,9 +521,9 @@ def build_behavioral_evidence(
         ],
         bins=[
             -np.inf,
-            0.20,
-            0.50,
-            0.75,
+            EVIDENCE_LOW_MAX,
+            EVIDENCE_MODERATE_MAX,
+            EVIDENCE_HIGH_MAX,
             np.inf,
         ],
         labels=[
@@ -426,11 +540,35 @@ def build_behavioral_evidence(
 
 def validate_output(
     result: pd.DataFrame,
+    expected_txids: set[str],
 ) -> dict:
 
-    if result["txid"].duplicated().any():
+    result_ids = set(
+        result[
+            TXID_COLUMN
+        ].map(normalize_txid)
+    )
+
+    if len(result) != len(
+        expected_txids
+    ):
+        raise ValueError(
+            "Behavioral evidence row count does not "
+            "match expected TXID count."
+        )
+
+    if result[
+        TXID_COLUMN
+    ].duplicated().any():
+
         raise ValueError(
             "Duplicate TXIDs in behavioral evidence."
+        )
+
+    if result_ids != expected_txids:
+        raise ValueError(
+            "Behavioral evidence TXID coverage "
+            "does not match input artifacts."
         )
 
     score_columns = [
@@ -456,11 +594,13 @@ def validate_output(
                 f"Non-finite values in {column}."
             )
 
-    for column in [
+    bounded_score_columns = [
         "peeling_evidence_score",
         "mixing_evidence_score",
         "behavioral_evidence_score",
-    ]:
+    ]
+
+    for column in bounded_score_columns:
 
         values = result[
             column
@@ -477,19 +617,138 @@ def validate_output(
                 f"{column} contains values outside [0,1]."
             )
 
-    signal_count = result[
-        "behavioral_signal_count"
-    ].to_numpy(
-        dtype=int
+    expected_behavioral_score = (
+        PEELING_WEIGHT
+        * result[
+            "peeling_evidence_score"
+        ]
+        + MIXING_WEIGHT
+        * result[
+            "mixing_evidence_score"
+        ]
     )
 
-    if (
-        (signal_count < 0)
-        | (signal_count > 2)
-    ).any():
+    score_matches = np.isclose(
+        result[
+            "behavioral_evidence_score"
+        ].to_numpy(
+            dtype=float
+        ),
+        expected_behavioral_score.to_numpy(
+            dtype=float
+        ),
+        rtol=1e-10,
+        atol=1e-12,
+    )
+
+    if not score_matches.all():
+        raise ValueError(
+            "Behavioral evidence scores are inconsistent "
+            "with the configured channel weights."
+        )
+
+    expected_signal_count = (
+        result[
+            "peeling_chain_candidate"
+        ].astype(int)
+        + result[
+            "mixing_pattern_candidate"
+        ].astype(int)
+    )
+
+    if not (
+        result[
+            "behavioral_signal_count"
+        ].to_numpy(
+            dtype=int
+        )
+        == expected_signal_count.to_numpy(
+            dtype=int
+        )
+    ).all():
 
         raise ValueError(
-            "Invalid behavioral signal count."
+            "Behavioral signal counts are inconsistent "
+            "with the source candidate flags."
+        )
+
+    expected_multiple = (
+        expected_signal_count
+        >= 2
+    )
+
+    if not (
+        result[
+            "multiple_behavioral_signals"
+        ].to_numpy(
+            dtype=bool
+        )
+        == expected_multiple.to_numpy(
+            dtype=bool
+        )
+    ).all():
+
+        raise ValueError(
+            "Multiple-signal flags are inconsistent."
+        )
+
+    expected_agreement = (
+        (
+            result[
+                "peeling_evidence_score"
+            ]
+            > 0
+        )
+        &
+        (
+            result[
+                "mixing_evidence_score"
+            ]
+            > 0
+        )
+    )
+
+    if not (
+        result[
+            "behavioral_signal_agreement"
+        ].to_numpy(
+            dtype=bool
+        )
+        == expected_agreement.to_numpy(
+            dtype=bool
+        )
+    ).all():
+
+        raise ValueError(
+            "Behavioral signal agreement flags "
+            "are inconsistent."
+        )
+
+    expected_interaction = (
+        result[
+            "peeling_evidence_score"
+        ]
+        * result[
+            "mixing_evidence_score"
+        ]
+    )
+
+    if not np.isclose(
+        result[
+            "peeling_mixing_interaction"
+        ].to_numpy(
+            dtype=float
+        ),
+        expected_interaction.to_numpy(
+            dtype=float
+        ),
+        rtol=1e-10,
+        atol=1e-12,
+    ).all():
+
+        raise ValueError(
+            "Peeling/mixing interaction values "
+            "are inconsistent."
         )
 
     time_values = result[
@@ -507,22 +766,38 @@ def validate_output(
             "Invalid time-step values."
         )
 
+    if result[
+        "behavioral_evidence_level"
+    ].isna().any():
+
+        raise ValueError(
+            "Missing behavioral evidence levels."
+        )
+
     return {
         "rows": int(
             len(result)
         ),
         "unique_txids": int(
-            result["txid"].nunique()
+            result[
+                TXID_COLUMN
+            ].nunique()
         ),
         "time_steps": {
             "min": int(
-                result["time_step"].min()
+                result[
+                    "time_step"
+                ].min()
             ),
             "max": int(
-                result["time_step"].max()
+                result[
+                    "time_step"
+                ].max()
             ),
             "unique": int(
-                result["time_step"].nunique()
+                result[
+                    "time_step"
+                ].nunique()
             ),
         },
         "peeling_candidates": int(
@@ -560,7 +835,12 @@ def validate_output(
                 "behavioral_evidence_score"
             ].mean()
         ),
-        "max_behavioral_score": float(
+        "median_behavioral_score": float(
+            result[
+                "behavioral_evidence_score"
+            ].median()
+        ),
+        "maximum_behavioral_score": float(
             result[
                 "behavioral_evidence_score"
             ].max()
@@ -579,15 +859,98 @@ def validate_output(
     }
 
 
+def build_report(
+    validation: dict,
+) -> dict:
+
+    return {
+        "milestone": "M9.3",
+        "status": "PASS",
+        "detector": (
+            "behavioral_evidence_fusion"
+        ),
+        "purpose": (
+            "Combine independently generated peeling-chain "
+            "and mixing-pattern structural evidence into "
+            "a single auditable behavioral evidence layer."
+        ),
+        "source_artifacts": {
+            "peeling": str(
+                PEELING_FILE
+            ),
+            "mixing": str(
+                MIXING_FILE
+            ),
+        },
+        "methodology": {
+            "peeling_weight": float(
+                PEELING_WEIGHT
+            ),
+            "mixing_weight": float(
+                MIXING_WEIGHT
+            ),
+            "combined_score": (
+                "0.50 * peeling evidence + "
+                "0.50 * mixing evidence"
+            ),
+            "independent_channels_preserved": True,
+            "candidate_channels_preserved": True,
+            "interaction_feature": (
+                "peeling evidence multiplied by "
+                "mixing evidence"
+            ),
+            "agreement_definition": (
+                "Both independent evidence scores are "
+                "strictly greater than zero."
+            ),
+            "multiple_signal_definition": (
+                "Both peeling-chain and mixing-pattern "
+                "candidate flags are true."
+            ),
+        },
+        "validation": validation,
+        "interpretation": (
+            "Behavioral evidence is structural investigative "
+            "evidence for downstream prioritization. "
+            "It is not a probability of illicit activity "
+            "and does not establish mixer usage, ownership, "
+            "identity, intent, or guilt."
+        ),
+        "source_limitations": {
+            "peeling": (
+                "The source address relationship data do not "
+                "provide individual address-level BTC amounts. "
+                "Peeling value-reduction evidence therefore "
+                "uses transaction-level output BTC reduction."
+            ),
+            "mixing": (
+                "The source AddrTx and TxAddr edge lists provide "
+                "address/transaction relationships but not "
+                "individual address-level BTC allocations or "
+                "equal-denomination output information."
+            ),
+        },
+        "offline_processing": True,
+        "artifacts": {
+            "behavioral_evidence": str(
+                OUTPUT_FILE
+            ),
+            "report": str(
+                REPORT_FILE
+            ),
+        },
+    }
+
+
 def main() -> None:
 
     print("=" * 72)
-    print("M9.3 BEHAVIORAL EVIDENCE LAYER")
+    print(
+        "M9.3 BEHAVIORAL EVIDENCE FUSION"
+    )
     print("=" * 72)
 
-    peeling, mixing = (
-        load_inputs()
-    )
+    peeling, mixing = load_inputs()
 
     print(
         f"Peeling rows: "
@@ -600,7 +963,7 @@ def main() -> None:
     )
 
     print(
-        "\nValidating input schemas..."
+        "\nValidating source artifacts..."
     )
 
     validate_input(
@@ -619,11 +982,23 @@ def main() -> None:
     )
 
     print(
-        "Input schemas: PASS"
+        "Source schemas: PASS"
     )
 
     print(
-        "\nValidating TXID alignment..."
+        "\nNormalizing and validating TXID alignment..."
+    )
+
+    peeling_ids = set(
+        peeling[
+            TXID_COLUMN
+        ].map(normalize_txid)
+    )
+
+    mixing_ids = set(
+        mixing[
+            TXID_COLUMN
+        ].map(normalize_txid)
     )
 
     validate_alignment(
@@ -632,11 +1007,16 @@ def main() -> None:
     )
 
     print(
+        f"Aligned TXIDs: "
+        f"{len(peeling_ids):,}"
+    )
+
+    print(
         "TXID alignment: PASS"
     )
 
     print(
-        "\nBuilding combined behavioral evidence..."
+        "\nBuilding behavioral evidence fusion..."
     )
 
     result = build_behavioral_evidence(
@@ -644,8 +1024,21 @@ def main() -> None:
         mixing,
     )
 
+    print(
+        "Evidence fusion: PASS"
+    )
+
+    print(
+        "\nRunning internal validation..."
+    )
+
     validation = validate_output(
-        result
+        result,
+        peeling_ids,
+    )
+
+    print(
+        "Output validation: PASS"
     )
 
     OUTPUT_DIR.mkdir(
@@ -663,64 +1056,33 @@ def main() -> None:
         index=False,
     )
 
-    report = {
-        "milestone": "M9.3",
-        "status": "PASS",
-        "purpose": (
-            "Combine independently generated peeling-chain "
-            "and mixing/fan-in-fan-out structural evidence "
-            "into an auditable behavioral evidence layer."
-        ),
-        "source_artifacts": {
-            "peeling": str(
-                PEELING_FILE
-            ),
-            "mixing": str(
-                MIXING_FILE
-            ),
-        },
-        "methodology": {
-            "peeling_weight": 0.50,
-            "mixing_weight": 0.50,
-            "combined_score": (
-                "0.5 * peeling evidence + "
-                "0.5 * mixing evidence"
-            ),
-            "independent_channels_preserved": True,
-            "identity_claim": False,
-            "illicit_activity_claim": False,
-            "interpretation": (
-                "Behavioral signals represent structural "
-                "evidence for downstream risk analysis. "
-                "They do not establish mixer usage, "
-                "illicit activity, ownership, or identity."
-            ),
-        },
-        "validation": validation,
-        "artifacts": {
-            "behavioral_evidence": str(
-                OUTPUT_FILE
-            ),
-            "report": str(
-                REPORT_FILE
-            ),
-        },
-    }
+    report = build_report(
+        validation
+    )
 
     with REPORT_FILE.open(
         "w",
         encoding="utf-8",
-    ) as f:
+    ) as file:
 
         json.dump(
             report,
-            f,
+            file,
             indent=2,
+            allow_nan=False,
         )
 
-    print("\n" + "-" * 72)
-    print("BEHAVIORAL EVIDENCE SUMMARY")
-    print("-" * 72)
+    print(
+        "\n" + "-" * 72
+    )
+
+    print(
+        "BEHAVIORAL EVIDENCE SUMMARY"
+    )
+
+    print(
+        "-" * 72
+    )
 
     print(
         f"Transactions processed: "
@@ -729,7 +1091,7 @@ def main() -> None:
 
     print(
         f"Time-step range: "
-        f"{validation['time_steps']['min']}–"
+        f"{validation['time_steps']['min']}-"
         f"{validation['time_steps']['max']}"
     )
 
@@ -744,7 +1106,7 @@ def main() -> None:
     )
 
     print(
-        f"Transactions with both behavioral signals: "
+        f"Transactions with both candidate signals: "
         f"{validation['multiple_behavioral_signals']:,}"
     )
 
@@ -770,27 +1132,41 @@ def main() -> None:
     )
 
     print(
+        f"Median behavioral evidence: "
+        f"{validation['median_behavioral_score']:.4f}"
+    )
+
+    print(
         f"Maximum behavioral evidence: "
-        f"{validation['max_behavioral_score']:.4f}"
+        f"{validation['maximum_behavioral_score']:.4f}"
     )
 
     print(
         "\nEvidence levels:"
     )
 
-    for level, count in (
-        validation[
-            "evidence_level_distribution"
-        ].items()
-    ):
+    for (
+        level,
+        count,
+    ) in validation[
+        "evidence_level_distribution"
+    ].items():
 
         print(
             f"  {level}: {count:,}"
         )
 
-    print("\n" + "=" * 72)
-    print("M9.3 COMPLETE")
-    print("=" * 72)
+    print(
+        "\n" + "=" * 72
+    )
+
+    print(
+        "M9.3 BEHAVIORAL EVIDENCE FUSION COMPLETE"
+    )
+
+    print(
+        "=" * 72
+    )
 
     print(
         f"Artifact: {OUTPUT_FILE}"

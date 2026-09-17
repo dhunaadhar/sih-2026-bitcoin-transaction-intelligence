@@ -2,6 +2,13 @@
   "milestone": "M9.2",
   "status": "PASS",
   "detector": "mixing_fan_in_fan_out",
+  "hardened": true,
+  "candidate_definition": {
+    "requires_fan_in": true,
+    "requires_fan_out": true,
+    "requires_high_participant_count": true,
+    "requires_balanced_ratio": true
+  },
   "thresholds": {
     "fan_in_threshold": 5,
     "fan_out_threshold": 5,
@@ -19,10 +26,11 @@
     "canonical_both_input_output_overlap": 202804
   },
   "methodology": {
-    "participant_counts": "Unique transaction input/output addresses from AddrTx and TxAddr edge lists.",
-    "txid_normalization": "Numeric TXID representations are normalized so integer and floating-point representations of the same TXID align.",
-    "duplicate_handling": "Duplicate source relationships are deduplicated before counting.",
-    "amount_limitation": "The source edge lists do not provide individual address-level BTC amounts. Therefore the detector does not infer address-level value allocation."
+    "participant_counts": "Unique transaction input/output addresses from AddrTx and TxAddr edge lists after duplicate removal.",
+    "candidate_logic": "A mixing-pattern candidate must simultaneously satisfy fan-in, fan-out, high participant count, and balanced input/output ratio conditions.",
+    "evidence_score": "Structural evidence score in [0,1]. It is an evidence-strength measure and not a probability of illicit activity.",
+    "txid_normalization": "Integer and floating-point representations of equivalent TXIDs are normalized.",
+    "amount_limitation": "The source edge lists do not provide individual address-level BTC amounts. Therefore no address-level value allocation is inferred."
   },
   "validation": {
     "rows": 203769,
@@ -34,12 +42,12 @@
     "extreme_participant_count": 5254,
     "mixing_candidate_count": 1497,
     "mixing_candidate_rate": 0.007346554186358082,
-    "mean_evidence_score": 0.21568295471833304,
+    "mean_evidence_score": 0.21977337082676954,
     "max_evidence_score": 1.0
   },
   "artifacts": {
     "indicators": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\mixing_pattern_indicators.parquet",
     "report": "D:\\Hackathons\\SIH 2026\\final\\reports\\behavior\\m9_2_mixing_patterns.json"
   },
-  "interpretation_note": "Fan-in/fan-out structure can be compatible with mixing-like transaction behavior, but structure alone does not establish the use of a mixer or illicit activity."
+  "interpretation_note": "Fan-in/fan-out structure can be compatible with mixing-like transaction behavior, but structural evidence alone does not establish mixer usage, illicit activity, ownership, identity, intent, or guilt."
 }

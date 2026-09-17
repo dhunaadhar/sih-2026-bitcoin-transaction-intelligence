@@ -2,27 +2,70 @@
   "milestone": "M9.1",
   "status": "PASS",
   "detector": "peeling_chain",
+  "hardening": {
+    "enabled": true,
+    "minimum_chain_length": 3,
+    "maximum_chain_length": 10,
+    "strict_causal_ordering": true,
+    "same_time_step_excluded": true,
+    "future_activity_excluded": true,
+    "historical_window_steps": 10,
+    "every_chain_edge_requires_valid_value_reduction": true
+  },
   "methodology": {
-    "min_chain_length": 3,
-    "max_history_steps": 10,
     "min_value_reduction_ratio": 0.05,
     "max_value_reduction_ratio": 0.95,
-    "causal_rule": "Only address activity from time_step < current transaction time_step is used.",
-    "address_amount_limitation": "Source address edge lists contain identifiers but no individual address-level BTC amounts. Value reduction therefore uses transaction-level output BTC totals."
+    "chain_definition": "A chain candidate requires at least MIN_CHAIN_LENGTH sequential transactions connected through reused output-to-input addresses. Every chain edge must be strictly historical and satisfy the configured transaction-level value reduction range.",
+    "chain_selection": "Longest causal chain is selected deterministically, with TXID ordering used as the tie-breaker.",
+    "value_semantics": "Value reduction uses transaction-level output BTC totals because the supplied AddrTx and TxAddr edge lists do not provide address-level BTC amounts."
+  },
+  "runtime": {
+    "history_build_seconds": 4.090614100015955,
+    "relationship_build_seconds": 15.601838100003079,
+    "chain_reconstruction_seconds": 234.05825470000855,
+    "total_seconds": 254.76678689999972,
+    "predecessor_edge_count": 1069577,
+    "overall_seconds": 264.5551456999965
   },
   "validation": {
     "rows": 203769,
     "unique_txids": 203769,
-    "candidate_count": 19232,
-    "candidate_rate": 0.09438138284037317,
     "direct_continuation_count": 28608,
     "gradual_reduction_count": 19232,
-    "max_evidence_score": 0.9999999999999999,
-    "mean_evidence_score": 0.08930308339345042
+    "valid_chain_count": 12018,
+    "candidate_count": 12018,
+    "candidate_rate": 0.05897854923958011,
+    "minimum_chain_length": 1,
+    "maximum_chain_length": 10,
+    "mean_chain_length": 1.3486153438452366,
+    "maximum_evidence_score": 1.0,
+    "mean_evidence_score": 0.08267253605798724
+  },
+  "chain_length_distribution": {
+    "1": 184537,
+    "2": 7214,
+    "3": 2824,
+    "4": 1569,
+    "5": 1409,
+    "6": 940,
+    "7": 733,
+    "8": 752,
+    "9": 649,
+    "10": 3142
+  },
+  "candidate_chain_length_distribution": {
+    "3": 2824,
+    "4": 1569,
+    "5": 1409,
+    "6": 940,
+    "7": 733,
+    "8": 752,
+    "9": 649,
+    "10": 3142
   },
   "artifacts": {
     "indicators": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\peeling_chain_indicators.parquet",
     "report": "D:\\Hackathons\\SIH 2026\\final\\reports\\behavior\\m9_1_peeling_chain.json"
   },
-  "interpretation_note": "A peeling-chain candidate is behavioral evidence of a possible sequential value-transfer pattern. It is not proof of mixing, illicit activity, ownership, identity, or guilt."
+  "interpretation_note": "A peeling-chain candidate is behavioral evidence of a possible sequential value-transfer pattern. It is not proof of mixing, illicit activity, ownership, identity, intent, or guilt."
 }

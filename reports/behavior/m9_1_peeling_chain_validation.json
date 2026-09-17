@@ -1,0 +1,40 @@
+{
+  "milestone": "M9.1",
+  "validation": "final_causal_chain_validation",
+  "status": "PASS",
+  "checks": {
+    "candidate_count_matches_valid": true,
+    "minimum_chain_length": true,
+    "candidate_length_consistency": true,
+    "txid_sequence_valid": true,
+    "txid_coverage_valid": true,
+    "strict_temporal_order": true,
+    "history_window_valid": true,
+    "address_continuity": true,
+    "edge_reduction_valid": true,
+    "stored_temporal_span_valid": true,
+    "stored_total_reduction_valid": true
+  },
+  "candidate_count": 12018,
+  "maximum_chain_length": 10,
+  "chain_length_distribution": {
+    "3": 2824,
+    "4": 1569,
+    "5": 1409,
+    "6": 940,
+    "7": 733,
+    "8": 752,
+    "9": 649,
+    "10": 3142
+  },
+  "failure_count": 0,
+  "failures": [],
+  "failure_output_truncated": false,
+  "parameters": {
+    "minimum_chain_length": 3,
+    "maximum_history_steps": 10,
+    "minimum_edge_reduction": 0.05,
+    "maximum_edge_reduction": 0.95
+  },
+  "interpretation": "Validation establishes structural and causal consistency of reconstructed peeling chains. The result does not establish illicit activity, identity, ownership, intent, or guilt."
+}
