@@ -1,0 +1,45 @@
+{
+  "milestone": "M9.2",
+  "status": "PASS",
+  "detector": "mixing_fan_in_fan_out",
+  "thresholds": {
+    "fan_in_threshold": 5,
+    "fan_out_threshold": 5,
+    "high_participant_threshold": 10,
+    "extreme_participant_threshold": 25,
+    "balanced_ratio_min": 0.4,
+    "balanced_ratio_max": 2.5
+  },
+  "txid_alignment": {
+    "canonical_unique_txids": 203769,
+    "addr_tx_unique_txids": 202804,
+    "tx_addr_unique_txids": 202804,
+    "canonical_input_overlap": 202804,
+    "canonical_output_overlap": 202804,
+    "canonical_both_input_output_overlap": 202804
+  },
+  "methodology": {
+    "participant_counts": "Unique transaction input/output addresses from AddrTx and TxAddr edge lists.",
+    "txid_normalization": "Numeric TXID representations are normalized so integer and floating-point representations of the same TXID align.",
+    "duplicate_handling": "Duplicate source relationships are deduplicated before counting.",
+    "amount_limitation": "The source edge lists do not provide individual address-level BTC amounts. Therefore the detector does not infer address-level value allocation."
+  },
+  "validation": {
+    "rows": 203769,
+    "unique_txids": 203769,
+    "fan_in_count": 11058,
+    "fan_out_count": 13805,
+    "balanced_fan_pattern_count": 1497,
+    "high_participant_count": 15328,
+    "extreme_participant_count": 5254,
+    "mixing_candidate_count": 1497,
+    "mixing_candidate_rate": 0.007346554186358082,
+    "mean_evidence_score": 0.21568295471833304,
+    "max_evidence_score": 1.0
+  },
+  "artifacts": {
+    "indicators": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\mixing_pattern_indicators.parquet",
+    "report": "D:\\Hackathons\\SIH 2026\\final\\reports\\behavior\\m9_2_mixing_patterns.json"
+  },
+  "interpretation_note": "Fan-in/fan-out structure can be compatible with mixing-like transaction behavior, but structure alone does not establish the use of a mixer or illicit activity."
+}
