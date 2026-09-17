@@ -14,12 +14,11 @@
   "transformed_model_features": 124,
   "top_features_per_transaction": 10,
   "predicted_class_distribution": {
-    "2": 998,
-    "3": 2
+    "2": 1000
   },
-  "mean_absolute_shap_contribution": 5.8282906535190975,
-  "mean_positive_shap_contribution": 5.089686877549244,
-  "mean_negative_shap_contribution": -0.7386037759698534,
+  "mean_absolute_shap_contribution": 5.98473323556727,
+  "mean_positive_shap_contribution": 5.267619275749541,
+  "mean_negative_shap_contribution": -0.7171139598177296,
   "validation": {
     "row_count_match": true,
     "unique_txids": true,

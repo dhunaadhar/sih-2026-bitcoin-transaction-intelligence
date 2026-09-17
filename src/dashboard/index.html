@@ -1,0 +1,2108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Offline AI-powered Bitcoin transaction monitoring, anomaly detection, behavioral analysis and graph investigation platform."
+    >
+
+    <title>
+        Bitcoin Transaction Intelligence
+    </title>
+
+
+    <!-- =========================================================
+         BASE DASHBOARD STYLES
+         ========================================================= -->
+
+    <link
+        rel="stylesheet"
+        href="/dashboard/styles.css"
+    >
+
+
+    <!-- =========================================================
+         LAYOUT OVERRIDE
+         ========================================================= -->
+
+    <link
+        rel="stylesheet"
+        href="/dashboard/layout-fix.css"
+    >
+
+</head>
+
+
+<body>
+
+<div class="app-shell">
+
+
+    <!-- =========================================================
+         TOP BAR
+         ========================================================= -->
+
+    <header class="topbar">
+
+        <div class="brand-block">
+
+            <div class="eyebrow">
+                OFFLINE INVESTIGATION PLATFORM
+            </div>
+
+            <h1>
+                Bitcoin Transaction Intelligence
+            </h1>
+
+            <p class="subtitle">
+                AI-powered monitoring, anomaly detection,
+                behavioral analysis and graph investigation
+            </p>
+
+        </div>
+
+
+        <div class="system-status">
+
+            <span
+                id="status-indicator"
+                class="status-dot"
+            ></span>
+
+            <div>
+
+                <div class="status-label">
+                    SYSTEM STATUS
+                </div>
+
+                <div id="status-text">
+                    Checking...
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================================
+         PRIMARY NAVIGATION
+         ========================================================= -->
+
+    <nav
+        id="main-navigation"
+        class="main-navigation"
+        aria-label="Primary navigation"
+    >
+
+        <button
+            class="nav-button active"
+            data-section="overview-section"
+        >
+            Overview
+        </button>
+
+
+        <button
+            class="nav-button"
+            data-section="alerts-section"
+        >
+            Alerts
+        </button>
+
+
+        <button
+            class="nav-button"
+            data-section="investigate-section"
+        >
+            Investigate
+        </button>
+
+
+        <button
+            class="nav-button"
+            data-section="graph-section"
+        >
+            Graph
+        </button>
+
+
+        <button
+            class="nav-button"
+            data-section="network-section"
+        >
+            Network
+        </button>
+
+
+        <button
+            class="nav-button"
+            data-section="import-section"
+        >
+            Import
+        </button>
+
+
+        <button
+            class="nav-button"
+            data-section="reports-section"
+        >
+            Reports
+        </button>
+
+
+        <button
+            class="nav-button"
+            data-section="system-section"
+        >
+            System
+        </button>
+
+
+        <!-- Wallet / Address is added by wallet.js -->
+
+    </nav>
+
+
+    <!-- =========================================================
+         MAIN APPLICATION AREA
+         ========================================================= -->
+
+    <main>
+
+
+        <!-- =====================================================
+             OVERVIEW
+             ===================================================== -->
+
+        <section
+            id="overview-section"
+            class="application-section active-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        SYSTEM OVERVIEW
+                    </div>
+
+                    <h2>
+                        Investigation Summary
+                    </h2>
+
+                </div>
+
+
+                <div class="offline-badge">
+                    OFFLINE MODE
+                </div>
+
+            </div>
+
+
+            <div
+                id="summary-cards"
+                class="metric-grid"
+            >
+
+                <article class="metric-card">
+
+                    <div class="metric-label">
+                        Transactions
+                    </div>
+
+                    <div
+                        id="metric-transactions"
+                        class="metric-value"
+                    >
+                        —
+                    </div>
+
+                    <div class="metric-detail">
+                        Unique transaction records
+                    </div>
+
+                </article>
+
+
+                <article class="metric-card">
+
+                    <div class="metric-label">
+                        Active Alerts
+                    </div>
+
+                    <div
+                        id="metric-active"
+                        class="metric-value"
+                    >
+                        —
+                    </div>
+
+                    <div class="metric-detail">
+                        Current investigative queue
+                    </div>
+
+                </article>
+
+
+                <article class="metric-card">
+
+                    <div class="metric-label">
+                        Very High Risk
+                    </div>
+
+                    <div
+                        id="metric-very-high"
+                        class="metric-value"
+                    >
+                        —
+                    </div>
+
+                    <div class="metric-detail">
+                        Highest priority observations
+                    </div>
+
+                </article>
+
+
+                <article class="metric-card">
+
+                    <div class="metric-label">
+                        Mean Risk
+                    </div>
+
+                    <div
+                        id="metric-mean-risk"
+                        class="metric-value"
+                    >
+                        —
+                    </div>
+
+                    <div class="metric-detail">
+                        Unified investigative score
+                    </div>
+
+                </article>
+
+
+                <article class="metric-card">
+
+                    <div class="metric-label">
+                        Top Queue
+                    </div>
+
+                    <div
+                        id="metric-top-queue"
+                        class="metric-value"
+                    >
+                        —
+                    </div>
+
+                    <div class="metric-detail">
+                        Ranked transactions available
+                    </div>
+
+                </article>
+
+
+                <article class="metric-card">
+
+                    <div class="metric-label">
+                        Evidence Channels
+                    </div>
+
+                    <div
+                        id="metric-channels"
+                        class="metric-value"
+                    >
+                        —
+                    </div>
+
+                    <div class="metric-detail">
+                        Mean active channels
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <!-- =================================================
+                 TEMPORAL INTELLIGENCE
+                 ================================================= -->
+
+            <div
+                class="section-heading subsection-heading"
+            >
+
+                <div>
+
+                    <div class="section-kicker">
+                        TEMPORAL INTELLIGENCE
+                    </div>
+
+                    <h2>
+                        Risk Across Time
+                    </h2>
+
+                </div>
+
+
+                <div class="time-controls">
+
+                    <label>
+                        From
+
+                        <select id="time-start">
+
+                            <option value="1">
+                                1
+                            </option>
+
+                        </select>
+
+                    </label>
+
+
+                    <label>
+                        To
+
+                        <select id="time-end">
+
+                            <option value="49">
+                                49
+                            </option>
+
+                        </select>
+
+                    </label>
+
+
+                    <button
+                        id="refresh-temporal"
+                        class="button secondary"
+                    >
+                        Refresh
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div class="chart-panel">
+
+                <div
+                    id="temporal-chart"
+                    class="temporal-chart"
+                >
+
+                    <div class="loading">
+                        Loading temporal intelligence...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+                 ================================================= -->
+
+            <div
+                class="section-heading subsection-heading"
+            >
+
+                <div>
+
+                    <div class="section-kicker">
+                        INVESTIGATOR WORKFLOW
+                    </div>
+
+                    <h2>
+                        Quick Actions
+                    </h2>
+
+                </div>
+
+            </div>
+
+
+            <div class="quick-action-grid">
+
+
+                <button
+                    class="quick-action-card"
+                    data-section="alerts-section"
+                >
+
+                    <span class="quick-action-title">
+                        Ranked Alerts
+                    </span>
+
+                    <span class="quick-action-description">
+                        Review the prioritized investigation queue.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action-card"
+                    data-section="investigate-section"
+                >
+
+                    <span class="quick-action-title">
+                        Investigate TXID
+                    </span>
+
+                    <span class="quick-action-description">
+                        Inspect unified risk and supporting evidence.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action-card"
+                    data-section="graph-section"
+                >
+
+                    <span class="quick-action-title">
+                        Graph Investigation
+                    </span>
+
+                    <span class="quick-action-description">
+                        Explore transaction, wallet and network relationships.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action-card"
+                    data-section="import-section"
+                >
+
+                    <span class="quick-action-title">
+                        Import Evidence
+                    </span>
+
+                    <span class="quick-action-description">
+                        Validate CSV, JSON or XML investigator data.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action-card"
+                    data-section="reports-section"
+                >
+
+                    <span class="quick-action-title">
+                        Generate Report
+                    </span>
+
+                    <span class="quick-action-description">
+                        Create a local investigation report from selected evidence.
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="quick-action-card"
+                    data-section="system-section"
+                >
+
+                    <span class="quick-action-title">
+                        System Health
+                    </span>
+
+                    <span class="quick-action-description">
+                        Inspect application and artifact availability.
+                    </span>
+
+                </button>
+
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             ALERTS
+             ===================================================== -->
+
+        <section
+            id="alerts-section"
+            class="application-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        ALERT INTELLIGENCE
+                    </div>
+
+                    <h2>
+                        Ranked Investigation Queue
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="alert-total"
+                    class="record-count"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="filter-bar">
+
+
+                <label>
+
+                    Priority
+
+                    <select id="priority-filter">
+
+                        <option value="">
+                            All priorities
+                        </option>
+
+                        <option value="VERY_HIGH">
+                            VERY HIGH
+                        </option>
+
+                        <option value="HIGH">
+                            HIGH
+                        </option>
+
+                        <option value="MODERATE">
+                            MODERATE
+                        </option>
+
+                        <option value="GUARDED">
+                            GUARDED
+                        </option>
+
+                        <option value="LOW">
+                            LOW
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <label>
+
+                    Status
+
+                    <select id="status-filter">
+
+                        <option value="">
+                            All statuses
+                        </option>
+
+                        <option value="ACTIVE">
+                            ACTIVE
+                        </option>
+
+                        <option value="WATCH">
+                            WATCH
+                        </option>
+
+                        <option value="INFORMATIONAL">
+                            INFORMATIONAL
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <label>
+
+                    Time step
+
+                    <select id="time-filter">
+
+                        <option value="">
+                            All time steps
+                        </option>
+
+                    </select>
+
+                </label>
+
+
+                <label>
+
+                    Minimum risk
+
+                    <input
+                        id="min-risk"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        placeholder="0"
+                    >
+
+                </label>
+
+
+                <label>
+
+                    Maximum risk
+
+                    <input
+                        id="max-risk"
+                        type="number"
+                        min="0"
+                        max="100"
+                        step="0.1"
+                        placeholder="100"
+                    >
+
+                </label>
+
+
+                <button
+                    id="apply-filters"
+                    class="button primary"
+                >
+                    Apply
+                </button>
+
+            </div>
+
+
+            <div class="table-panel">
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Rank
+                                </th>
+
+                                <th>
+                                    TXID
+                                </th>
+
+                                <th>
+                                    Time
+                                </th>
+
+                                <th>
+                                    Risk
+                                </th>
+
+                                <th>
+                                    Priority
+                                </th>
+
+                                <th>
+                                    ML
+                                </th>
+
+                                <th>
+                                    Anomaly
+                                </th>
+
+                                <th>
+                                    Behavior
+                                </th>
+
+                                <th>
+                                    Entity
+                                </th>
+
+                                <th>
+                                    Network
+                                </th>
+
+                                <th>
+                                    Channels
+                                </th>
+
+                                <th>
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="alerts-body">
+
+                            <tr>
+
+                                <td
+                                    colspan="12"
+                                    class="loading"
+                                >
+                                    Loading alerts...
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="pagination">
+
+                    <button
+                        id="previous-page"
+                        class="button secondary"
+                    >
+                        Previous
+                    </button>
+
+
+                    <span id="page-information">
+                        Page —
+                    </span>
+
+
+                    <button
+                        id="next-page"
+                        class="button secondary"
+                    >
+                        Next
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             TRANSACTION INVESTIGATION
+             ===================================================== -->
+
+        <section
+            id="investigate-section"
+            class="application-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        TRANSACTION INVESTIGATION
+                    </div>
+
+                    <h2>
+                        Evidence Profile
+                    </h2>
+
+                </div>
+
+
+                <div
+                    id="selected-txid"
+                    class="selected-id"
+                >
+                    No transaction selected
+                </div>
+
+            </div>
+
+
+            <div class="investigator-search panel-card">
+
+                <div class="panel-title">
+                    Transaction Lookup
+                </div>
+
+
+                <div class="search-row">
+
+                    <input
+                        id="txid-search"
+                        type="text"
+                        placeholder="Enter Bitcoin transaction ID"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+
+
+                    <button
+                        id="search-txid"
+                        class="button primary"
+                    >
+                        Investigate
+                    </button>
+
+
+                    <button
+                        id="clear-investigation"
+                        class="button secondary"
+                    >
+                        Clear
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="txid-search-message"
+                    class="form-message"
+                ></div>
+
+            </div>
+
+
+            <div
+                id="investigation-empty"
+                class="empty-panel"
+            >
+                Select a transaction from the ranked queue
+                or enter a TXID above to open its investigation profile.
+            </div>
+
+
+            <div
+                id="investigation-panel"
+                class="investigation-grid hidden"
+            >
+
+                <div class="investigation-main">
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-title">
+                            Risk Assessment
+                        </div>
+
+
+                        <div
+                            id="investigation-risk"
+                            class="investigation-risk"
+                        >
+                            —
+                        </div>
+
+
+                        <div
+                            id="investigation-explanation"
+                            class="explanation"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-title">
+                            Evidence Channels
+                        </div>
+
+
+                        <div
+                            id="evidence-bars"
+                            class="evidence-bars"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-title">
+                            Model Assessment
+                        </div>
+
+
+                        <div
+                            id="model-details"
+                            class="detail-grid"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-title">
+                            Behavioral Evidence
+                        </div>
+
+
+                        <div
+                            id="behavior-details"
+                            class="detail-grid"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <aside class="investigation-side">
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-title">
+                            Transaction
+                        </div>
+
+
+                        <div
+                            id="transaction-details"
+                            class="detail-list"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-title">
+                            Network Evidence
+                        </div>
+
+
+                        <div
+                            id="network-details"
+                            class="detail-list"
+                        ></div>
+
+                    </div>
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-title">
+                            SHAP Explanation
+                        </div>
+
+
+                        <div
+                            id="shap-details"
+                            class="shap-list"
+                        >
+                            No SHAP explanation loaded.
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel-card">
+
+                        <div class="panel-title">
+                            Report
+                        </div>
+
+
+                        <p class="panel-description">
+                            Generate a local investigation report
+                            using the currently selected transaction.
+                        </p>
+
+
+                        <button
+                            id="generate-selected-report"
+                            class="button primary full-width"
+                        >
+                            Generate Investigation Report
+                        </button>
+
+                    </div>
+
+
+                </aside>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             GRAPH
+             ===================================================== -->
+
+        <section
+            id="graph-section"
+            class="application-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        GRAPH INTELLIGENCE
+                    </div>
+
+                    <h2>
+                        Unified Investigation Graph
+                    </h2>
+
+                </div>
+
+
+                <div class="graph-legend">
+                    TXID → Wallet → IP
+                </div>
+
+            </div>
+
+
+            <div class="graph-search panel-card">
+
+                <div class="panel-title">
+                    Graph Lookup
+                </div>
+
+
+                <div class="search-row">
+
+                    <input
+                        id="graph-txid-search"
+                        type="text"
+                        placeholder="Enter TXID"
+                        autocomplete="off"
+                        spellcheck="false"
+                    >
+
+
+                    <button
+                        id="search-graph"
+                        class="button primary"
+                    >
+                        Explore Graph
+                    </button>
+
+                </div>
+
+
+                <div
+                    id="graph-search-message"
+                    class="form-message"
+                ></div>
+
+            </div>
+
+
+            <div
+                id="graph-empty"
+                class="empty-panel"
+            >
+                Select a transaction or enter a TXID
+                to inspect its graph neighborhood.
+            </div>
+
+
+            <div
+                id="graph-panel"
+                class="graph-panel hidden"
+            >
+
+                <div
+                    id="graph-summary"
+                    class="graph-summary"
+                ></div>
+
+
+                <div class="graph-workspace">
+
+
+                    <div class="panel-card graph-visual-card">
+
+                        <div class="panel-title">
+                            Relationship View
+                        </div>
+
+
+                        <div
+                            id="graph-visualization"
+                            class="graph-visualization"
+                        >
+                            Graph visualization will be rendered here.
+                        </div>
+
+                    </div>
+
+
+                    <div class="panel-card graph-node-card">
+
+                        <div class="panel-title">
+                            Connected Nodes
+                        </div>
+
+
+                        <div
+                            id="graph-nodes"
+                            class="graph-nodes"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             NETWORK
+             ===================================================== -->
+
+        <section
+            id="network-section"
+            class="application-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        NETWORK INTELLIGENCE
+                    </div>
+
+                    <h2>
+                        Network Evidence
+                    </h2>
+
+                </div>
+
+
+                <div class="offline-badge">
+                    OFFLINE FEEDS
+                </div>
+
+            </div>
+
+
+            <div class="network-overview-grid">
+
+
+                <article class="panel-card">
+
+                    <div class="panel-title">
+                        Network Observations
+                    </div>
+
+
+                    <div
+                        id="network-observation-count"
+                        class="large-stat"
+                    >
+                        —
+                    </div>
+
+
+                    <div class="metric-detail">
+                        Correlated network observations
+                    </div>
+
+                </article>
+
+
+                <article class="panel-card">
+
+                    <div class="panel-title">
+                        VPN Indicators
+                    </div>
+
+
+                    <div
+                        id="network-vpn-count"
+                        class="large-stat"
+                    >
+                        —
+                    </div>
+
+
+                    <div class="metric-detail">
+                        Offline intelligence matches
+                    </div>
+
+                </article>
+
+
+                <article class="panel-card">
+
+                    <div class="panel-title">
+                        Proxy Indicators
+                    </div>
+
+
+                    <div
+                        id="network-proxy-count"
+                        class="large-stat"
+                    >
+                        —
+                    </div>
+
+
+                    <div class="metric-detail">
+                        Offline intelligence matches
+                    </div>
+
+                </article>
+
+
+                <article class="panel-card">
+
+                    <div class="panel-title">
+                        Tor Exit Indicators
+                    </div>
+
+
+                    <div
+                        id="network-tor-count"
+                        class="large-stat"
+                    >
+                        —
+                    </div>
+
+
+                    <div class="metric-detail">
+                        Offline intelligence matches
+                    </div>
+
+                </article>
+
+
+                <article class="panel-card">
+
+                    <div class="panel-title">
+                        Hosting Indicators
+                    </div>
+
+
+                    <div
+                        id="network-hosting-count"
+                        class="large-stat"
+                    >
+                        —
+                    </div>
+
+
+                    <div class="metric-detail">
+                        Offline intelligence matches
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <div class="panel-card">
+
+                <div class="panel-title">
+                    Network Intelligence Workflow
+                </div>
+
+
+                <div class="workflow-list">
+
+
+                    <div class="workflow-step">
+
+                        <span class="workflow-number">
+                            01
+                        </span>
+
+                        <span>
+                            Ingest structured network observations.
+                        </span>
+
+                    </div>
+
+
+                    <div class="workflow-step">
+
+                        <span class="workflow-number">
+                            02
+                        </span>
+
+                        <span>
+                            Correlate observations with blockchain transactions.
+                        </span>
+
+                    </div>
+
+
+                    <div class="workflow-step">
+
+                        <span class="workflow-number">
+                            03
+                        </span>
+
+                        <span>
+                            Apply available offline VPN/proxy/Tor/hosting intelligence.
+                        </span>
+
+                    </div>
+
+
+                    <div class="workflow-step">
+
+                        <span class="workflow-number">
+                            04
+                        </span>
+
+                        <span>
+                            Feed supported network evidence into investigation prioritization.
+                        </span>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="notice">
+
+                <div class="notice-title">
+                    Network intelligence limitation
+                </div>
+
+
+                <p>
+                    VPN, proxy, Tor and hosting classifications are
+                    interpreted as network evidence. They do not establish
+                    the identity or ownership of a blockchain participant.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             IMPORT
+             ===================================================== -->
+
+        <section
+            id="import-section"
+            class="application-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        INVESTIGATOR DATA
+                    </div>
+
+                    <h2>
+                        Import Evidence
+                    </h2>
+
+                </div>
+
+
+                <div class="offline-badge">
+                    LOCAL PROCESSING
+                </div>
+
+            </div>
+
+
+            <div class="import-grid">
+
+
+                <div class="panel-card">
+
+                    <div class="panel-title">
+                        Dataset Import
+                    </div>
+
+
+                    <p class="panel-description">
+                        Import investigator-provided CSV, JSON or XML
+                        evidence through the M3.5 validation pipeline.
+                    </p>
+
+
+                    <div class="form-stack">
+
+
+                        <label>
+
+                            Data type
+
+                            <select id="import-data-type">
+
+                                <option value="BLOCKCHAIN_TRANSACTION">
+                                    Blockchain Transaction
+                                </option>
+
+                                <option value="NETWORK_OBSERVATION">
+                                    Network Observation
+                                </option>
+
+                                <option value="IP_INTELLIGENCE">
+                                    IP Intelligence
+                                </option>
+
+                            </select>
+
+                        </label>
+
+
+                        <label>
+
+                            Evidence file
+
+                            <input
+                                id="import-file"
+                                type="file"
+                                accept=".csv,.json,.xml"
+                            >
+
+                        </label>
+
+
+                        <div
+                            id="import-file-info"
+                            class="file-info"
+                        >
+                            No file selected.
+                        </div>
+
+
+                        <button
+                            id="import-submit"
+                            class="button primary"
+                        >
+                            Validate and Import
+                        </button>
+
+
+                        <div
+                            id="import-message"
+                            class="form-message"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel-card">
+
+                    <div class="panel-title">
+                        Import Result
+                    </div>
+
+
+                    <div
+                        id="import-result"
+                        class="import-result"
+                    >
+
+                        <div class="empty-panel compact">
+                            Import a dataset to view validation,
+                            deduplication and provenance results.
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="notice">
+
+                <div class="notice-title">
+                    Dataset isolation
+                </div>
+
+
+                <p>
+                    Investigator imports are stored as case-specific
+                    artifacts and do not silently modify the validated
+                    canonical SIH benchmark dataset or production model.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             REPORTS
+             ===================================================== -->
+
+        <section
+            id="reports-section"
+            class="application-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        INVESTIGATION OUTPUT
+                    </div>
+
+                    <h2>
+                        Reports
+                    </h2>
+
+                </div>
+
+
+                <div class="offline-badge">
+                    LOCAL EXPORT
+                </div>
+
+            </div>
+
+
+            <div class="report-grid">
+
+
+                <div class="panel-card">
+
+                    <div class="panel-title">
+                        Generate Investigation Report
+                    </div>
+
+
+                    <p class="panel-description">
+                        Select a transaction and generate a structured
+                        local report containing its investigative evidence.
+                    </p>
+
+
+                    <div class="form-stack">
+
+
+                        <label>
+
+                            Transaction ID
+
+                            <input
+                                id="report-txid"
+                                type="text"
+                                placeholder="Enter TXID"
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+
+                        </label>
+
+
+                        <button
+                            id="generate-report"
+                            class="button primary"
+                        >
+                            Generate Report
+                        </button>
+
+
+                        <div
+                            id="report-message"
+                            class="form-message"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel-card">
+
+                    <div class="panel-title">
+                        Report Contents
+                    </div>
+
+
+                    <div class="report-contents">
+
+
+                        <div class="report-item">
+                            Risk assessment
+                        </div>
+
+
+                        <div class="report-item">
+                            Model confidence
+                        </div>
+
+
+                        <div class="report-item">
+                            Anomaly evidence
+                        </div>
+
+
+                        <div class="report-item">
+                            Behavioral evidence
+                        </div>
+
+
+                        <div class="report-item">
+                            Entity / graph evidence
+                        </div>
+
+
+                        <div class="report-item">
+                            Network evidence
+                        </div>
+
+
+                        <div class="report-item">
+                            SHAP explanation
+                        </div>
+
+
+                        <div class="report-item">
+                            Data provenance and limitations
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div
+                id="report-result"
+                class="panel-card report-result"
+            >
+
+                <div class="panel-title">
+                    Generated Report
+                </div>
+
+
+                <div class="empty-panel compact">
+                    No report generated in this session.
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SYSTEM
+             ===================================================== -->
+
+        <section
+            id="system-section"
+            class="application-section"
+        >
+
+            <div class="section-heading">
+
+                <div>
+
+                    <div class="section-kicker">
+                        SYSTEM MONITORING
+                    </div>
+
+                    <h2>
+                        System Health
+                    </h2>
+
+                </div>
+
+
+                <button
+                    id="refresh-health"
+                    class="button secondary"
+                >
+                    Refresh Health
+                </button>
+
+            </div>
+
+
+            <div
+                id="health-overview"
+                class="health-grid"
+            >
+
+
+                <article class="health-card">
+
+                    <div class="health-card-title">
+                        API
+                    </div>
+
+                    <div
+                        id="health-api"
+                        class="health-card-status"
+                    >
+                        Checking...
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-card-title">
+                        Ranked Alerts
+                    </div>
+
+                    <div
+                        id="health-ranked-alerts"
+                        class="health-card-status"
+                    >
+                        Checking...
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-card-title">
+                        Risk Scores
+                    </div>
+
+                    <div
+                        id="health-risk-scores"
+                        class="health-card-status"
+                    >
+                        Checking...
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-card-title">
+                        Temporal Features
+                    </div>
+
+                    <div
+                        id="health-temporal"
+                        class="health-card-status"
+                    >
+                        Checking...
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-card-title">
+                        SHAP
+                    </div>
+
+                    <div
+                        id="health-shap"
+                        class="health-card-status"
+                    >
+                        Checking...
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-card-title">
+                        Investigation Graph
+                    </div>
+
+                    <div
+                        id="health-graph"
+                        class="health-card-status"
+                    >
+                        Checking...
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-card-title">
+                        Dashboard
+                    </div>
+
+                    <div
+                        id="health-dashboard"
+                        class="health-card-status"
+                    >
+                        Checking...
+                    </div>
+
+                </article>
+
+
+                <article class="health-card">
+
+                    <div class="health-card-title">
+                        Import Engine
+                    </div>
+
+                    <div
+                        id="health-import"
+                        class="health-card-status"
+                    >
+                        Checking...
+                    </div>
+
+                </article>
+
+
+            </div>
+
+
+            <div class="panel-card">
+
+                <div class="panel-title">
+                    Platform Configuration
+                </div>
+
+
+                <div
+                    id="system-configuration"
+                    class="detail-grid"
+                >
+
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            Operating mode
+                        </div>
+
+                        <div class="detail-value">
+                            Offline
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            API version
+                        </div>
+
+                        <div
+                            id="system-version"
+                            class="detail-value"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            Supported formats
+                        </div>
+
+                        <div
+                            id="system-formats"
+                            class="detail-value"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            Maximum import size
+                        </div>
+
+                        <div
+                            id="system-import-size"
+                            class="detail-value"
+                        >
+                            —
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+
+            <div class="panel-card">
+
+                <div class="panel-title">
+                    Methodology
+                </div>
+
+
+                <div class="methodology-list">
+
+
+                    <div class="methodology-item">
+                        <strong>M7</strong>
+                        Production XGBoost classification
+                    </div>
+
+
+                    <div class="methodology-item">
+                        <strong>M8</strong>
+                        Isolation Forest anomaly detection
+                    </div>
+
+
+                    <div class="methodology-item">
+                        <strong>M9</strong>
+                        Peeling-chain and mixing behavioral intelligence
+                    </div>
+
+
+                    <div class="methodology-item">
+                        <strong>M10</strong>
+                        Network intelligence and SHAP explainability
+                    </div>
+
+
+                    <div class="methodology-item">
+                        <strong>M11</strong>
+                        Unified risk scoring and ranked alerts
+                    </div>
+
+
+                    <div class="methodology-item">
+                        <strong>M12</strong>
+                        Unified investigation graph
+                    </div>
+
+
+                    <div class="methodology-item">
+                        <strong>M13</strong>
+                        Offline VPN/proxy/Tor/hosting intelligence
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             GLOBAL LIMITATION NOTICE
+             ===================================================== -->
+
+        <section class="notice">
+
+            <div class="notice-title">
+                Investigative-use limitation
+            </div>
+
+
+            <p>
+                Risk scores, anomaly signals, behavioral patterns,
+                graph relationships, network evidence and model
+                explanations are designed to prioritize investigation.
+                They do not establish real-world identity, ownership,
+                intent, illicit activity or guilt.
+            </p>
+
+
+            <p>
+                The system operates on pseudonymous blockchain and
+                network evidence and should be interpreted together
+                with independent investigative evidence.
+            </p>
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =========================================================
+         FOOTER
+         ========================================================= -->
+
+    <footer>
+
+        <span>
+            Bitcoin Transaction Intelligence Platform
+        </span>
+
+
+        <span>
+            Offline analytical environment
+        </span>
+
+    </footer>
+
+
+</div>
+
+
+<!-- =============================================================
+     APPLICATION JAVASCRIPT
+     ============================================================= -->
+
+<script src="/dashboard/app.js"></script>
+<script src="/dashboard/wallet.js"></script>
+<script src="/dashboard/wallet-navigation-fix.js"></script>
+
+
+
+</body>
+
+</html>

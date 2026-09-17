@@ -13,7 +13,7 @@
     "network": 203769
   },
   "output": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\normalized_evidence.parquet",
-  "output_sha256": "4b2913d3ec3962cbc80b433700331564bb1a9b7d2a3895f360565d70bec2a0f0",
+  "output_sha256": "9c3ebebd4b9ba077d49c9f4e5801f6c5b68bd2efd892f90438941aa26af36372",
   "output_rows": 203769,
   "output_unique_txids": 203769,
   "signal_definitions": {
@@ -50,7 +50,7 @@
     "network_positive_transactions": 1,
     "network_observation_coverage": 4.907517826558505e-06,
     "max_available_evidence_channels": 3,
-    "mean_behavioral_signal": 0.15249301905589174,
+    "mean_behavioral_signal": 0.1512229534423784,
     "mean_entity_signal": 0.04258798053297577,
     "mean_network_signal": 1.6023438305139644e-06
   },

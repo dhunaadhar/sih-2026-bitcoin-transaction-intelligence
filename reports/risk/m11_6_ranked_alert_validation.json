@@ -1,0 +1,244 @@
+{
+  "milestone": "M11.6",
+  "title": "Ranked Alert Validation",
+  "status": "PASS",
+  "artifacts": {
+    "ranked_alerts": "data\\derived\\ranked_alerts.parquet",
+    "m11_4_risk_scores": "data\\derived\\unified_risk_scores.parquet",
+    "report": "reports\\risk\\m11_6_ranked_alert_validation.json"
+  },
+  "dataset": {
+    "rows": 203769,
+    "unique_txids": 203769,
+    "risk_score_min": 11.070451436401708,
+    "risk_score_max": 86.5826740325778
+  },
+  "alerts": {
+    "active_alerts": 33665,
+    "priority_distribution": {
+      "GUARDED": 136916,
+      "LOW": 33188,
+      "MODERATE": 27742,
+      "HIGH": 5844,
+      "VERY_HIGH": 79
+    },
+    "top_queue_size": 1000,
+    "top_queue_class_distribution": {
+      "2": 1000
+    }
+  },
+  "ranking": {
+    "deterministic_reproducible": true,
+    "risk_monotonic_descending": true,
+    "top_1000_boundary_valid": true,
+    "first_rank": 1,
+    "last_rank": 203769
+  },
+  "evidence": {
+    "channel_count_min": 2,
+    "channel_count_max": 5,
+    "allowed_channel_count_max": 5,
+    "signal_ranges_valid": true
+  },
+  "checks": [
+    {
+      "check": "ranked_alert_schema",
+      "status": "PASS",
+      "details": {
+        "missing_columns": []
+      }
+    },
+    {
+      "check": "risk_score_schema",
+      "status": "PASS",
+      "details": {
+        "missing_columns": []
+      }
+    },
+    {
+      "check": "ranked_alert_row_count",
+      "status": "PASS",
+      "details": {
+        "actual": 203769,
+        "expected": 203769
+      }
+    },
+    {
+      "check": "ranked_alert_unique_txids",
+      "status": "PASS",
+      "details": {
+        "rows": 203769,
+        "unique_txids": 203769
+      }
+    },
+    {
+      "check": "risk_score_unique_txids",
+      "status": "PASS",
+      "details": {
+        "rows": 203769,
+        "unique_txids": 203769
+      }
+    },
+    {
+      "check": "ranked_alert_txid_coverage",
+      "status": "PASS",
+      "details": {
+        "alert_only": 0,
+        "risk_only": 0
+      }
+    },
+    {
+      "check": "numeric_integrity",
+      "status": "PASS",
+      "details": {
+        "time_step": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "risk_score": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "investigation_rank": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "effective_evidence_channel_count": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "behavioral_signal": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "entity_signal": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "anomaly_signal": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "network_signal": {
+          "missing": 0,
+          "infinite": 0
+        }
+      }
+    },
+    {
+      "check": "risk_score_range",
+      "status": "PASS",
+      "details": {
+        "min": 11.070451436401708,
+        "max": 86.5826740325778
+      }
+    },
+    {
+      "check": "priority_band_consistency",
+      "status": "PASS",
+      "details": {
+        "mismatches": 0,
+        "distribution": {
+          "GUARDED": 136916,
+          "LOW": 33188,
+          "MODERATE": 27742,
+          "HIGH": 5844,
+          "VERY_HIGH": 79
+        }
+      }
+    },
+    {
+      "check": "investigation_rank_sequence",
+      "status": "PASS",
+      "details": {
+        "first_rank": 1,
+        "last_rank": 203769,
+        "expected_last_rank": 203769,
+        "unique_ranks": 203769
+      }
+    },
+    {
+      "check": "deterministic_ranking_reproducibility",
+      "status": "PASS",
+      "details": {
+        "mismatched_positions": 0
+      }
+    },
+    {
+      "check": "risk_score_monotonic_descending",
+      "status": "PASS",
+      "details": {
+        "violations": 0
+      }
+    },
+    {
+      "check": "top_1000_queue_integrity",
+      "status": "PASS",
+      "details": {
+        "queue_size": 1000,
+        "expected_size": 1000
+      }
+    },
+    {
+      "check": "top_1000_high_risk_boundary",
+      "status": "PASS",
+      "details": {
+        "top_1000_min_risk": 72.09172323718484,
+        "remaining_max_risk": 72.0914363377873
+      }
+    },
+    {
+      "check": "evidence_signal_ranges",
+      "status": "PASS",
+      "details": {
+        "behavioral_signal": {
+          "min": 0.0,
+          "max": 1.0
+        },
+        "entity_signal": {
+          "min": 0.0,
+          "max": 0.9342994380344174
+        },
+        "anomaly_signal": {
+          "min": 9.81503565311701e-06,
+          "max": 1.0
+        },
+        "network_signal": {
+          "min": 0.0,
+          "max": 0.326508
+        }
+      }
+    },
+    {
+      "check": "evidence_channel_count_range",
+      "status": "PASS",
+      "details": {
+        "min": 2,
+        "max": 5,
+        "allowed_min": 0,
+        "allowed_max": 5,
+        "unique": [
+          2,
+          3,
+          4,
+          5
+        ]
+      }
+    },
+    {
+      "check": "m11_4_risk_score_consistency",
+      "status": "PASS",
+      "details": {
+        "mismatches": 0
+      }
+    },
+    {
+      "check": "m11_4_time_step_consistency",
+      "status": "PASS",
+      "details": {
+        "mismatches": 0
+      }
+    }
+  ],
+  "failed_checks": []
+}

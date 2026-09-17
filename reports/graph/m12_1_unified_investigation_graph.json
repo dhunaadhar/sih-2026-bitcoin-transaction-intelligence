@@ -43,7 +43,7 @@
   ],
   "graphml_investigation_view": {
     "seed_transaction_count": 100,
-    "view_node_count": 4839,
+    "view_node_count": 4850,
     "view_edge_count": 5000,
     "seed_limit": 100,
     "node_limit": 5000,

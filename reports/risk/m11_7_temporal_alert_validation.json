@@ -1,0 +1,787 @@
+{
+  "milestone": "M11.7",
+  "title": "Temporal Alert Validation",
+  "status": "PASS",
+  "artifacts": {
+    "ranked_alerts": "data\\derived\\ranked_alerts.parquet",
+    "m11_4_risk_scores": "data\\derived\\unified_risk_scores.parquet",
+    "report": "reports\\risk\\m11_7_temporal_alert_validation.json"
+  },
+  "dataset": {
+    "rows": 203769,
+    "unique_txids": 203769,
+    "time_step_min": 1,
+    "time_step_max": 49,
+    "time_step_count": 49
+  },
+  "risk": {
+    "mean": 30.072598251707056,
+    "median": 27.59791503631075,
+    "min": 11.070451436401708,
+    "max": 86.5826740325778
+  },
+  "alerts": {
+    "priority_distribution": {
+      "GUARDED": 136916,
+      "LOW": 33188,
+      "MODERATE": 27742,
+      "HIGH": 5844,
+      "VERY_HIGH": 79
+    },
+    "top_queue_size": 1000,
+    "top_queue_mean_risk": 74.74600011436736,
+    "top_queue_time_min": 5,
+    "top_queue_time_max": 49
+  },
+  "temporal_summary": {
+    "highest_mean_risk_time_step": 18,
+    "highest_mean_risk": 33.27138241393142,
+    "lowest_mean_risk_time_step": 1,
+    "lowest_mean_risk": 24.189418804367694,
+    "highest_high_rate_time_step": 23,
+    "highest_high_rate": 0.08379351740696278,
+    "highest_very_high_rate_time_step": 25,
+    "highest_very_high_rate": 0.0025929127052722557,
+    "highest_top_queue_time_step": 29,
+    "highest_top_queue_count": 111
+  },
+  "temporal_diagnostics": [
+    {
+      "time_step": 1,
+      "transaction_count": 7880,
+      "mean_risk": 24.189418804367694,
+      "median_risk": 25.69517066866935,
+      "high_count": 0,
+      "very_high_count": 0,
+      "high_rate": 0.0,
+      "very_high_rate": 0.0,
+      "top_1000_count": 0
+    },
+    {
+      "time_step": 2,
+      "transaction_count": 4544,
+      "mean_risk": 29.48380663871466,
+      "median_risk": 27.13326389477165,
+      "high_count": 4,
+      "very_high_count": 0,
+      "high_rate": 0.0008802816901408451,
+      "very_high_rate": 0.0,
+      "top_1000_count": 0
+    },
+    {
+      "time_step": 3,
+      "transaction_count": 6621,
+      "mean_risk": 30.772101538658852,
+      "median_risk": 28.891079944493324,
+      "high_count": 199,
+      "very_high_count": 0,
+      "high_rate": 0.03005588279716055,
+      "very_high_rate": 0.0,
+      "top_1000_count": 0
+    },
+    {
+      "time_step": 4,
+      "transaction_count": 5693,
+      "mean_risk": 30.082586916022148,
+      "median_risk": 27.708032025193376,
+      "high_count": 163,
+      "very_high_count": 0,
+      "high_rate": 0.028631652907078867,
+      "very_high_rate": 0.0,
+      "top_1000_count": 0
+    },
+    {
+      "time_step": 5,
+      "transaction_count": 6803,
+      "mean_risk": 32.117866006230656,
+      "median_risk": 28.393688719292136,
+      "high_count": 521,
+      "very_high_count": 0,
+      "high_rate": 0.07658386006173747,
+      "very_high_rate": 0.0,
+      "top_1000_count": 2
+    },
+    {
+      "time_step": 6,
+      "transaction_count": 4328,
+      "mean_risk": 31.420293199266,
+      "median_risk": 30.53631344608771,
+      "high_count": 65,
+      "very_high_count": 0,
+      "high_rate": 0.015018484288354898,
+      "very_high_rate": 0.0,
+      "top_1000_count": 1
+    },
+    {
+      "time_step": 7,
+      "transaction_count": 6048,
+      "mean_risk": 29.803491841852754,
+      "median_risk": 26.907110225498776,
+      "high_count": 322,
+      "very_high_count": 0,
+      "high_rate": 0.05324074074074074,
+      "very_high_rate": 0.0,
+      "top_1000_count": 2
+    },
+    {
+      "time_step": 8,
+      "transaction_count": 4457,
+      "mean_risk": 30.732702788422188,
+      "median_risk": 28.520804859485416,
+      "high_count": 35,
+      "very_high_count": 0,
+      "high_rate": 0.007852815795378058,
+      "very_high_rate": 0.0,
+      "top_1000_count": 2
+    },
+    {
+      "time_step": 9,
+      "transaction_count": 4996,
+      "mean_risk": 27.737794230136632,
+      "median_risk": 24.984563651513554,
+      "high_count": 38,
+      "very_high_count": 0,
+      "high_rate": 0.007606084867894315,
+      "very_high_rate": 0.0,
+      "top_1000_count": 7
+    },
+    {
+      "time_step": 10,
+      "transaction_count": 6727,
+      "mean_risk": 31.404666674558136,
+      "median_risk": 28.46426732200481,
+      "high_count": 270,
+      "very_high_count": 0,
+      "high_rate": 0.04013676230117437,
+      "very_high_rate": 0.0,
+      "top_1000_count": 2
+    },
+    {
+      "time_step": 11,
+      "transaction_count": 4296,
+      "mean_risk": 27.87921033847586,
+      "median_risk": 26.266831849805925,
+      "high_count": 84,
+      "very_high_count": 1,
+      "high_rate": 0.019553072625698324,
+      "very_high_rate": 0.00023277467411545624,
+      "top_1000_count": 8
+    },
+    {
+      "time_step": 12,
+      "transaction_count": 2047,
+      "mean_risk": 31.438120593257793,
+      "median_risk": 28.110550118654665,
+      "high_count": 142,
+      "very_high_count": 2,
+      "high_rate": 0.06936980947728383,
+      "very_high_rate": 0.0009770395701025891,
+      "top_1000_count": 8
+    },
+    {
+      "time_step": 13,
+      "transaction_count": 4528,
+      "mean_risk": 27.308322504982588,
+      "median_risk": 25.284765428969884,
+      "high_count": 52,
+      "very_high_count": 1,
+      "high_rate": 0.011484098939929329,
+      "very_high_rate": 0.00022084805653710247,
+      "top_1000_count": 5
+    },
+    {
+      "time_step": 14,
+      "transaction_count": 2022,
+      "mean_risk": 32.355643933551875,
+      "median_risk": 30.93241842508773,
+      "high_count": 26,
+      "very_high_count": 0,
+      "high_rate": 0.012858555885262116,
+      "very_high_rate": 0.0,
+      "top_1000_count": 1
+    },
+    {
+      "time_step": 15,
+      "transaction_count": 3639,
+      "mean_risk": 29.904688673028666,
+      "median_risk": 30.131221725085084,
+      "high_count": 95,
+      "very_high_count": 0,
+      "high_rate": 0.026106073097004672,
+      "very_high_rate": 0.0,
+      "top_1000_count": 3
+    },
+    {
+      "time_step": 16,
+      "transaction_count": 2975,
+      "mean_risk": 31.174507629101775,
+      "median_risk": 31.357053944662066,
+      "high_count": 78,
+      "very_high_count": 1,
+      "high_rate": 0.02621848739495798,
+      "very_high_rate": 0.0003361344537815126,
+      "top_1000_count": 10
+    },
+    {
+      "time_step": 17,
+      "transaction_count": 3385,
+      "mean_risk": 30.482062307789377,
+      "median_risk": 27.911846610509823,
+      "high_count": 105,
+      "very_high_count": 4,
+      "high_rate": 0.0310192023633678,
+      "very_high_rate": 0.0011816838995568684,
+      "top_1000_count": 15
+    },
+    {
+      "time_step": 18,
+      "transaction_count": 1976,
+      "mean_risk": 33.27138241393142,
+      "median_risk": 33.60605349390234,
+      "high_count": 107,
+      "very_high_count": 2,
+      "high_rate": 0.0541497975708502,
+      "very_high_rate": 0.0010121457489878543,
+      "top_1000_count": 15
+    },
+    {
+      "time_step": 19,
+      "transaction_count": 3506,
+      "mean_risk": 33.04109996122608,
+      "median_risk": 29.34393179846691,
+      "high_count": 234,
+      "very_high_count": 1,
+      "high_rate": 0.06674272675413577,
+      "very_high_rate": 0.0002852253280091272,
+      "top_1000_count": 32
+    },
+    {
+      "time_step": 20,
+      "transaction_count": 4291,
+      "mean_risk": 28.799373641390453,
+      "median_risk": 24.490062594023808,
+      "high_count": 45,
+      "very_high_count": 4,
+      "high_rate": 0.010487065951992542,
+      "very_high_rate": 0.0009321836401771149,
+      "top_1000_count": 13
+    },
+    {
+      "time_step": 21,
+      "transaction_count": 3537,
+      "mean_risk": 27.069160523689817,
+      "median_risk": 23.991147110247276,
+      "high_count": 44,
+      "very_high_count": 2,
+      "high_rate": 0.012439920836867402,
+      "very_high_rate": 0.0005654509471303364,
+      "top_1000_count": 11
+    },
+    {
+      "time_step": 22,
+      "transaction_count": 5894,
+      "mean_risk": 30.895321342705557,
+      "median_risk": 25.87465152386573,
+      "high_count": 440,
+      "very_high_count": 3,
+      "high_rate": 0.07465218866644045,
+      "very_high_rate": 0.0005089921954530031,
+      "top_1000_count": 75
+    },
+    {
+      "time_step": 23,
+      "transaction_count": 4165,
+      "mean_risk": 33.01066530557961,
+      "median_risk": 28.426488382690714,
+      "high_count": 349,
+      "very_high_count": 4,
+      "high_rate": 0.08379351740696278,
+      "very_high_rate": 0.0009603841536614646,
+      "top_1000_count": 90
+    },
+    {
+      "time_step": 24,
+      "transaction_count": 4592,
+      "mean_risk": 32.3516876478851,
+      "median_risk": 29.503913604226433,
+      "high_count": 266,
+      "very_high_count": 0,
+      "high_rate": 0.057926829268292686,
+      "very_high_rate": 0.0,
+      "top_1000_count": 86
+    },
+    {
+      "time_step": 25,
+      "transaction_count": 2314,
+      "mean_risk": 30.120716793932306,
+      "median_risk": 24.26793277163342,
+      "high_count": 76,
+      "very_high_count": 6,
+      "high_rate": 0.032843560933448576,
+      "very_high_rate": 0.0025929127052722557,
+      "top_1000_count": 27
+    },
+    {
+      "time_step": 26,
+      "transaction_count": 2523,
+      "mean_risk": 27.967157903691625,
+      "median_risk": 24.31000510413796,
+      "high_count": 34,
+      "very_high_count": 3,
+      "high_rate": 0.013476020610384463,
+      "very_high_rate": 0.0011890606420927466,
+      "top_1000_count": 15
+    },
+    {
+      "time_step": 27,
+      "transaction_count": 1089,
+      "mean_risk": 29.224729146451335,
+      "median_risk": 26.212266168930743,
+      "high_count": 20,
+      "very_high_count": 0,
+      "high_rate": 0.018365472910927456,
+      "very_high_rate": 0.0,
+      "top_1000_count": 5
+    },
+    {
+      "time_step": 28,
+      "transaction_count": 1653,
+      "mean_risk": 30.792600850308688,
+      "median_risk": 28.536845851338143,
+      "high_count": 38,
+      "very_high_count": 0,
+      "high_rate": 0.022988505747126436,
+      "very_high_rate": 0.0,
+      "top_1000_count": 6
+    },
+    {
+      "time_step": 29,
+      "transaction_count": 4275,
+      "mean_risk": 32.53523664762419,
+      "median_risk": 29.22292257061299,
+      "high_count": 221,
+      "very_high_count": 0,
+      "high_rate": 0.05169590643274854,
+      "very_high_rate": 0.0,
+      "top_1000_count": 111
+    },
+    {
+      "time_step": 30,
+      "transaction_count": 2483,
+      "mean_risk": 30.53776959780626,
+      "median_risk": 28.688748651317038,
+      "high_count": 111,
+      "very_high_count": 0,
+      "high_rate": 0.04470398711236408,
+      "very_high_rate": 0.0,
+      "top_1000_count": 5
+    },
+    {
+      "time_step": 31,
+      "transaction_count": 2816,
+      "mean_risk": 31.434206828945864,
+      "median_risk": 28.74489371133364,
+      "high_count": 49,
+      "very_high_count": 0,
+      "high_rate": 0.01740056818181818,
+      "very_high_rate": 0.0,
+      "top_1000_count": 5
+    },
+    {
+      "time_step": 32,
+      "transaction_count": 4525,
+      "mean_risk": 27.598303171666682,
+      "median_risk": 23.329939104006776,
+      "high_count": 25,
+      "very_high_count": 0,
+      "high_rate": 0.0055248618784530384,
+      "very_high_rate": 0.0,
+      "top_1000_count": 0
+    },
+    {
+      "time_step": 33,
+      "transaction_count": 3151,
+      "mean_risk": 29.58850766786761,
+      "median_risk": 29.07630637947284,
+      "high_count": 40,
+      "very_high_count": 0,
+      "high_rate": 0.012694382735639479,
+      "very_high_rate": 0.0,
+      "top_1000_count": 20
+    },
+    {
+      "time_step": 34,
+      "transaction_count": 2486,
+      "mean_risk": 29.19920097545152,
+      "median_risk": 27.36665638253623,
+      "high_count": 24,
+      "very_high_count": 0,
+      "high_rate": 0.009654062751407884,
+      "very_high_rate": 0.0,
+      "top_1000_count": 1
+    },
+    {
+      "time_step": 35,
+      "transaction_count": 5507,
+      "mean_risk": 29.701387142783744,
+      "median_risk": 27.17274495899591,
+      "high_count": 57,
+      "very_high_count": 0,
+      "high_rate": 0.010350463047031052,
+      "very_high_rate": 0.0,
+      "top_1000_count": 7
+    },
+    {
+      "time_step": 36,
+      "transaction_count": 6393,
+      "mean_risk": 29.20338699564911,
+      "median_risk": 26.554766950992075,
+      "high_count": 50,
+      "very_high_count": 0,
+      "high_rate": 0.00782105427811669,
+      "very_high_rate": 0.0,
+      "top_1000_count": 7
+    },
+    {
+      "time_step": 37,
+      "transaction_count": 3306,
+      "mean_risk": 29.385520655201617,
+      "median_risk": 27.822499605914526,
+      "high_count": 31,
+      "very_high_count": 0,
+      "high_rate": 0.009376890502117362,
+      "very_high_rate": 0.0,
+      "top_1000_count": 6
+    },
+    {
+      "time_step": 38,
+      "transaction_count": 2891,
+      "mean_risk": 30.278631388585776,
+      "median_risk": 28.276141781568725,
+      "high_count": 23,
+      "very_high_count": 0,
+      "high_rate": 0.007955724662746454,
+      "very_high_rate": 0.0,
+      "top_1000_count": 7
+    },
+    {
+      "time_step": 39,
+      "transaction_count": 2760,
+      "mean_risk": 32.46565506250637,
+      "median_risk": 28.861944829082695,
+      "high_count": 30,
+      "very_high_count": 0,
+      "high_rate": 0.010869565217391304,
+      "very_high_rate": 0.0,
+      "top_1000_count": 7
+    },
+    {
+      "time_step": 40,
+      "transaction_count": 4481,
+      "mean_risk": 31.463518454036212,
+      "median_risk": 28.96088320052544,
+      "high_count": 83,
+      "very_high_count": 3,
+      "high_rate": 0.018522651193929925,
+      "very_high_rate": 0.0006694934166480696,
+      "top_1000_count": 24
+    },
+    {
+      "time_step": 41,
+      "transaction_count": 5342,
+      "mean_risk": 29.616129563734937,
+      "median_risk": 26.918030663290892,
+      "high_count": 67,
+      "very_high_count": 2,
+      "high_rate": 0.012542119056533133,
+      "very_high_rate": 0.00037439161362785476,
+      "top_1000_count": 51
+    },
+    {
+      "time_step": 42,
+      "transaction_count": 7140,
+      "mean_risk": 30.770729307628017,
+      "median_risk": 27.817999947310376,
+      "high_count": 136,
+      "very_high_count": 0,
+      "high_rate": 0.01904761904761905,
+      "very_high_rate": 0.0,
+      "top_1000_count": 45
+    },
+    {
+      "time_step": 43,
+      "transaction_count": 5063,
+      "mean_risk": 30.422604301760636,
+      "median_risk": 28.66693983756011,
+      "high_count": 70,
+      "very_high_count": 3,
+      "high_rate": 0.013825794983211535,
+      "very_high_rate": 0.0005925340707090658,
+      "top_1000_count": 42
+    },
+    {
+      "time_step": 44,
+      "transaction_count": 4975,
+      "mean_risk": 28.655926278742864,
+      "median_risk": 23.766700736442605,
+      "high_count": 101,
+      "very_high_count": 1,
+      "high_rate": 0.020301507537688442,
+      "very_high_rate": 0.00020100502512562814,
+      "top_1000_count": 53
+    },
+    {
+      "time_step": 45,
+      "transaction_count": 5598,
+      "mean_risk": 31.397796412606276,
+      "median_risk": 26.583224878025682,
+      "high_count": 461,
+      "very_high_count": 12,
+      "high_rate": 0.08235083958556627,
+      "very_high_rate": 0.0021436227224008574,
+      "top_1000_count": 79
+    },
+    {
+      "time_step": 46,
+      "transaction_count": 3519,
+      "mean_risk": 31.28072205257632,
+      "median_risk": 28.181874067960916,
+      "high_count": 75,
+      "very_high_count": 3,
+      "high_rate": 0.021312872975277068,
+      "very_high_rate": 0.0008525149190110827,
+      "top_1000_count": 13
+    },
+    {
+      "time_step": 47,
+      "transaction_count": 5121,
+      "mean_risk": 31.684183996621655,
+      "median_risk": 27.696966521702393,
+      "high_count": 226,
+      "very_high_count": 13,
+      "high_rate": 0.044132005467682096,
+      "very_high_rate": 0.0025385666861941028,
+      "top_1000_count": 49
+    },
+    {
+      "time_step": 48,
+      "transaction_count": 2954,
+      "mean_risk": 27.043740849922482,
+      "median_risk": 23.385071961942963,
+      "high_count": 82,
+      "very_high_count": 4,
+      "high_rate": 0.027758970886932972,
+      "very_high_rate": 0.0013540961408259986,
+      "top_1000_count": 16
+    },
+    {
+      "time_step": 49,
+      "transaction_count": 2454,
+      "mean_risk": 30.387779393331357,
+      "median_risk": 26.205599236991016,
+      "high_count": 30,
+      "very_high_count": 4,
+      "high_rate": 0.012224938875305624,
+      "very_high_rate": 0.0016299918500407497,
+      "top_1000_count": 11
+    }
+  ],
+  "checks": [
+    {
+      "check": "ranked_alert_schema",
+      "status": "PASS",
+      "details": {
+        "missing_columns": []
+      }
+    },
+    {
+      "check": "risk_score_schema",
+      "status": "PASS",
+      "details": {
+        "missing_columns": []
+      }
+    },
+    {
+      "check": "expected_row_count",
+      "status": "PASS",
+      "details": {
+        "actual": 203769,
+        "expected": 203769
+      }
+    },
+    {
+      "check": "unique_txids",
+      "status": "PASS",
+      "details": {
+        "rows": 203769,
+        "unique_txids": 203769
+      }
+    },
+    {
+      "check": "risk_score_txid_coverage",
+      "status": "PASS",
+      "details": {
+        "alert_only": 0,
+        "risk_only": 0
+      }
+    },
+    {
+      "check": "time_step_range",
+      "status": "PASS",
+      "details": {
+        "min": 1,
+        "max": 49,
+        "expected_min": 1,
+        "expected_max": 49
+      }
+    },
+    {
+      "check": "all_expected_time_steps_present",
+      "status": "PASS",
+      "details": {
+        "observed_steps": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23,
+          24,
+          25,
+          26,
+          27,
+          28,
+          29,
+          30,
+          31,
+          32,
+          33,
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49
+        ],
+        "expected_step_count": 49
+      }
+    },
+    {
+      "check": "numeric_integrity",
+      "status": "PASS",
+      "details": {
+        "time_step": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "risk_score": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "investigation_rank": {
+          "missing": 0,
+          "infinite": 0
+        },
+        "effective_evidence_channel_count": {
+          "missing": 0,
+          "infinite": 0
+        }
+      }
+    },
+    {
+      "check": "risk_score_range",
+      "status": "PASS",
+      "details": {
+        "min": 11.070451436401708,
+        "max": 86.5826740325778
+      }
+    },
+    {
+      "check": "priority_consistency",
+      "status": "PASS",
+      "details": {
+        "mismatches": 0
+      }
+    },
+    {
+      "check": "m11_4_time_alignment",
+      "status": "PASS",
+      "details": {
+        "mismatches": 0
+      }
+    },
+    {
+      "check": "m11_4_risk_alignment",
+      "status": "PASS",
+      "details": {
+        "mismatches": 0
+      }
+    },
+    {
+      "check": "temporal_diagnostics_complete",
+      "status": "PASS",
+      "details": {
+        "time_steps": 49,
+        "zero_transaction_steps": 0
+      }
+    },
+    {
+      "check": "temporal_rate_integrity",
+      "status": "PASS",
+      "details": {}
+    },
+    {
+      "check": "top_queue_temporal_partition",
+      "status": "PASS",
+      "details": {
+        "sum_of_top_queue_counts": 1000,
+        "expected": 1000
+      }
+    },
+    {
+      "check": "chronological_time_coverage",
+      "status": "PASS",
+      "details": {
+        "first_time_step": 1,
+        "last_time_step": 49,
+        "time_step_count": 49
+      }
+    },
+    {
+      "check": "top_queue_time_range",
+      "status": "PASS",
+      "details": {
+        "min_time_step": 5,
+        "max_time_step": 49
+      }
+    }
+  ],
+  "failed_checks": []
+}
