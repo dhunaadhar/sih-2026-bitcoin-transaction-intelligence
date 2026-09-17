@@ -1,0 +1,36 @@
+{
+  "milestone": "M10.2",
+  "status": "PASS",
+  "purpose": "Provide an offline network-observation ingestion layer with normalization, deduplication, validation, and provenance.",
+  "input_format": [
+    "CSV"
+  ],
+  "output_schema": [
+    "network_event_id",
+    "timestamp",
+    "src_ip",
+    "src_port",
+    "dst_ip",
+    "dst_port",
+    "txid",
+    "geo_country",
+    "asn",
+    "protocol",
+    "direction",
+    "observation_source"
+  ],
+  "features": [
+    "required-field validation",
+    "timestamp normalization",
+    "IP normalization",
+    "port validation",
+    "ASN normalization",
+    "country normalization",
+    "TXID normalization",
+    "network event ID generation",
+    "provenance assignment",
+    "exact observation deduplication"
+  ],
+  "dataset_constraint": "No network observations are fabricated by this module. The Elliptic++ dataset used by the project does not contain IP, port, ASN, country, or network-layer timestamps.",
+  "report": "D:\\Hackathons\\SIH 2026\\final\\reports\\network\\m10_2_network_ingestion.json"
+}

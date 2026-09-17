@@ -1,0 +1,37 @@
+{
+  "module": "M10.4",
+  "status": "PASS",
+  "purpose": "Conservative temporal/network contextualization of M10.3 exact TXID correlations.",
+  "input": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\network_blockchain_correlations.parquet",
+  "input_rows": 3,
+  "matched_network_observations": 2,
+  "unmatched_network_observations": 1,
+  "unique_matched_blockchain_txids": 1,
+  "transactions_with_multiple_network_observations": 1,
+  "wall_clock_blockchain_timestamp_available": false,
+  "blockchain_time_step_converted_to_wall_clock": false,
+  "fabricated_temporal_delta": false,
+  "identity_inference_performed": false,
+  "wallet_ownership_inference_performed": false,
+  "transaction_authorship_inference_performed": false,
+  "illicit_activity_inference_performed": false,
+  "score_semantics": "Contextual evidence score in [0,1], not a probability and not proof of illicit activity.",
+  "score_components": {
+    "observation_count": 0.4,
+    "endpoint_diversity": 0.3,
+    "network_observation_span": 0.3
+  },
+  "reference_parameters": {
+    "reference_span_seconds": 60.0,
+    "reference_observation_count": 5
+  },
+  "notes": [
+    "M10.4 operates only on supplied network timestamps and exact TXID relationships.",
+    "Elliptic++ time_step is retained as dataset-relative ordered context.",
+    "No conversion from time_step to wall-clock time is performed.",
+    "Temporal evidence does not establish IP ownership or transaction authorship.",
+    "Current network observations are synthetic pipeline-validation data."
+  ],
+  "output": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\temporal_network_correlation.parquet",
+  "output_sha256": "f7062272dc520c68a94fd3644b73e68ebafa902bd6ab593e135916e94e46ac83"
+}

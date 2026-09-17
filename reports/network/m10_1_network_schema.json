@@ -1,0 +1,48 @@
+{
+  "milestone": "M10.1",
+  "status": "PASS",
+  "purpose": "Define the canonical network-observation schema required for offline network/blockchain correlation.",
+  "required_columns": [
+    "timestamp",
+    "src_ip",
+    "src_port",
+    "dst_ip",
+    "dst_port",
+    "txid",
+    "geo_country",
+    "asn"
+  ],
+  "optional_columns": [
+    "network_event_id",
+    "protocol",
+    "direction",
+    "observation_source"
+  ],
+  "canonical_columns": [
+    "network_event_id",
+    "timestamp",
+    "src_ip",
+    "src_port",
+    "dst_ip",
+    "dst_port",
+    "txid",
+    "geo_country",
+    "asn",
+    "protocol",
+    "direction",
+    "observation_source"
+  ],
+  "validation_rules": {
+    "timestamp": "Parseable timestamp normalized to UTC.",
+    "src_ip": "Valid IPv4 or IPv6 address.",
+    "dst_ip": "Valid IPv4 or IPv6 address.",
+    "src_port": "Integer in range 0-65535.",
+    "dst_port": "Integer in range 0-65535.",
+    "txid": "Non-empty transaction identifier.",
+    "geo_country": "Normalized uppercase country identifier.",
+    "asn": "Non-negative numeric ASN, optionally prefixed with AS."
+  },
+  "dataset_constraint": "The Elliptic++ source used by this project does not contain IP, port, ASN, country, or network-layer timestamps. This schema therefore defines an ingestion interface and does not represent observed network measurements.",
+  "provenance_requirement": "Every network observation should identify its observation_source so real, synthetic, replayed, or externally supplied data are distinguishable.",
+  "report": "D:\\Hackathons\\SIH 2026\\final\\reports\\network\\m10_1_network_schema.json"
+}
