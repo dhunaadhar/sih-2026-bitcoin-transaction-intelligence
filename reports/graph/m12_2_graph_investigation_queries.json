@@ -1,0 +1,45 @@
+{
+  "transaction_context": {
+    "status": "PASS",
+    "txid": "157195066",
+    "connected_node_count": 56,
+    "relationship_count": 57
+  },
+  "wallet_context": {
+    "status": "PASS",
+    "wallet": "14YRXHHof4BY1TVxN5FqYPcEdpmXiYT78a",
+    "transaction_count": 1
+  },
+  "ip_context": {
+    "status": "PASS",
+    "ip_address": "192.0.2.10",
+    "transaction_count": 1
+  },
+  "neighborhood": {
+    "status": "PASS",
+    "node_id": "tx:157195066",
+    "neighbor_count": 56
+  },
+  "top_risk_transactions": {
+    "status": "PASS",
+    "returned": 10
+  },
+  "shortest_path": {
+    "status": "PASS",
+    "source": "tx:157195066",
+    "target": "tx:126802668",
+    "found": true,
+    "path_length": 2
+  },
+  "status": "PASS",
+  "graph_nodes": 1026715,
+  "graph_edges": 1379970,
+  "supported_queries": [
+    "transaction_context",
+    "wallet_context",
+    "ip_context",
+    "neighborhood",
+    "top_risk_transactions",
+    "shortest_path"
+  ]
+}

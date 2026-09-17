@@ -1,0 +1,53 @@
+{
+  "milestone": "M12.1",
+  "status": "PASS",
+  "graph_type": "Unified Bitcoin investigation graph",
+  "scope": {
+    "total_nodes": 1026715,
+    "total_edges": 1379970,
+    "transaction_nodes": 203769,
+    "wallet_nodes": 822942,
+    "ip_nodes": 4
+  },
+  "node_types": {
+    "transaction": 203769,
+    "wallet": 822942,
+    "ip": 4
+  },
+  "edge_types": {
+    "INPUT_TO": 477117,
+    "OUTPUT_TO": 837124,
+    "OBSERVED_SOURCE": 2,
+    "OBSERVED_DESTINATION": 2,
+    "ADDRESS_REUSE_CONTINUITY": 65725
+  },
+  "source_statistics": {
+    "canonical_transactions": 203769,
+    "input_address_edges_processed": 477117,
+    "output_address_edges_processed": 837124,
+    "network_rows_processed": 2,
+    "network_ip_transaction_observations": 4,
+    "address_reuse_continuity_edges": 76905
+  },
+  "network_coverage": {
+    "unique_source_ips": 2,
+    "unique_destination_ips": 2
+  },
+  "limitations": [
+    "Elliptic++ address edge lists do not contain individual address-level BTC amounts.",
+    "Wallet nodes represent blockchain addresses and are not asserted to be real-world identities.",
+    "IP-to-transaction relationships require supplied network observations with exact TXID correlation.",
+    "Current network observations are synthetic and have very limited coverage.",
+    "Address reuse continuity is structural evidence and does not prove common ownership.",
+    "Graph relationships do not establish illicit activity, ownership, identity, intent, or guilt."
+  ],
+  "graphml_investigation_view": {
+    "seed_transaction_count": 100,
+    "view_node_count": 4839,
+    "view_edge_count": 5000,
+    "seed_limit": 100,
+    "node_limit": 5000,
+    "selection_method": "Top investigation-ranked transactions with bounded one-hop graph expansion.",
+    "output": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\investigation_graph\\investigation_graph_top_alerts.graphml"
+  }
+}

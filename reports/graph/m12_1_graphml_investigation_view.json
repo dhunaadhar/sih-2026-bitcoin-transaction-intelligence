@@ -1,0 +1,20 @@
+{
+  "milestone": "M12.1",
+  "status": "PASS",
+  "full_graph": {
+    "nodes": 1026715,
+    "edges": 1379970,
+    "nodes_artifact": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\investigation_graph\\investigation_graph_nodes.parquet",
+    "edges_artifact": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\investigation_graph\\investigation_graph_edges.parquet"
+  },
+  "graphml_view": {
+    "seed_transaction_count": 100,
+    "view_node_count": 4839,
+    "view_edge_count": 5000,
+    "seed_limit": 100,
+    "node_limit": 5000,
+    "selection_method": "Top investigation-ranked transactions with bounded one-hop graph expansion.",
+    "output": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\investigation_graph\\investigation_graph_top_alerts.graphml"
+  },
+  "methodology": "The complete investigation graph is preserved in Parquet. GraphML is a bounded analyst-facing view generated from top investigation-ranked transactions and their one-hop relationships."
+}
