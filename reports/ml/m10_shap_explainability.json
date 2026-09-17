@@ -1,0 +1,33 @@
+{
+  "milestone": "M10",
+  "component": "SHAP Explainability",
+  "status": "PASS",
+  "method": "SHAP TreeExplainer",
+  "model_path": "models\\production_xgboost\\model.joblib",
+  "feature_path": "data\\derived\\unified_features_temporal_safe.parquet",
+  "alert_path": "data\\derived\\ranked_alerts.parquet",
+  "output_path": "data\\derived\\shap_explanations.parquet",
+  "rows_explained": 1000,
+  "unique_txids": 1000,
+  "source_alert_queue_size": 1000,
+  "base_model_features": 87,
+  "transformed_model_features": 124,
+  "top_features_per_transaction": 10,
+  "predicted_class_distribution": {
+    "2": 998,
+    "3": 2
+  },
+  "mean_absolute_shap_contribution": 5.8282906535190975,
+  "mean_positive_shap_contribution": 5.089686877549244,
+  "mean_negative_shap_contribution": -0.7386037759698534,
+  "validation": {
+    "row_count_match": true,
+    "unique_txids": true,
+    "txid_normalization_join": true,
+    "transformed_feature_count_match": true,
+    "finite_values": true,
+    "human_readable_explanations_present": true
+  },
+  "interpretation": "SHAP explanations identify feature contributions to the production supervised model prediction. They do not establish illicit activity, real-world identity, ownership, intent, or guilt.",
+  "network_coverage_note": "SHAP explanations are independent of the current limited synthetic network-observation coverage."
+}
