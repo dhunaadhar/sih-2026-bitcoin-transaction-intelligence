@@ -1,0 +1,34 @@
+{
+  "milestone": "M7.1",
+  "status": "PASS",
+  "model": "XGBoost",
+  "production_candidate": true,
+  "training_rows": 120804,
+  "validation_rows": 36318,
+  "training_time_range": [
+    1,
+    29
+  ],
+  "validation_time_range": [
+    30,
+    39
+  ],
+  "original_feature_count": 87,
+  "transformed_feature_count": 124,
+  "frozen_test_set_used": false,
+  "label_distribution": {
+    "1": 2871,
+    "2": 23510,
+    "3": 94423
+  },
+  "artifacts": {
+    "model": "D:\\Hackathons\\SIH 2026\\final\\models\\production_xgboost\\model.joblib",
+    "schema": "D:\\Hackathons\\SIH 2026\\final\\models\\production_xgboost\\feature_schema.json",
+    "metadata": "D:\\Hackathons\\SIH 2026\\final\\models\\production_xgboost\\metadata.json"
+  },
+  "label_mapping": {
+    "1": 0,
+    "2": 1,
+    "3": 2
+  }
+}

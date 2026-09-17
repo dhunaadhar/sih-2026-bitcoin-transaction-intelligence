@@ -1,0 +1,38 @@
+{
+  "milestone": "M7.3",
+  "status": "PASS",
+  "purpose": "Validate serialized production inference against the frozen temporal-safe test set.",
+  "test_dataset": "D:\\Hackathons\\SIH 2026\\final\\data\\evaluation\\test_temporal_safe.parquet",
+  "test_rows": 46647,
+  "model_features": 87,
+  "transformed_features": 124,
+  "metrics": {
+    "accuracy": 0.800694578429481,
+    "macro_f1": 0.44351582057618083,
+    "roc_auc_ovr_macro": 0.8018735400828468,
+    "macro_pr_auc": 0.5206365311392541,
+    "log_loss": 0.4976807724014442
+  },
+  "class_distribution": {
+    "actual": {
+      "1": 636,
+      "2": 10548,
+      "3": 35463
+    },
+    "predicted": {
+      "1": 73,
+      "2": 5164,
+      "3": 41410
+    }
+  },
+  "validation_checks": {
+    "prediction_count_matches": true,
+    "unique_txids": true,
+    "probability_shape_valid": true,
+    "probabilities_sum_to_one": true,
+    "no_nan_probabilities": true,
+    "no_infinite_probabilities": true,
+    "test_set_not_modified": true
+  },
+  "note": "This validation uses the frozen test set only for post-training verification of the serialized production inference artifact. It does not retrain or modify the model."
+}

@@ -1,0 +1,58 @@
+{
+  "milestone": "M8.1",
+  "status": "PASS",
+  "model": "IsolationForest",
+  "production_candidate": true,
+  "training_rows": 120804,
+  "validation_rows": 36318,
+  "training_time_range": [
+    1,
+    29
+  ],
+  "validation_time_range": [
+    30,
+    39
+  ],
+  "original_feature_count": 87,
+  "transformed_feature_count": 124,
+  "frozen_test_set_used": false,
+  "contamination": 0.01,
+  "training_anomaly_count": 1209,
+  "training_anomaly_rate": 0.01000794675672991,
+  "validation_anomaly_count": 398,
+  "validation_anomaly_rate": 0.010958753235310315,
+  "training_score_statistics": {
+    "count": 120804,
+    "min": -0.298789442116257,
+    "max": 0.13324381264910834,
+    "mean": -0.24382775516865973,
+    "median": -0.2705000475211944,
+    "std": 0.06724830269124099,
+    "p01": -0.2979382000503457,
+    "p05": -0.29652508730005694,
+    "p25": -0.2899321671539483,
+    "p75": -0.22629325085973714,
+    "p95": -0.08686281235261144,
+    "p99": 6.139887724762247e-17
+  },
+  "validation_score_statistics": {
+    "count": 36318,
+    "min": -0.2939859851646792,
+    "max": 0.14101549425928017,
+    "mean": -0.23770905496437095,
+    "median": -0.26459923564684135,
+    "std": 0.06989796418767903,
+    "p01": -0.2933641716039465,
+    "p05": -0.29182659761399476,
+    "p25": -0.28505547143875504,
+    "p75": -0.21884795430559723,
+    "p95": -0.08636377386710549,
+    "p99": 0.00835035310500913
+  },
+  "artifacts": {
+    "model": "D:\\Hackathons\\SIH 2026\\final\\models\\production_isolation_forest\\model.joblib",
+    "schema": "D:\\Hackathons\\SIH 2026\\final\\models\\production_isolation_forest\\feature_schema.json",
+    "metadata": "D:\\Hackathons\\SIH 2026\\final\\models\\production_isolation_forest\\metadata.json"
+  },
+  "methodology_note": "Isolation Forest is used as an independent unsupervised anomaly-ranking layer. Its anomaly score is not a probability, identity attribution, or proof of illicit behavior."
+}

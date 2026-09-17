@@ -1,0 +1,28 @@
+{
+  "milestone": "M9.1",
+  "status": "PASS",
+  "detector": "peeling_chain",
+  "methodology": {
+    "min_chain_length": 3,
+    "max_history_steps": 10,
+    "min_value_reduction_ratio": 0.05,
+    "max_value_reduction_ratio": 0.95,
+    "causal_rule": "Only address activity from time_step < current transaction time_step is used.",
+    "address_amount_limitation": "Source address edge lists contain identifiers but no individual address-level BTC amounts. Value reduction therefore uses transaction-level output BTC totals."
+  },
+  "validation": {
+    "rows": 203769,
+    "unique_txids": 203769,
+    "candidate_count": 19232,
+    "candidate_rate": 0.09438138284037317,
+    "direct_continuation_count": 28608,
+    "gradual_reduction_count": 19232,
+    "max_evidence_score": 0.9999999999999999,
+    "mean_evidence_score": 0.08930308339345042
+  },
+  "artifacts": {
+    "indicators": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\peeling_chain_indicators.parquet",
+    "report": "D:\\Hackathons\\SIH 2026\\final\\reports\\behavior\\m9_1_peeling_chain.json"
+  },
+  "interpretation_note": "A peeling-chain candidate is behavioral evidence of a possible sequential value-transfer pattern. It is not proof of mixing, illicit activity, ownership, identity, or guilt."
+}
