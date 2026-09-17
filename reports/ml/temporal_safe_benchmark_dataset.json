@@ -1,0 +1,86 @@
+{
+  "stage": "M6.16",
+  "task": "build_temporal_safe_benchmark_dataset",
+  "status": "PASS",
+  "input_feature_artifact": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_features_temporal_safe.parquet",
+  "label_artifact": "D:\\Hackathons\\SIH 2026\\data\\external\\elipticpp\\transactions\\txs_classes.csv",
+  "feature_manifest": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\feature_manifest.json",
+  "temporal_split": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\temporal_split.json",
+  "output_artifacts": {
+    "train": "D:\\Hackathons\\SIH 2026\\final\\data\\evaluation\\train_temporal_safe.parquet",
+    "validation": "D:\\Hackathons\\SIH 2026\\final\\data\\evaluation\\validation_temporal_safe.parquet",
+    "test": "D:\\Hackathons\\SIH 2026\\final\\data\\evaluation\\test_temporal_safe.parquet"
+  },
+  "feature_statistics": {
+    "total_input_columns": 93,
+    "model_candidate_features": 87,
+    "leakage_sensitive_features_excluded": 4
+  },
+  "dataset_statistics": {
+    "total_rows": 203769,
+    "train_rows": 120804,
+    "validation_rows": 36318,
+    "test_rows": 46647
+  },
+  "time_ranges": {
+    "train": [
+      1,
+      29
+    ],
+    "validation": [
+      30,
+      39
+    ],
+    "test": [
+      40,
+      49
+    ]
+  },
+  "class_distribution": {
+    "full": {
+      "1": 4545,
+      "2": 42019,
+      "3": 157205
+    },
+    "train": {
+      "1": 2871,
+      "2": 23510,
+      "3": 94423
+    },
+    "validation": {
+      "1": 1038,
+      "2": 7961,
+      "3": 27319
+    },
+    "test": {
+      "1": 636,
+      "2": 10548,
+      "3": 35463
+    }
+  },
+  "integrity": {
+    "feature_only_txids": 0,
+    "label_only_txids": 0,
+    "train_validation_overlap": 0,
+    "train_test_overlap": 0,
+    "validation_test_overlap": 0,
+    "complete_partition_coverage": true,
+    "infinite_values_train": 0,
+    "infinite_values_validation": 0,
+    "infinite_values_test": 0
+  },
+  "methodology": {
+    "split_type": "chronological",
+    "train_time_steps": "1-29",
+    "validation_time_steps": "30-39",
+    "test_time_steps": "40-49",
+    "random_split": false,
+    "resampling": false,
+    "class_balancing": false,
+    "leakage_sensitive_features_excluded": true,
+    "temporal_safe_graph_features_used": true,
+    "future_time_steps_in_training_features": false,
+    "same_time_step_graph_information_used": false
+  },
+  "next_step": "Benchmark Logistic Regression, Random Forest, HistGradientBoosting, and XGBoost using these temporal-safe partitions."
+}

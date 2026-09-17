@@ -1,0 +1,219 @@
+{
+  "stage": "M6.12",
+  "task": "graph_temporal_leakage_provenance_audit",
+  "status": "TEMPORAL_SAFE_GRAPH_REBUILD_REQUIRED",
+  "model_candidate_feature_count": 87,
+  "graph_feature_audit": {
+    "features": [
+      {
+        "feature": "entity_input_address_count",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_repeated_cosponsor_count",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_repeated_cosponsor_ratio",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_max_repeated_cosponsor_degree",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_max_shared_transaction_count",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_distinct_clusters_t1",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_max_cluster_size_t1",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_distinct_clusters_t2",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_max_cluster_size_t2",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_distinct_clusters_t3",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "input_max_cluster_size_t3",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "entity_output_address_count",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_repeated_cosponsor_count",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_repeated_cosponsor_ratio",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_max_repeated_cosponsor_degree",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_max_shared_transaction_count",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_distinct_clusters_t1",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_max_cluster_size_t1",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_distinct_clusters_t2",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_max_cluster_size_t2",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_distinct_clusters_t3",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      },
+      {
+        "feature": "output_max_cluster_size_t3",
+        "category": "DEFINITELY_GLOBAL",
+        "reason": "M5 graph/entity evidence was constructed over the complete available dataset rather than within historical time windows.",
+        "temporal_safe_for_chronological_test": false,
+        "requires_rebuild": true
+      }
+    ],
+    "summary": {
+      "category_counts": {
+        "DEFINITELY_GLOBAL": 22
+      },
+      "definitely_global_features": [
+        "entity_input_address_count",
+        "input_repeated_cosponsor_count",
+        "input_repeated_cosponsor_ratio",
+        "input_max_repeated_cosponsor_degree",
+        "input_max_shared_transaction_count",
+        "input_distinct_clusters_t1",
+        "input_max_cluster_size_t1",
+        "input_distinct_clusters_t2",
+        "input_max_cluster_size_t2",
+        "input_distinct_clusters_t3",
+        "input_max_cluster_size_t3",
+        "entity_output_address_count",
+        "output_repeated_cosponsor_count",
+        "output_repeated_cosponsor_ratio",
+        "output_max_repeated_cosponsor_degree",
+        "output_max_shared_transaction_count",
+        "output_distinct_clusters_t1",
+        "output_max_cluster_size_t1",
+        "output_distinct_clusters_t2",
+        "output_max_cluster_size_t2",
+        "output_distinct_clusters_t3",
+        "output_max_cluster_size_t3"
+      ],
+      "potentially_future_dependent_features": [],
+      "total_graph_features": 22,
+      "requires_temporal_safe_rebuild": true
+    }
+  },
+  "m5_artifacts": {
+    "entity_evidence": {
+      "exists": false,
+      "path": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\entity_evidence.parquet"
+    },
+    "transaction_entity_evidence": {
+      "exists": false,
+      "path": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\transaction_entity_evidence.parquet"
+    },
+    "cosponsor_cluster_thresholds": {
+      "exists": false,
+      "path": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\cosponsor_cluster_thresholds.parquet"
+    }
+  },
+  "methodology": {
+    "classification_policy": "Conservative provenance classification",
+    "global_graph_features_are_safe": false,
+    "future_information_claim": "A global graph construction is treated as potentially future-dependent when used in chronological evaluation.",
+    "test_results_are_not_invalidated": "The audit does not delete or alter previous benchmark results. It identifies a methodological limitation that must be resolved before production claims."
+  },
+  "required_next_step": "Rebuild graph/entity features causally so each transaction only uses graph relationships available at or before its observation time.",
+  "methodology_note": "The current M5 graph/entity artifacts were constructed over the complete available transaction/address observation window. Consequently, graph-derived aggregates and clusters that depend on relationships observed later in the dataset cannot be considered causally valid for earlier transactions without a time-aware rebuild. This audit therefore flags those features conservatively rather than claiming that observed predictive performance is free of graph temporal leakage.",
+  "class_semantics": "Numeric class IDs retained; no semantic interpretation assigned."
+}

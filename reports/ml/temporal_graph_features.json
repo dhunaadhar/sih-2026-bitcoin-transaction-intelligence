@@ -1,0 +1,75 @@
+{
+  "stage": "M6.13",
+  "task": "temporal_safe_graph_feature_rebuild",
+  "status": "PASS",
+  "sources": {
+    "addr_tx": "D:\\Hackathons\\SIH 2026\\data\\external\\elipticpp\\actor\\AddrTx_edgelist.csv",
+    "tx_addr": "D:\\Hackathons\\SIH 2026\\data\\external\\elipticpp\\actor\\TxAddr_edgelist.csv",
+    "canonical_transactions": "D:\\Hackathons\\SIH 2026\\final\\data\\canonical\\canonical_transactions.parquet"
+  },
+  "input_statistics": {
+    "canonical_transactions": 203769,
+    "transactions_processed": 203769,
+    "transactions_with_inputs": 202804,
+    "transactions_with_outputs": 202804,
+    "time_steps": 49
+  },
+  "output_statistics": {
+    "entity_rows": 822942,
+    "transaction_rows": 203769,
+    "unique_txids": 203769,
+    "graph_feature_columns": 22,
+    "nonzero_counts": {
+      "input_repeated_cosponsor_count": 7790,
+      "input_repeated_cosponsor_ratio": 7790,
+      "output_repeated_cosponsor_count": 11519,
+      "output_repeated_cosponsor_ratio": 11519,
+      "input_max_repeated_cosponsor_degree": 7790,
+      "output_max_repeated_cosponsor_degree": 11519,
+      "input_max_shared_transaction_count": 14164,
+      "output_max_shared_transaction_count": 21322,
+      "input_distinct_clusters_t1": 14164,
+      "input_distinct_clusters_t2": 7790,
+      "input_distinct_clusters_t3": 5596,
+      "output_distinct_clusters_t1": 21322,
+      "output_distinct_clusters_t2": 11519,
+      "output_distinct_clusters_t3": 8249,
+      "input_max_cluster_size_t1": 203769,
+      "input_max_cluster_size_t2": 203769,
+      "input_max_cluster_size_t3": 203769,
+      "output_max_cluster_size_t1": 203769,
+      "output_max_cluster_size_t2": 203769,
+      "output_max_cluster_size_t3": 203769,
+      "entity_input_address_count": 31514,
+      "entity_output_address_count": 45551
+    }
+  },
+  "temporal_policy": {
+    "future_transactions_used": false,
+    "same_time_step_transactions_used": false,
+    "current_transaction_used_before_features": false,
+    "historical_condition": "only transactions from strictly earlier time steps are present in graph state",
+    "graph_update_order": "calculate ALL features for time t -> update graph with ALL transactions at time t"
+  },
+  "time1_validation": {
+    "rows": 7880,
+    "zero_state_violations": 0,
+    "singleton_size_violations": 0,
+    "status": "PASS"
+  },
+  "graph_definition": {
+    "relationship": "input addresses appearing together in a transaction",
+    "graph_type": "undirected co-sponsorship graph",
+    "thresholds": {
+      "t1": "pair observed at least once",
+      "t2": "pair observed at least twice",
+      "t3": "pair observed at least three times"
+    }
+  },
+  "limitations": [
+    "Temporal-safe graph structure does not establish real-world identity.",
+    "A cluster represents structural association, not proof of common ownership.",
+    "The global M5 graph remains available for retrospective investigation and visualization."
+  ],
+  "next_step": "Validate the regenerated temporal artifact and then integrate causal graph evidence into a new chronological ML benchmark."
+}

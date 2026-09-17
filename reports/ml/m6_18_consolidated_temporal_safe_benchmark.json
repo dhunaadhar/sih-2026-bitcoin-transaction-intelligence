@@ -1,0 +1,140 @@
+{
+  "milestone": "M6.18",
+  "title": "Consolidated Temporal-Safe ML Benchmark",
+  "status": "PASS",
+  "purpose": "Consolidate causal temporal-safe benchmark results and compare them with the earlier globally constructed benchmark.",
+  "methodology": {
+    "split": {
+      "train": "time_step 1-29",
+      "validation": "time_step 30-39",
+      "test": "time_step 40-49"
+    },
+    "graph_features": "Temporal-safe graph/entity features constructed using only information available before each transaction time step.",
+    "leakage_sensitive_features": 4,
+    "original_model_candidate_features": 87,
+    "comparison_note": "The global benchmark is retained for methodological comparison only. The temporal-safe benchmark is the causal benchmark for downstream model development."
+  },
+  "metrics": {
+    "required": [
+      "accuracy",
+      "macro_f1",
+      "roc_auc_macro",
+      "pr_auc_macro"
+    ],
+    "optional": [
+      "log_loss"
+    ],
+    "aliases_supported": {
+      "roc_auc_macro": [
+        "roc_auc_macro",
+        "roc_auc_ovr_macro",
+        "roc_auc"
+      ],
+      "pr_auc_macro": [
+        "pr_auc_macro",
+        "macro_pr_auc",
+        "pr_auc",
+        "average_precision_macro"
+      ]
+    },
+    "optional_metric_policy": "Missing optional metrics are recorded as null and do not invalidate benchmark consolidation."
+  },
+  "benchmark_table": [
+    {
+      "model": "Logistic Regression",
+      "temporal_safe_accuracy": 0.2265954938152507,
+      "global_accuracy": 0.26959933114669754,
+      "delta_accuracy": -0.04300383733144683,
+      "temporal_safe_macro_f1": 0.24138867179616064,
+      "global_macro_f1": 0.2684599666197307,
+      "delta_macro_f1": -0.02707129482357007,
+      "temporal_safe_roc_auc_macro": 0.6840436718398886,
+      "global_roc_auc_macro": 0.694695187264664,
+      "delta_roc_auc_macro": -0.010651515424775382,
+      "temporal_safe_pr_auc_macro": 0.4456478382007005,
+      "global_pr_auc_macro": 0.4528680618075546,
+      "delta_pr_auc_macro": -0.007220223606854148,
+      "temporal_safe_log_loss": 2.599153070751794,
+      "global_log_loss": null,
+      "delta_log_loss": null
+    },
+    {
+      "model": "Random Forest",
+      "temporal_safe_accuracy": 0.8004802023709993,
+      "global_accuracy": 0.8114776941711149,
+      "delta_accuracy": -0.010997491800115666,
+      "temporal_safe_macro_f1": 0.45438058300382833,
+      "global_macro_f1": 0.4562372197688848,
+      "delta_macro_f1": -0.0018566367650564852,
+      "temporal_safe_roc_auc_macro": 0.7855759802919012,
+      "global_roc_auc_macro": 0.7991723656561218,
+      "delta_roc_auc_macro": -0.013596385364220587,
+      "temporal_safe_pr_auc_macro": 0.5112943503656652,
+      "global_pr_auc_macro": 0.5232332494418787,
+      "delta_pr_auc_macro": -0.011938899076213483,
+      "temporal_safe_log_loss": 0.50968146139189,
+      "global_log_loss": null,
+      "delta_log_loss": null
+    },
+    {
+      "model": "HistGradientBoosting",
+      "temporal_safe_accuracy": 0.7366818873668188,
+      "global_accuracy": 0.7411409093832401,
+      "delta_accuracy": -0.004459022016421232,
+      "temporal_safe_macro_f1": 0.4638576726966934,
+      "global_macro_f1": 0.4646011139630352,
+      "delta_macro_f1": -0.0007434412663417933,
+      "temporal_safe_roc_auc_macro": 0.766225033915891,
+      "global_roc_auc_macro": 0.7864450986769717,
+      "delta_roc_auc_macro": -0.020220064761080625,
+      "temporal_safe_pr_auc_macro": 0.500932225061095,
+      "global_pr_auc_macro": 0.5327941361033649,
+      "delta_pr_auc_macro": -0.031861911042269875,
+      "temporal_safe_log_loss": 0.6261257601466577,
+      "global_log_loss": null,
+      "delta_log_loss": null
+    },
+    {
+      "model": "XGBoost",
+      "temporal_safe_accuracy": 0.800694578429481,
+      "global_accuracy": 0.8097841233091089,
+      "delta_accuracy": -0.009089544879627875,
+      "temporal_safe_macro_f1": 0.44351582057618083,
+      "global_macro_f1": 0.45631643190139043,
+      "delta_macro_f1": -0.012800611325209599,
+      "temporal_safe_roc_auc_macro": 0.8018735510785019,
+      "global_roc_auc_macro": 0.8103040025183579,
+      "delta_roc_auc_macro": -0.00843045143985599,
+      "temporal_safe_pr_auc_macro": 0.5206365231906184,
+      "global_pr_auc_macro": 0.5358038397280659,
+      "delta_pr_auc_macro": -0.015167316537447517,
+      "temporal_safe_log_loss": 0.49768075346946716,
+      "global_log_loss": null,
+      "delta_log_loss": null
+    }
+  ],
+  "current_downstream_candidate": {
+    "model": "XGBoost",
+    "selection_metric": "temporal_safe_test_pr_auc_macro",
+    "value": 0.5206365231906184,
+    "selection_note": "Metric-based candidate for downstream evaluation. Final production selection should also consider calibration, temporal stability, explainability, latency, and operational requirements."
+  },
+  "model_reports": {
+    "Logistic Regression": {
+      "temporal_safe": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\logistic_regression_temporal_safe.json",
+      "global": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\logistic_regression.json"
+    },
+    "Random Forest": {
+      "temporal_safe": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\random_forest_temporal_safe.json",
+      "global": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\random_forest.json"
+    },
+    "HistGradientBoosting": {
+      "temporal_safe": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\hist_gradient_boosting_temporal_safe.json",
+      "global": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\hist_gradient_boosting.json"
+    },
+    "XGBoost": {
+      "temporal_safe": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\xgboost_temporal_safe.json",
+      "global": "D:\\Hackathons\\SIH 2026\\final\\reports\\ml\\xgboost.json"
+    }
+  }
+}

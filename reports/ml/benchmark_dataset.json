@@ -1,0 +1,143 @@
+{
+  "protocol": {
+    "task": "three_class_supervised_classification",
+    "classes": [
+      1,
+      2,
+      3
+    ],
+    "leakage_sensitive_features_excluded": [
+      "transactions_in_time_step",
+      "time_step_activity_ratio",
+      "time_step_activity_deviation",
+      "time_step_activity_log1p"
+    ],
+    "split_type": "chronological"
+  },
+  "features": {
+    "total_benchmark_features": 87,
+    "features": [
+      "total_btc",
+      "fee_btc",
+      "input_address_count",
+      "output_address_count",
+      "input_btc_min",
+      "input_btc_max",
+      "input_btc_mean",
+      "input_btc_median",
+      "input_btc_total",
+      "output_btc_min",
+      "output_btc_max",
+      "output_btc_mean",
+      "output_btc_median",
+      "output_btc_total",
+      "transaction_data_missing",
+      "input_count_log1p",
+      "output_count_log1p",
+      "total_address_count",
+      "address_count_imbalance",
+      "address_count_ratio",
+      "total_btc_log1p",
+      "fee_btc_log1p",
+      "fee_rate_relative",
+      "input_output_value_ratio",
+      "input_output_value_difference",
+      "input_value_range",
+      "input_value_range_log1p",
+      "input_mean_median_ratio",
+      "input_max_mean_ratio",
+      "output_value_range",
+      "output_value_range_log1p",
+      "output_mean_median_ratio",
+      "output_max_mean_ratio",
+      "input_max_share",
+      "output_max_share",
+      "input_median_share",
+      "output_median_share",
+      "temporal_position",
+      "early_period",
+      "late_period",
+      "wallet_overlap_count",
+      "wallet_overlap_input_ratio",
+      "wallet_overlap_output_ratio",
+      "wallet_jaccard_similarity",
+      "unique_wallet_count",
+      "unique_wallet_count_log1p",
+      "has_wallet_overlap",
+      "wallet_relationship_missing",
+      "input_wallets_seen_before",
+      "output_wallets_seen_before",
+      "input_wallet_prior_frequency_sum",
+      "output_wallet_prior_frequency_sum",
+      "input_wallet_prior_frequency_mean",
+      "output_wallet_prior_frequency_mean",
+      "input_wallet_prior_frequency_max",
+      "output_wallet_prior_frequency_max",
+      "input_wallet_reuse_ratio",
+      "output_wallet_reuse_ratio",
+      "input_wallet_recency_min",
+      "output_wallet_recency_min",
+      "input_wallet_recency_mean",
+      "output_wallet_recency_mean",
+      "input_wallet_recency_max",
+      "output_wallet_recency_max",
+      "wallet_history_missing",
+      "entity_input_address_count",
+      "input_repeated_cosponsor_count",
+      "input_repeated_cosponsor_ratio",
+      "input_max_repeated_cosponsor_degree",
+      "input_max_shared_transaction_count",
+      "input_distinct_clusters_t1",
+      "input_max_cluster_size_t1",
+      "input_distinct_clusters_t2",
+      "input_max_cluster_size_t2",
+      "input_distinct_clusters_t3",
+      "input_max_cluster_size_t3",
+      "entity_output_address_count",
+      "output_repeated_cosponsor_count",
+      "output_repeated_cosponsor_ratio",
+      "output_max_repeated_cosponsor_degree",
+      "output_max_shared_transaction_count",
+      "output_distinct_clusters_t1",
+      "output_max_cluster_size_t1",
+      "output_distinct_clusters_t2",
+      "output_max_cluster_size_t2",
+      "output_distinct_clusters_t3",
+      "output_max_cluster_size_t3"
+    ]
+  },
+  "dataset": {
+    "rows": 203769,
+    "train_rows": 120804,
+    "validation_rows": 36318,
+    "test_rows": 46647
+  },
+  "class_distribution": {
+    "overall": {
+      "1": 4545,
+      "2": 42019,
+      "3": 157205
+    },
+    "train": {
+      "1": 2871,
+      "2": 23510,
+      "3": 94423
+    },
+    "validation": {
+      "1": 1038,
+      "2": 7961,
+      "3": 27319
+    },
+    "test": {
+      "1": 636,
+      "2": 10548,
+      "3": 35463
+    }
+  },
+  "artifacts": {
+    "train": "data\\evaluation\\train.parquet",
+    "validation": "data\\evaluation\\validation.parquet",
+    "test": "data\\evaluation\\test.parquet"
+  },
+  "status": "PASS"
+}

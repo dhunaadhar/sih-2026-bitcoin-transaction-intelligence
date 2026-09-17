@@ -1,0 +1,164 @@
+{
+  "stage": "M6.15",
+  "task": "build_temporal_safe_unified_features",
+  "status": "PASS",
+  "base_artifact": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_features.parquet",
+  "temporal_graph_artifact": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\temporal_transaction_entity_evidence.parquet",
+  "output_artifact": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_features_temporal_safe.parquet",
+  "statistics": {
+    "base_rows": 203769,
+    "output_rows": 203769,
+    "base_columns": 93,
+    "output_columns": 93,
+    "graph_features_replaced": 22,
+    "txid_coverage_base_only": 0,
+    "txid_coverage_temporal_only": 0,
+    "time_step_mismatches": 0,
+    "missing_temporal_graph_cells": 0,
+    "infinite_values": 0
+  },
+  "temporal_graph_features": [
+    "input_repeated_cosponsor_count",
+    "input_repeated_cosponsor_ratio",
+    "output_repeated_cosponsor_count",
+    "output_repeated_cosponsor_ratio",
+    "input_max_repeated_cosponsor_degree",
+    "output_max_repeated_cosponsor_degree",
+    "input_max_shared_transaction_count",
+    "output_max_shared_transaction_count",
+    "input_distinct_clusters_t1",
+    "input_distinct_clusters_t2",
+    "input_distinct_clusters_t3",
+    "output_distinct_clusters_t1",
+    "output_distinct_clusters_t2",
+    "output_distinct_clusters_t3",
+    "input_max_cluster_size_t1",
+    "input_max_cluster_size_t2",
+    "input_max_cluster_size_t3",
+    "output_max_cluster_size_t1",
+    "output_max_cluster_size_t2",
+    "output_max_cluster_size_t3",
+    "entity_input_address_count",
+    "entity_output_address_count"
+  ],
+  "replacement_statistics": {
+    "input_repeated_cosponsor_count": {
+      "changed_rows": 6932,
+      "old_nonzero": 13378,
+      "new_nonzero": 7790
+    },
+    "input_repeated_cosponsor_ratio": {
+      "changed_rows": 6932,
+      "old_nonzero": 13378,
+      "new_nonzero": 7790
+    },
+    "output_repeated_cosponsor_count": {
+      "changed_rows": 13298,
+      "old_nonzero": 23794,
+      "new_nonzero": 11519
+    },
+    "output_repeated_cosponsor_ratio": {
+      "changed_rows": 13298,
+      "old_nonzero": 23794,
+      "new_nonzero": 11519
+    },
+    "input_max_repeated_cosponsor_degree": {
+      "changed_rows": 10771,
+      "old_nonzero": 13378,
+      "new_nonzero": 7790
+    },
+    "output_max_repeated_cosponsor_degree": {
+      "changed_rows": 20320,
+      "old_nonzero": 23794,
+      "new_nonzero": 11519
+    },
+    "input_max_shared_transaction_count": {
+      "changed_rows": 14621,
+      "old_nonzero": 13378,
+      "new_nonzero": 14164
+    },
+    "output_max_shared_transaction_count": {
+      "changed_rows": 25640,
+      "old_nonzero": 23794,
+      "new_nonzero": 21322
+    },
+    "input_distinct_clusters_t1": {
+      "changed_rows": 189173,
+      "old_nonzero": 202804,
+      "new_nonzero": 14164
+    },
+    "input_distinct_clusters_t2": {
+      "changed_rows": 198183,
+      "old_nonzero": 202804,
+      "new_nonzero": 7790
+    },
+    "input_distinct_clusters_t3": {
+      "changed_rows": 199632,
+      "old_nonzero": 202804,
+      "new_nonzero": 5596
+    },
+    "output_distinct_clusters_t1": {
+      "changed_rows": 200702,
+      "old_nonzero": 202804,
+      "new_nonzero": 21322
+    },
+    "output_distinct_clusters_t2": {
+      "changed_rows": 202279,
+      "old_nonzero": 202804,
+      "new_nonzero": 11519
+    },
+    "output_distinct_clusters_t3": {
+      "changed_rows": 202465,
+      "old_nonzero": 202804,
+      "new_nonzero": 8249
+    },
+    "input_max_cluster_size_t1": {
+      "changed_rows": 54906,
+      "old_nonzero": 202804,
+      "new_nonzero": 203769
+    },
+    "input_max_cluster_size_t2": {
+      "changed_rows": 12041,
+      "old_nonzero": 202804,
+      "new_nonzero": 203769
+    },
+    "input_max_cluster_size_t3": {
+      "changed_rows": 8469,
+      "old_nonzero": 202804,
+      "new_nonzero": 203769
+    },
+    "output_max_cluster_size_t1": {
+      "changed_rows": 103545,
+      "old_nonzero": 202804,
+      "new_nonzero": 203769
+    },
+    "output_max_cluster_size_t2": {
+      "changed_rows": 22231,
+      "old_nonzero": 202804,
+      "new_nonzero": 203769
+    },
+    "output_max_cluster_size_t3": {
+      "changed_rows": 14100,
+      "old_nonzero": 202804,
+      "new_nonzero": 203769
+    },
+    "entity_input_address_count": {
+      "changed_rows": 178791,
+      "old_nonzero": 202804,
+      "new_nonzero": 31514
+    },
+    "entity_output_address_count": {
+      "changed_rows": 196985,
+      "old_nonzero": 202804,
+      "new_nonzero": 45551
+    }
+  },
+  "methodology": {
+    "global_graph_features_removed": true,
+    "temporal_graph_features_inserted": true,
+    "future_graph_information_used": false,
+    "same_time_step_graph_information_used": false,
+    "temporal_policy": "graph features at time t use only transactions from time steps < t"
+  },
+  "next_step": "Build the temporal-safe benchmark train, validation, and test datasets using the existing chronological split."
+}

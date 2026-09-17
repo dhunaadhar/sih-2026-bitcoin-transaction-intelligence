@@ -1,0 +1,214 @@
+{
+  "stage": "M6.17.3",
+  "model": "HistGradientBoostingClassifier",
+  "temporal_safe": true,
+  "label_column": "label",
+  "random_state": 42,
+  "feature_count": 87,
+  "model_features": [
+    "total_btc",
+    "fee_btc",
+    "input_address_count",
+    "output_address_count",
+    "input_btc_min",
+    "input_btc_max",
+    "input_btc_mean",
+    "input_btc_median",
+    "input_btc_total",
+    "output_btc_min",
+    "output_btc_max",
+    "output_btc_mean",
+    "output_btc_median",
+    "output_btc_total",
+    "transaction_data_missing",
+    "input_count_log1p",
+    "output_count_log1p",
+    "total_address_count",
+    "address_count_imbalance",
+    "address_count_ratio",
+    "total_btc_log1p",
+    "fee_btc_log1p",
+    "fee_rate_relative",
+    "input_output_value_ratio",
+    "input_output_value_difference",
+    "input_value_range",
+    "input_value_range_log1p",
+    "input_mean_median_ratio",
+    "input_max_mean_ratio",
+    "output_value_range",
+    "output_value_range_log1p",
+    "output_mean_median_ratio",
+    "output_max_mean_ratio",
+    "input_max_share",
+    "output_max_share",
+    "input_median_share",
+    "output_median_share",
+    "temporal_position",
+    "early_period",
+    "late_period",
+    "wallet_overlap_count",
+    "wallet_overlap_input_ratio",
+    "wallet_overlap_output_ratio",
+    "wallet_jaccard_similarity",
+    "unique_wallet_count",
+    "unique_wallet_count_log1p",
+    "has_wallet_overlap",
+    "wallet_relationship_missing",
+    "input_wallets_seen_before",
+    "output_wallets_seen_before",
+    "input_wallet_prior_frequency_sum",
+    "output_wallet_prior_frequency_sum",
+    "input_wallet_prior_frequency_mean",
+    "output_wallet_prior_frequency_mean",
+    "input_wallet_prior_frequency_max",
+    "output_wallet_prior_frequency_max",
+    "input_wallet_reuse_ratio",
+    "output_wallet_reuse_ratio",
+    "input_wallet_recency_min",
+    "output_wallet_recency_min",
+    "input_wallet_recency_mean",
+    "output_wallet_recency_mean",
+    "input_wallet_recency_max",
+    "output_wallet_recency_max",
+    "wallet_history_missing",
+    "entity_input_address_count",
+    "input_repeated_cosponsor_count",
+    "input_repeated_cosponsor_ratio",
+    "input_max_repeated_cosponsor_degree",
+    "input_max_shared_transaction_count",
+    "input_distinct_clusters_t1",
+    "input_max_cluster_size_t1",
+    "input_distinct_clusters_t2",
+    "input_max_cluster_size_t2",
+    "input_distinct_clusters_t3",
+    "input_max_cluster_size_t3",
+    "entity_output_address_count",
+    "output_repeated_cosponsor_count",
+    "output_repeated_cosponsor_ratio",
+    "output_max_repeated_cosponsor_degree",
+    "output_max_shared_transaction_count",
+    "output_distinct_clusters_t1",
+    "output_max_cluster_size_t1",
+    "output_distinct_clusters_t2",
+    "output_max_cluster_size_t2",
+    "output_distinct_clusters_t3",
+    "output_max_cluster_size_t3"
+  ],
+  "leakage_sensitive_features_excluded": [
+    "transactions_in_time_step",
+    "time_step_activity_ratio",
+    "time_step_activity_deviation",
+    "time_step_activity_log1p"
+  ],
+  "missing_value_handling": {
+    "strategy": "median",
+    "add_indicator": true,
+    "nan_allowed": true,
+    "infinity_allowed": false
+  },
+  "datasets": {
+    "train": {
+      "rows": 120804,
+      "time_min": 1,
+      "time_max": 29
+    },
+    "validation": {
+      "rows": 36318,
+      "time_min": 30,
+      "time_max": 39
+    },
+    "test": {
+      "rows": 46647,
+      "time_min": 40,
+      "time_max": 49
+    }
+  },
+  "hyperparameters": {
+    "learning_rate": 0.08,
+    "max_iter": 300,
+    "max_leaf_nodes": 31,
+    "min_samples_leaf": 30,
+    "l2_regularization": 1.0,
+    "class_weight": "balanced"
+  },
+  "validation": {
+    "accuracy": 0.7661765515722231,
+    "macro_f1": 0.5901149956515334,
+    "roc_auc_ovr_macro": 0.8281068323751574,
+    "macro_pr_auc": 0.6344193280468943,
+    "log_loss": 0.587057648714481,
+    "classification_report": {
+      "1": {
+        "precision": 0.23669064748201438,
+        "recall": 0.6339113680154143,
+        "f1-score": 0.34468308014667365,
+        "support": 1038.0
+      },
+      "2": {
+        "precision": 0.6091583811791066,
+        "recall": 0.546413767114684,
+        "f1-score": 0.576082638061184,
+        "support": 7961.0
+      },
+      "3": {
+        "precision": 0.8644164109557905,
+        "recall": 0.8352428712617592,
+        "f1-score": 0.8495792687467422,
+        "support": 27319.0
+      },
+      "accuracy": 0.7661765515722231,
+      "macro avg": {
+        "precision": 0.5700884798723038,
+        "recall": 0.6718560021306192,
+        "f1-score": 0.5901149956515334,
+        "support": 36318.0
+      },
+      "weighted avg": {
+        "precision": 0.7905222395383678,
+        "recall": 0.7661765515722231,
+        "f1-score": 0.7751977245908249,
+        "support": 36318.0
+      }
+    }
+  },
+  "test": {
+    "accuracy": 0.7366818873668188,
+    "macro_f1": 0.4638576726966934,
+    "roc_auc_ovr_macro": 0.766225033915891,
+    "macro_pr_auc": 0.500932225061095,
+    "log_loss": 0.6261257601466577,
+    "classification_report": {
+      "1": {
+        "precision": 0.018089053803339517,
+        "recall": 0.06132075471698113,
+        "f1-score": 0.027936962750716332,
+        "support": 636.0
+      },
+      "2": {
+        "precision": 0.533782519183979,
+        "recall": 0.5407660219946909,
+        "f1-score": 0.5372515776584723,
+        "support": 10548.0
+      },
+      "3": {
+        "precision": 0.8466499038603756,
+        "recall": 0.807066520034966,
+        "f1-score": 0.8263844776808916,
+        "support": 35463.0
+      },
+      "accuracy": 0.7366818873668188,
+      "macro avg": {
+        "precision": 0.46617382561589804,
+        "recall": 0.46971776558221273,
+        "f1-score": 0.4638576726966934,
+        "support": 46647.0
+      },
+      "weighted avg": {
+        "precision": 0.7646062595916573,
+        "recall": 0.7366818873668188,
+        "f1-score": 0.7501183416178635,
+        "support": 46647.0
+      }
+    }
+  }
+}

@@ -1,0 +1,399 @@
+{
+  "stage": "M6.17.2",
+  "model": "RandomForestClassifier",
+  "status": "PASS",
+  "methodology": {
+    "feature_source": "D:\\Hackathons\\SIH 2026\\final\\data\\derived\\unified_features_temporal_safe.parquet",
+    "benchmark_source": "M6.16 temporal-safe benchmark datasets",
+    "split_type": "chronological",
+    "train_time_steps": "1-29",
+    "validation_time_steps": "30-39",
+    "test_time_steps": "40-49",
+    "future_information_used": false,
+    "same_time_step_graph_information_used": false,
+    "random_split": false,
+    "resampling": false,
+    "class_balancing": "RandomForest class_weight=balanced_subsample"
+  },
+  "features": {
+    "original_model_feature_count": 87,
+    "transformed_feature_count": 124,
+    "leakage_sensitive_excluded": 4,
+    "feature_names": [
+      "total_btc",
+      "fee_btc",
+      "input_address_count",
+      "output_address_count",
+      "input_btc_min",
+      "input_btc_max",
+      "input_btc_mean",
+      "input_btc_median",
+      "input_btc_total",
+      "output_btc_min",
+      "output_btc_max",
+      "output_btc_mean",
+      "output_btc_median",
+      "output_btc_total",
+      "transaction_data_missing",
+      "input_count_log1p",
+      "output_count_log1p",
+      "total_address_count",
+      "address_count_imbalance",
+      "address_count_ratio",
+      "total_btc_log1p",
+      "fee_btc_log1p",
+      "fee_rate_relative",
+      "input_output_value_ratio",
+      "input_output_value_difference",
+      "input_value_range",
+      "input_value_range_log1p",
+      "input_mean_median_ratio",
+      "input_max_mean_ratio",
+      "output_value_range",
+      "output_value_range_log1p",
+      "output_mean_median_ratio",
+      "output_max_mean_ratio",
+      "input_max_share",
+      "output_max_share",
+      "input_median_share",
+      "output_median_share",
+      "temporal_position",
+      "early_period",
+      "late_period",
+      "wallet_overlap_count",
+      "wallet_overlap_input_ratio",
+      "wallet_overlap_output_ratio",
+      "wallet_jaccard_similarity",
+      "unique_wallet_count",
+      "unique_wallet_count_log1p",
+      "has_wallet_overlap",
+      "wallet_relationship_missing",
+      "input_wallets_seen_before",
+      "output_wallets_seen_before",
+      "input_wallet_prior_frequency_sum",
+      "output_wallet_prior_frequency_sum",
+      "input_wallet_prior_frequency_mean",
+      "output_wallet_prior_frequency_mean",
+      "input_wallet_prior_frequency_max",
+      "output_wallet_prior_frequency_max",
+      "input_wallet_reuse_ratio",
+      "output_wallet_reuse_ratio",
+      "input_wallet_recency_min",
+      "output_wallet_recency_min",
+      "input_wallet_recency_mean",
+      "output_wallet_recency_mean",
+      "input_wallet_recency_max",
+      "output_wallet_recency_max",
+      "wallet_history_missing",
+      "entity_input_address_count",
+      "input_repeated_cosponsor_count",
+      "input_repeated_cosponsor_ratio",
+      "input_max_repeated_cosponsor_degree",
+      "input_max_shared_transaction_count",
+      "input_distinct_clusters_t1",
+      "input_max_cluster_size_t1",
+      "input_distinct_clusters_t2",
+      "input_max_cluster_size_t2",
+      "input_distinct_clusters_t3",
+      "input_max_cluster_size_t3",
+      "entity_output_address_count",
+      "output_repeated_cosponsor_count",
+      "output_repeated_cosponsor_ratio",
+      "output_max_repeated_cosponsor_degree",
+      "output_max_shared_transaction_count",
+      "output_distinct_clusters_t1",
+      "output_max_cluster_size_t1",
+      "output_distinct_clusters_t2",
+      "output_max_cluster_size_t2",
+      "output_distinct_clusters_t3",
+      "output_max_cluster_size_t3"
+    ]
+  },
+  "dataset": {
+    "train_rows": 120804,
+    "validation_rows": 36318,
+    "test_rows": 46647,
+    "train_class_distribution": {
+      "1": 2871,
+      "2": 23510,
+      "3": 94423
+    },
+    "validation_class_distribution": {
+      "1": 1038,
+      "2": 7961,
+      "3": 27319
+    },
+    "test_class_distribution": {
+      "1": 636,
+      "2": 10548,
+      "3": 35463
+    }
+  },
+  "model_parameters": {
+    "n_estimators": 300,
+    "max_depth": null,
+    "min_samples_leaf": 2,
+    "class_weight": "balanced_subsample",
+    "n_jobs": -1,
+    "random_state": 42,
+    "imputation": {
+      "strategy": "median",
+      "add_indicator": true
+    }
+  },
+  "validation_metrics": {
+    "accuracy": 0.8092681315050388,
+    "macro_f1": 0.5671533227639505,
+    "roc_auc_ovr_macro": 0.8243483820338326,
+    "macro_pr_auc": 0.6075733125199286,
+    "log_loss": 0.4964348108153787
+  },
+  "test_metrics": {
+    "accuracy": 0.8004802023709993,
+    "macro_f1": 0.45438058300382833,
+    "roc_auc_ovr_macro": 0.7855759802919012,
+    "macro_pr_auc": 0.5112943503656652,
+    "log_loss": 0.50968146139189
+  },
+  "test_per_class": {
+    "1": {
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0,
+      "average_precision": 0.041486490666422106
+    },
+    "2": {
+      "precision": 0.6645214521452145,
+      "recall": 0.38177853621539626,
+      "f1": 0.48494701348747593,
+      "average_precision": 0.5931258682082949
+    },
+    "3": {
+      "precision": 0.8244975744975745,
+      "recall": 0.9393734314637792,
+      "f1": 0.8781947355240092,
+      "average_precision": 0.8992706922222783
+    }
+  },
+  "feature_importance": {
+    "transformed_top_25": [
+      {
+        "feature": "input_output_value_difference",
+        "importance": 0.05691454441229349
+      },
+      {
+        "feature": "fee_btc",
+        "importance": 0.051745624877426205
+      },
+      {
+        "feature": "fee_btc_log1p",
+        "importance": 0.0511125767655297
+      },
+      {
+        "feature": "total_address_count",
+        "importance": 0.0487750146764204
+      },
+      {
+        "feature": "output_max_share",
+        "importance": 0.040139445182038616
+      },
+      {
+        "feature": "temporal_position",
+        "importance": 0.034599066646514
+      },
+      {
+        "feature": "output_max_mean_ratio",
+        "importance": 0.03382182757328885
+      },
+      {
+        "feature": "output_value_range",
+        "importance": 0.025693928703159164
+      },
+      {
+        "feature": "unique_wallet_count",
+        "importance": 0.024978181971366368
+      },
+      {
+        "feature": "output_median_share",
+        "importance": 0.024597745756739266
+      },
+      {
+        "feature": "output_value_range_log1p",
+        "importance": 0.02439930268059307
+      },
+      {
+        "feature": "unique_wallet_count_log1p",
+        "importance": 0.022025251193896696
+      },
+      {
+        "feature": "input_btc_min",
+        "importance": 0.02138016695399488
+      },
+      {
+        "feature": "output_address_count",
+        "importance": 0.020420066663808713
+      },
+      {
+        "feature": "output_count_log1p",
+        "importance": 0.01989905280770876
+      },
+      {
+        "feature": "output_btc_min",
+        "importance": 0.019764327347472344
+      },
+      {
+        "feature": "input_median_share",
+        "importance": 0.015687730223301527
+      },
+      {
+        "feature": "input_max_share",
+        "importance": 0.015665875952304033
+      },
+      {
+        "feature": "fee_rate_relative",
+        "importance": 0.015394208385893105
+      },
+      {
+        "feature": "input_output_value_ratio",
+        "importance": 0.014604112105420662
+      },
+      {
+        "feature": "input_btc_median",
+        "importance": 0.014261262854720833
+      },
+      {
+        "feature": "output_btc_median",
+        "importance": 0.014232609595264857
+      },
+      {
+        "feature": "input_count_log1p",
+        "importance": 0.01398154917320684
+      },
+      {
+        "feature": "input_btc_mean",
+        "importance": 0.013922969297684981
+      },
+      {
+        "feature": "output_btc_max",
+        "importance": 0.01383877221601903
+      }
+    ],
+    "aggregated_original_top_25": [
+      {
+        "feature": "input_output_value_difference",
+        "importance": 0.05694264193701664
+      },
+      {
+        "feature": "fee_btc",
+        "importance": 0.051820332184149304
+      },
+      {
+        "feature": "fee_btc_log1p",
+        "importance": 0.05114308755641446
+      },
+      {
+        "feature": "total_address_count",
+        "importance": 0.04881527502094655
+      },
+      {
+        "feature": "output_max_share",
+        "importance": 0.040220185120937675
+      },
+      {
+        "feature": "temporal_position",
+        "importance": 0.034599066646514
+      },
+      {
+        "feature": "output_max_mean_ratio",
+        "importance": 0.03383866369556776
+      },
+      {
+        "feature": "output_value_range",
+        "importance": 0.02574903373959673
+      },
+      {
+        "feature": "unique_wallet_count",
+        "importance": 0.024978181971366368
+      },
+      {
+        "feature": "output_median_share",
+        "importance": 0.024683474411163454
+      },
+      {
+        "feature": "output_value_range_log1p",
+        "importance": 0.02446283508714905
+      },
+      {
+        "feature": "unique_wallet_count_log1p",
+        "importance": 0.022025251193896696
+      },
+      {
+        "feature": "input_btc_min",
+        "importance": 0.021414343040767246
+      },
+      {
+        "feature": "output_address_count",
+        "importance": 0.020449101582543126
+      },
+      {
+        "feature": "output_count_log1p",
+        "importance": 0.01989905280770876
+      },
+      {
+        "feature": "output_btc_min",
+        "importance": 0.01978243593585572
+      },
+      {
+        "feature": "input_max_share",
+        "importance": 0.01574664863458942
+      },
+      {
+        "feature": "input_median_share",
+        "importance": 0.015737372219965986
+      },
+      {
+        "feature": "fee_rate_relative",
+        "importance": 0.015414253123957092
+      },
+      {
+        "feature": "input_output_value_ratio",
+        "importance": 0.014690755985136304
+      },
+      {
+        "feature": "input_btc_median",
+        "importance": 0.014328400576302502
+      },
+      {
+        "feature": "output_btc_median",
+        "importance": 0.014278584863728664
+      },
+      {
+        "feature": "input_count_log1p",
+        "importance": 0.01398154917320684
+      },
+      {
+        "feature": "input_btc_mean",
+        "importance": 0.01397428373081102
+      },
+      {
+        "feature": "output_btc_max",
+        "importance": 0.013875110876384905
+      }
+    ]
+  },
+  "comparison_reference": {
+    "global_m6_7_validation": {
+      "accuracy": 0.816,
+      "macro_f1": 0.5803,
+      "roc_auc_ovr_macro": 0.8362,
+      "macro_pr_auc": 0.6299
+    },
+    "global_m6_7_test": {
+      "accuracy": 0.8115,
+      "macro_f1": 0.4562,
+      "roc_auc_ovr_macro": 0.7992,
+      "macro_pr_auc": 0.5232
+    }
+  },
+  "next_step": "Run temporal-safe HistGradientBoosting and XGBoost using the identical M6 benchmark methodology."
+}
