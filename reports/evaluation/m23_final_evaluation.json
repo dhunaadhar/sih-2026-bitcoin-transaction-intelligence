@@ -1,0 +1,126 @@
+{
+  "milestone": "M23",
+  "title": "Final Evaluation",
+  "status": "PASS",
+  "dataset": {
+    "transactions": 203769,
+    "time_steps": 49,
+    "train_rows": 120804,
+    "validation_rows": 36318,
+    "test_rows": 46647,
+    "train_time": "1-29",
+    "validation_time": "30-39",
+    "test_time": "40-49"
+  },
+  "temporal_safety": {
+    "model_features": 87,
+    "leakage_sensitive_excluded": 4,
+    "future_information_used": false,
+    "same_time_step_graph_information_used": false,
+    "random_split": false
+  },
+  "benchmark": {
+    "LogisticRegression": {
+      "accuracy": 0.2265954938,
+      "macro_f1": 0.2413886718,
+      "roc_auc": 0.6840436718,
+      "pr_auc": 0.4456478382,
+      "log_loss": 2.5991530708
+    },
+    "RandomForest": {
+      "accuracy": 0.8004802024,
+      "macro_f1": 0.454380583,
+      "roc_auc": 0.7855759803,
+      "pr_auc": 0.5112943504,
+      "log_loss": 0.5096814614
+    },
+    "HistGradientBoosting": {
+      "accuracy": 0.7366818874,
+      "macro_f1": 0.4638576727,
+      "roc_auc": 0.7662250339,
+      "pr_auc": 0.5009322251,
+      "log_loss": 0.6261257601
+    },
+    "XGBoost": {
+      "accuracy": 0.8006945784,
+      "macro_f1": 0.4435158206,
+      "roc_auc": 0.8018735511,
+      "pr_auc": 0.5206365232,
+      "log_loss": 0.4976807535
+    }
+  },
+  "production_models": {
+    "xgboost": {
+      "features": 87,
+      "transformed_features": 124,
+      "training_rows": 120804,
+      "validation_rows": 36318,
+      "test_used_for_training": false
+    },
+    "isolation_forest": {
+      "features": 87,
+      "transformed_features": 124,
+      "training_rows": 120804,
+      "validation_rows": 36318,
+      "test_used_for_training": false
+    }
+  },
+  "risk_engine": {
+    "rows": 203769,
+    "unique_txids": 203769,
+    "risk_min": 11.0704514364,
+    "risk_max": 86.5826740326,
+    "very_high": 79,
+    "high": 5844,
+    "moderate": 27742,
+    "guarded": 136916,
+    "low": 33188
+  },
+  "alerts": {
+    "queue_size": 1000,
+    "ranked_validation": "PASS",
+    "temporal_validation": "PASS",
+    "deterministic_ranking": true
+  },
+  "network_intelligence": {
+    "offline": true,
+    "network_fixture_coverage": "very_low",
+    "transactions_with_m13_intelligence": 1,
+    "vpn_transactions": 1,
+    "proxy_transactions": 1,
+    "tor_transactions": 0,
+    "hosting_datacenter_transactions": 1
+  },
+  "testing": {
+    "tests_passed": 62,
+    "warnings": 3,
+    "status": "PASS"
+  },
+  "deployment": {
+    "linux": "validated",
+    "appimage": "validated"
+  },
+  "limitations": [
+    "Elliptic++ source data does not provide IP, port, country, or ASN fields.",
+    "Current network intelligence evaluation uses a synthetic offline validation fixture with very low coverage.",
+    "Address/entity clustering represents structural association and does not establish real-world identity or ownership.",
+    "Risk scores are investigative priorities, not probabilities of illicit activity or proof of criminality."
+  ],
+  "reproducibility": {
+    "status": "PASS",
+    "basis": [
+      "temporal-safe benchmark reports",
+      "production model metadata",
+      "ranked-alert validation",
+      "temporal-alert validation",
+      "M13 integration validation",
+      "62-test automated suite"
+    ]
+  },
+  "performance_audit": {
+    "test_rows": 46647,
+    "test_columns": 94,
+    "parquet_load_seconds": 0.199,
+    "parquet_rows_per_second": 234280.01
+  }
+}
