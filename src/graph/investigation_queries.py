@@ -308,122 +308,73 @@ class InvestigationGraph:
         address: str,
     ) -> dict[str, Any]:
 
-        node_id = (
-            f"wallet:{address}"
-        )
+        raw_address = str(address).strip()
 
-        if not self.node_exists(
-            node_id
-        ):
+        if raw_address.startswith("wallet:"):
+            node_id = raw_address
+            wallet_address = raw_address[7:]
+        else:
+            wallet_address = raw_address
+            node_id = f"wallet:{wallet_address}"
+
+        if not self.node_exists(node_id):
             raise KeyError(
-                f"Wallet not found: {address}"
+                f"Wallet not found: {wallet_address}"
             )
 
-        outgoing = self.edges[
-            self.edges["source"]
-            == node_id
-        ]
+        connected_edges = self.edges[
+            (self.edges["source"] == node_id)
+            | (self.edges["target"] == node_id)
+        ].copy()
 
-        incoming = self.edges[
-            self.edges["target"]
-            == node_id
-        ]
-
-        connected_edges = pd.concat(
-            [
-                outgoing,
-                incoming,
-            ],
-            ignore_index=True,
-        ).drop_duplicates(
+        connected_edges = connected_edges.drop_duplicates(
             subset=["edge_id"]
         )
 
         txids = set()
 
-        for _, row in (
-            connected_edges.iterrows()
-        ):
-
-            for endpoint in (
-                row["source"],
-                row["target"],
-            ):
-
-                if str(endpoint).startswith(
-                    "tx:"
-                ):
-
-                    txids.add(
-                        str(endpoint)[3:]
-                    )
+        for _, row in connected_edges.iterrows():
+            for endpoint in (row["source"], row["target"]):
+                endpoint_text = str(endpoint).strip()
+                if endpoint_text.startswith("tx:"):
+                    txid = endpoint_text[3:].strip()
+                    if txid:
+                        txids.add(txid)
 
         transactions = []
 
-        for txid in txids:
-
-            tx_node = (
-                f"tx:{txid}"
-            )
-
-            if tx_node not in (
-                self.node_lookup
-            ):
-                continue
-
+        for txid in sorted(txids):
+            tx_node = f"tx:{txid}"
             record = {
-                "txid": txid
+                "txid": txid,
+                "node_id": tx_node,
+                "node_type": "transaction",
             }
 
-            record.update(
-                self.node_lookup[
-                    tx_node
-                ]
-            )
+            metadata = self.node_lookup.get(tx_node)
+            if metadata is not None:
+                record.update(metadata)
 
-            transactions.append(
-                record
-            )
+            transactions.append(record)
 
-        transactions_df = (
-            pd.DataFrame(
-                transactions
-            )
-        )
+        transactions_df = pd.DataFrame(transactions)
 
-        if not transactions_df.empty:
-
-            if "time_step" in (
-                transactions_df.columns
-            ):
-
-                transactions_df = (
-                    transactions_df
-                    .sort_values(
-                        "time_step"
-                    )
-                )
+        if not transactions_df.empty and "time_step" in transactions_df.columns:
+            transactions_df = transactions_df.sort_values(
+                "time_step",
+                na_position="last",
+            ).reset_index(drop=True)
 
         return {
             "query": "wallet_context",
-            "wallet": address,
-            "transaction_count": int(
-                len(transactions_df)
-            ),
+            "wallet": wallet_address,
+            "transaction_count": int(len(txids)),
             "transactions": (
-                transactions_df
-                .to_dict(
-                    orient="records"
-                )
+                transactions_df.to_dict(orient="records")
                 if not transactions_df.empty
                 else []
             ),
-            "relationships": (
-                connected_edges
-                .to_dict(
-                    orient="records"
-                )
-            ),
+            "relationships": connected_edges.to_dict(orient="records"),
         }
 
     # ================================================================
