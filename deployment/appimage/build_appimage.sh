@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
@@ -9,44 +10,57 @@ VENV_DIR="${ROOT_DIR}/.venv-linux"
 APP_NAME="SIH-2026-Bitcoin-Transaction-Intelligence"
 APPIMAGETOOL="${HOME}/appimage-tools/appimagetool-x86_64.AppImage"
 
-echo "=== SIH 2026 AppImage Build ==="
+echo "=== SIH 2026 AppImage Builder ==="
 
-if [[ ! -x "${VENV_DIR}/bin/python" ]]; then
-    echo "ERROR: ${VENV_DIR}/bin/python not found."
+[[ -x "${VENV_DIR}/bin/python" ]] || {
+    echo "ERROR: Python 3.11 virtual environment not found."
     exit 1
-fi
+}
 
-if [[ ! -x "${APPIMAGETOOL}" ]]; then
-    echo "ERROR: AppImageTool not found at ${APPIMAGETOOL}"
+[[ -x "${APPIMAGETOOL}" ]] || {
+    echo "ERROR: AppImageTool not found."
     exit 1
-fi
+}
 
 "${VENV_DIR}/bin/python" --version
 
 rm -rf "${APPDIR}"
-mkdir -p     "${APPDIR}/usr/share/${APP_NAME}"     "${APPDIR}/usr/share/applications"     "${APPDIR}/usr/share/icons/hicolor/256x256/apps"     "${APPDIR}/opt"
+
+mkdir -p \
+    "${APPDIR}/usr/share/${APP_NAME}" \
+    "${APPDIR}/usr/share/applications" \
+    "${APPDIR}/usr/share/icons/hicolor/256x256/apps" \
+    "${APPDIR}/opt"
 
 echo "[1/6] Copying application..."
-cp -a "${ROOT_DIR}/src" "${APPDIR}/usr/share/${APP_NAME}/"
-cp -a "${ROOT_DIR}/requirements.txt" "${APPDIR}/usr/share/${APP_NAME}/"
+cp -a "${ROOT_DIR}/src" \
+    "${APPDIR}/usr/share/${APP_NAME}/"
+
+cp -a "${ROOT_DIR}/requirements.txt" \
+    "${APPDIR}/usr/share/${APP_NAME}/"
 
 if [[ -d "${ROOT_DIR}/deployment/linux/config" ]]; then
-    cp -a "${ROOT_DIR}/deployment/linux/config" "${APPDIR}/usr/share/${APP_NAME}/"
+    cp -a "${ROOT_DIR}/deployment/linux/config" \
+        "${APPDIR}/usr/share/${APP_NAME}/"
 fi
 
 echo "[2/6] Copying models..."
-cp -a "${ROOT_DIR}/models" "${APPDIR}/usr/share/${APP_NAME}/"
+cp -a "${ROOT_DIR}/models" \
+    "${APPDIR}/usr/share/${APP_NAME}/"
 
 echo "[3/6] Copying data..."
-cp -a "${ROOT_DIR}/data" "${APPDIR}/usr/share/${APP_NAME}/"
+cp -a "${ROOT_DIR}/data" \
+    "${APPDIR}/usr/share/${APP_NAME}/"
 
 echo "[4/6] Copying Python runtime..."
-cp -a "${VENV_DIR}" "${APPDIR}/opt/venv-linux"
+cp -a "${VENV_DIR}" \
+    "${APPDIR}/opt/venv-linux"
 
 echo "[5/6] Creating launcher..."
 
 cat > "${APPDIR}/AppRun" <<'APPRUN'
 #!/usr/bin/env bash
+
 set -euo pipefail
 
 APPDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -61,7 +75,10 @@ export PYTHONPATH="${APP_ROOT}:${PYTHONPATH:-}"
 
 cd "${APP_ROOT}"
 
-exec "${VENV}/bin/python" -m uvicorn     src.api.app:app     --host "${SIH_HOST}"     --port "${SIH_PORT}"
+exec "${VENV}/bin/python" -m uvicorn \
+    src.api.app:app \
+    --host "${SIH_HOST}" \
+    --port "${SIH_PORT}"
 APPRUN
 
 chmod +x "${APPDIR}/AppRun"
@@ -77,23 +94,30 @@ Type=Application
 Categories=Utility;Security;
 DESKTOP
 
+cp "${APPDIR}/usr/share/applications/${APP_NAME}.desktop" \
+   "${APPDIR}/${APP_NAME}.desktop"
+
 cat > "${APPDIR}/usr/share/icons/hicolor/256x256/apps/sih-2026.svg" <<'ICON'
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
-<rect width="256" height="256" rx="32" fill="#111827"/>
+<rect width="256" height="256" rx="32"/>
 <circle cx="128" cy="128" r="78" fill="none" stroke="#f59e0b" stroke-width="12"/>
 <path d="M128 70v116M105 82h38c22 0 35 10 35 27 0 17-13 27-35 27h-38m0-54h43c19 0 30 9 30 23 0 15-11 24-30 24h-43m0 0h45c22 0 35 10 35 27 0 18-13 28-35 28h-45"
-fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round"/>
+fill="none" stroke="white" stroke-width="10" stroke-linecap="round"/>
 </svg>
 ICON
 
-cp "${APPDIR}/usr/share/icons/hicolor/256x256/apps/sih-2026.svg" "${APPDIR}/sih-2026.svg"
-
-mkdir -p "${DIST_DIR}"
-rm -f "${DIST_DIR}/${APP_NAME}-x86_64.AppImage"
+cp "${APPDIR}/usr/share/icons/hicolor/256x256/apps/sih-2026.svg" \
+   "${APPDIR}/sih-2026.svg"
 
 echo "[6/6] Building AppImage..."
 
-"${APPIMAGETOOL}"     "${APPDIR}"     "${DIST_DIR}/${APP_NAME}-x86_64.AppImage"
+mkdir -p "${DIST_DIR}"
+
+rm -f "${DIST_DIR}/${APP_NAME}-x86_64.AppImage"
+
+"${APPIMAGETOOL}" \
+    "${APPDIR}" \
+    "${DIST_DIR}/${APP_NAME}-x86_64.AppImage"
 
 chmod +x "${DIST_DIR}/${APP_NAME}-x86_64.AppImage"
 
