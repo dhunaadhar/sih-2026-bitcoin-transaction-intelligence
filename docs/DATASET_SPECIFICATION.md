@@ -144,3 +144,16 @@ A dataset shall be accepted for downstream feature engineering only after:
 ## 16. Model Independence
 
 This specification does not select or prefer any machine-learning algorithm. Logistic Regression, XGBoost, Isolation Forest, and other appropriate candidates shall be evaluated quantitatively in the later ML benchmark milestone.
+
+
+## 17. Implemented Dataset Status
+
+The implemented canonical Elliptic++ transaction dataset contains 203,769 unique transactions across time steps 1–49. The canonical artifact contains 19 columns and retains 965 transactions with incomplete address relationships as structured missingness.
+
+The downstream unified feature matrix contains 203,769 transactions and 93 columns. Temporal-safe graph/entity features were rebuilt using only information available before each transaction time step to prevent future-data and same-time-step leakage.
+
+The source dataset contains no IP, port, geographic-country, or ASN fields. These network fields are therefore implemented as an optional offline intelligence layer rather than being fabricated from the blockchain source.
+
+The source class distribution is numeric: class 1 = 4,545, class 2 = 42,019, and class 3 = 157,205. No semantic class names are assigned without authoritative provenance.
+
+The canonical source manifest records provenance and SHA-256 information for the source files.\n

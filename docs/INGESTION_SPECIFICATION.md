@@ -268,7 +268,7 @@ Automated test result:
 
 
 
-`3 passed`
+`6 automated tests passed; 2 cross-format validation tests passed`
 
 
 
@@ -300,3 +300,14 @@ Those functions belong to downstream components.
 
 In particular, an IP address associated with a transaction must not automatically be interpreted as proof of ownership or identity of a wallet.
 
+
+
+## 11. Implemented Ingestion Status
+
+The ingestion subsystem supports CSV, JSON, and XML investigator imports through a common normalization and validation pipeline.
+
+Implemented components include schema validation, field alias normalization, list normalization, numeric/IP/port/timestamp validation, exact-record SHA-256 deduplication, and provenance generation.
+
+Investigator-import validation has been extended across all three supported formats. The implementation includes automated cross-format validation in addition to the original ingestion tests.
+
+The ingestion subsystem remains deliberately separate from graph construction, ML inference, anomaly detection, behavioural detection, risk scoring, and identity attribution.\n

@@ -4,9 +4,9 @@
 Smart India Hackathon 2026 - PS 26146: AI-Powered Monitoring & Analysis of Bitcoin Transaction Traffic.
 
 ## Production Model Status
-UNDECIDED.
+VALIDATED — XGBoost.
 
-The final production machine-learning model shall not be selected in advance. Candidate models will be quantitatively benchmarked and the final model will be selected based on documented evaluation results.
+The production supervised classifier was selected after quantitative temporal-safe benchmarking. XGBoost is the production classification model, while Isolation Forest provides an independent unsupervised anomaly channel. The benchmark and selection evidence are documented in the M6 ML evaluation reports.
 
 ## Core Requirements
 
@@ -21,8 +21,8 @@ The final production machine-learning model shall not be selected in advance. Ca
 - AI/ML-based detection rather than rules alone.
 - Quantitative comparison of multiple ML models.
 - Logistic Regression must be included as a benchmark candidate.
-- XGBoost and Isolation Forest are candidate techniques, not predetermined final choices.
-- Automated experimentation/model selection shall be evaluated as part of the project.
+- XGBoost is the validated production supervised classifier; Isolation Forest is the production unsupervised anomaly detector.
+- Model selection is supported by the completed temporal-safe quantitative benchmark.
 - Anomaly detection.
 - Peeling-chain detection.
 - Mixing-pattern detection.
@@ -63,3 +63,50 @@ Every major milestone shall follow:
 3. Document.
 4. Quantitatively validate.
 5. Commit to Git.
+
+
+## 22. Implemented Production Status
+
+The implementation has progressed from the initial specification to a validated end-to-end investigative platform.
+
+### Data and intelligence pipeline
+
+- Canonical transaction dataset: 203,769 transactions across 49 time steps.
+- Transaction feature matrix: 93 columns including `txid`.
+- Temporal-safe graph/entity evidence is used for ML evaluation.
+- Address graph: 822,942 unique addresses and 2,784,344 unique directed edges.
+- Unified investigation graph: 1,026,715 nodes and 1,379,970 edges.
+
+### Machine learning
+
+Multiple models were benchmarked using chronological train/validation/test splits. The frozen temporal-safe test set contains 46,647 transactions.
+
+The production supervised classifier is XGBoost, trained after temporal-safe benchmarking. The production package uses 87 model features and excludes leakage-sensitive temporal activity features and identifiers.
+
+The temporal-safe XGBoost benchmark achieved test accuracy 0.8007, Macro F1 0.4435, ROC-AUC 0.8019, PR-AUC 0.5206, and LogLoss 0.4977.
+
+Isolation Forest provides an independent unsupervised anomaly channel.
+
+### Behavioural intelligence
+
+Peeling-chain and mixing-pattern detectors are implemented with explicit temporal and structural safeguards. The behavioural layer reconstructed 12,018 valid peeling-chain candidates and 1,497 mixing candidates from the available source relationships.
+
+### Explainability and risk intelligence
+
+SHAP-based explanations are generated for ranked alerts. The unified risk engine combines supervised ML, anomaly, behavioural, temporal-safe entity/graph, and network evidence into an investigative prioritisation score from 0 to 100.
+
+Ranked alerts provide priority, confidence, severity, supporting evidence, and analyst-facing explanations.
+
+### Network intelligence
+
+Network intelligence supports optional offline correlation of IP and related network metadata. VPN, proxy, Tor, and hosting classifications are only applied when supported by an explicit intelligence feed. Unknown network intelligence is not fabricated.
+
+### Application and deployment
+
+The system provides a FastAPI backend, investigation dashboard, monitoring and reliability components, controlled reporting/notification workflows, Linux deployment scripts, and an offline x86_64 AppImage.
+
+### Validation status
+
+The current automated test suite contains 62 passing tests with 3 warnings. Graph-specific regression tests contain 8 passing tests. Linux deployment and AppImage execution have also been manually validated.
+
+The production system remains an investigative intelligence platform. Its outputs do not establish real-world identity, wallet ownership, illicit activity, or criminal guilt without independent evidence.
