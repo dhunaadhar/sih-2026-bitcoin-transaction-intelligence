@@ -1,4 +1,4 @@
-"use strict";
+﻿"use strict";
 
 /*
  * Bitcoin Transaction Intelligence Platform
@@ -13,7 +13,6 @@
  *   /api/alerts/{txid}
  *   /api/temporal
  *   /api/graph/{txid}
- *   /api/top-risk
  *   /api/import
  *
  * No external JavaScript libraries are required.
@@ -120,7 +119,7 @@ function formatNumber(value, digits = 0) {
     const number = Number(value);
 
     if (!Number.isFinite(number)) {
-        return "—";
+        return "â€”";
     }
 
     return number.toLocaleString(
@@ -138,7 +137,7 @@ function formatRisk(value) {
     const number = Number(value);
 
     if (!Number.isFinite(number)) {
-        return "—";
+        return "â€”";
     }
 
     return number.toFixed(2);
@@ -150,7 +149,7 @@ function formatPercent(value, digits = 1) {
     const number = Number(value);
 
     if (!Number.isFinite(number)) {
-        return "—";
+        return "â€”";
     }
 
     return `${(number * 100).toFixed(digits)}%`;
@@ -184,7 +183,7 @@ function setText(id, value) {
         value === null ||
         value === undefined ||
         value === ""
-            ? "—"
+            ? "â€”"
             : String(value);
 }
 
@@ -636,7 +635,7 @@ function renderSummary(
             ? Number(
                 evidence.mean_evidence_channels
             ).toFixed(2)
-            : "—"
+            : "â€”"
     );
 }
 
@@ -884,7 +883,7 @@ function renderTemporal(
 
             <div>
                 <span class="chart-label">
-                    Time steps ${data.start_time_step}–${data.end_time_step}
+                    Time steps ${data.start_time_step}â€“${data.end_time_step}
                 </span>
             </div>
         </div>
@@ -1819,12 +1818,12 @@ function renderInvestigationRisk(
     const level =
         alert.risk_level ??
         risk.risk_level ??
-        "—";
+        "â€”";
 
 
     const priority =
         alert.alert_priority ??
-        "—";
+        "â€”";
 
 
     const explanation =
@@ -2274,7 +2273,7 @@ function renderShap(
                 <strong>
                     ${escapeHtml(
                         record.predicted_class ??
-                        "—"
+                        "â€”"
                     )}
                 </strong>
             </div>
@@ -2404,7 +2403,7 @@ function renderDetailGrid(
                             value === undefined ||
                             value === null ||
                             value === ""
-                                ? "—"
+                                ? "â€”"
                                 : value
                         )}
                     </div>
@@ -2447,7 +2446,7 @@ function renderDetailList(
                             item[1] === undefined ||
                             item[1] === null ||
                             item[1] === ""
-                                ? "—"
+                                ? "â€”"
                                 : item[1]
                         )}
                     </div>
@@ -2568,6 +2567,23 @@ async function openGraph(
     if (!normalized) {
         return;
     }
+
+
+    /*
+     * Keep the currently investigated transaction
+     * synchronized across workspaces.
+     *
+     * This allows:
+     *
+     * Alerts -> Investigation -> Graph
+     *
+     * without requiring the analyst to copy/paste
+     * the TXID again.
+     */
+    state.selectedTxid =
+        normalized;
+
+    synchronizeSelectedTransaction();
 
 
     state.loadingGraph =
@@ -3113,7 +3129,7 @@ function graphNodeShortLabel(
         return (
             nodeId
                 .slice(3, 13)
-            + "…"
+            + "â€¦"
         );
     }
 
@@ -3127,7 +3143,7 @@ function graphNodeShortLabel(
         return (
             nodeId
                 .slice(7, 17)
-            + "…"
+            + "â€¦"
         );
     }
 
@@ -3154,7 +3170,7 @@ function graphNodeShortLabel(
                 0,
                 15
             )
-            + "…"
+            + "â€¦"
         );
     }
 
@@ -3199,7 +3215,7 @@ function renderGraphNodes(
 
                     const nodeId =
                         node.node_id ||
-                        "—";
+                        "â€”";
 
                     const type =
                         node.node_type ||
@@ -3324,7 +3340,7 @@ async function loadNetworkOverview() {
                         ? "Correlated"
                         : "0"
                 )
-                : "—"
+                : "â€”"
         );
 
 
@@ -3412,22 +3428,22 @@ async function loadNetworkOverview() {
 
             setText(
                 "network-vpn-count",
-                "—"
+                "â€”"
             );
 
             setText(
                 "network-proxy-count",
-                "—"
+                "â€”"
             );
 
             setText(
                 "network-tor-count",
-                "—"
+                "â€”"
             );
 
             setText(
                 "network-hosting-count",
-                "—"
+                "â€”"
             );
         }
 
@@ -3501,7 +3517,7 @@ function initializeImport() {
 
             setText(
                 "import-file-info",
-                `${file.name} — ${formatNumber(
+                `${file.name} â€” ${formatNumber(
                     file.size / 1024,
                     1
                 )} KB`
@@ -3794,7 +3810,7 @@ function renderImportResult(
             <span class="mono">
                 ${escapeHtml(
                     data.import_id ||
-                    "—"
+                    "â€”"
                 )}
             </span>
 
@@ -4615,7 +4631,7 @@ function renderGeneratedReport(
                     report.generated_at_utc
                 )}
 
-                ·
+                Â·
 
                 Offline:
                 ${report.offline ? "YES" : "NO"}
@@ -4891,7 +4907,7 @@ function renderHealth(
             ? formats.join(
                 ", "
             )
-            : "—"
+            : "â€”"
     );
 
 
@@ -4906,7 +4922,7 @@ function renderHealth(
         "system-import-size",
         Number.isFinite(size)
             ? `${size.toFixed(0)} MB`
-            : "—"
+            : "â€”"
     );
 }
 
