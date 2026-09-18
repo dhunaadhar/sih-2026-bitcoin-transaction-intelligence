@@ -38,14 +38,14 @@ echo "Required deployment artifacts: PASS"
 python3 -B - <<'PY'
 from src.api.app import app
 from src.monitoring.health_monitor import run_health_check
-from src.security.security_baseline import run_security_baseline_check
+from src.security.security_baseline import run_security_baseline
 
 assert len(app.routes) >= 16
 
 health = run_health_check()
 assert health["status"] == "healthy"
 
-security = run_security_baseline_check()
+security = run_security_baseline()
 assert security["status"] == "PASS"
 
 print("API: PASS")
