@@ -1211,6 +1211,13 @@ def import_investigator_data(
             output_directory
         )
 
+        runtime_data = os.environ.get("SIH_RUNTIME_DATA_DIR")
+        if runtime_data:
+            requested = output_directory.resolve()
+            app_root = Path(__file__).resolve().parents[2]
+            if str(requested).startswith(str(app_root.resolve())):
+                output_directory = Path(runtime_data) / "derived" / "investigator_imports"
+
         output_directory.mkdir(
             parents=True,
             exist_ok=True,

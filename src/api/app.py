@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import os
 import tempfile
 from pathlib import Path
 from typing import Any
@@ -34,9 +35,7 @@ DERIVED_DIR = ROOT / "data" / "derived"
 
 DASHBOARD_DIR = ROOT / "src" / "dashboard"
 
-INVESTIGATOR_IMPORT_DIR = (
-    DERIVED_DIR / "investigator_imports"
-)
+INVESTIGATOR_IMPORT_DIR = Path(os.environ.get("SIH_RUNTIME_DATA_DIR", str(DERIVED_DIR))) / "investigator_imports"
 
 RANKED_ALERTS_PATH = (
     DERIVED_DIR / "ranked_alerts.parquet"

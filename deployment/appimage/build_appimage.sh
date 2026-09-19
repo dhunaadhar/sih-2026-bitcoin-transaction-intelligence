@@ -66,6 +66,9 @@ set -euo pipefail
 APPDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 APP_ROOT="${APPDIR}/usr/share/SIH-2026-Bitcoin-Transaction-Intelligence"
 VENV="${APPDIR}/opt/venv-linux"
+RUNTIME_DATA="${XDG_DATA_HOME:-${HOME}/.local/share}/SIH-2026-Bitcoin-Transaction-Intelligence/data"
+mkdir -p "${RUNTIME_DATA}/derived/investigator_imports"
+export SIH_RUNTIME_DATA_DIR="${RUNTIME_DATA}"
 
 export SIH_MODE="${SIH_MODE:-offline}"
 export SIH_ENV="${SIH_ENV:-production}"
