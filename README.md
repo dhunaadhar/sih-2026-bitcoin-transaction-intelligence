@@ -657,6 +657,20 @@ Potential extensions include:
 
 ---
 
+## Future Scope
+
+The following enhancements are planned as the next stage of the platform beyond the current prototype implementation:
+
+- **M26 — Native Desktop Application:** Extend the AppImage deployment so the application launches directly as a desktop application without requiring the user to manually open a browser or access a localhost URL.
+- **M27 — Secure Investigator Data Dumps:** Treat every investigator-supplied CSV, JSON, and XML dump as untrusted input. Add file-type validation, size and filename checks, integrity hashing, malware scanning, schema validation, and safe parsing before data enters the intelligence pipeline.
+- **M28 — High-Risk Transaction Drill-Down:** Make the high-risk transaction summary interactive so investigators can open the complete list of high-risk transactions and inspect individual transactions directly.
+- **M29 — Authentication:** Provide an optional authentication layer for secured or operational deployments while retaining an authentication-disabled mode for controlled offline demonstrations.
+- **M30 — Large-Monitor Dashboard Optimization:** Optimize the investigation dashboard for large monitoring displays and operational control-room environments.
+- **M31 — Automatic Process Recovery:** Integrate process supervision and automatic restart mechanisms, including **Tron**, to improve application availability and recover automatically from unexpected process failures.
+- **M32 — Synthetic Investigator Datasets:** Provide clearly labelled synthetic CSV, JSON, and XML datasets for demonstrating the complete investigator-data import workflow without relying on real sensitive network observations.
+
+These enhancements are intended to improve operational security, deployment usability, resilience, investigator workflow, and demonstration coverage while preserving the platform's offline-first architecture.
+
 ## Project Status
 
 ### Completed
