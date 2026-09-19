@@ -3298,7 +3298,7 @@ function renderGraphNodes(
                             "function"
                         ) {
 
-                            await window.inspectWalletFromGraph(
+                            window.inspectWalletFromGraph(
                                 nodeId
                             );
 
