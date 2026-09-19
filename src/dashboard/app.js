@@ -434,7 +434,7 @@ function initializeNavigation() {
 
             button.addEventListener(
                 "click",
-                () => {
+                async () => {
 
                     const section =
                         button.dataset.section;
@@ -488,6 +488,10 @@ function navigateToSection(
 
     state.currentSection =
         sectionId;
+
+    if (sectionId === "graph-section") {
+        synchronizeSelectedTransaction();
+    }
 
     window.scrollTo(
         {
@@ -3265,7 +3269,7 @@ function renderGraphNodes(
 
             button.addEventListener(
                 "click",
-                () => {
+                async () => {
 
                     const nodeId =
                         button.dataset.nodeId ||
@@ -3283,11 +3287,35 @@ function renderGraphNodes(
                             )
                         );
 
+                    } else if (
+                        nodeId.startsWith(
+                            "wallet:"
+                        )
+                    ) {
+
+                        if (
+                            typeof window.inspectWalletFromGraph ===
+                            "function"
+                        ) {
+
+                            await window.inspectWalletFromGraph(
+                                nodeId
+                            );
+
+                        } else {
+
+                            setMessage(
+                                "graph-search-message",
+                                "Wallet investigation workspace is unavailable.",
+                                "error"
+                            );
+                        }
+
                     } else {
 
                         setMessage(
                             "graph-search-message",
-                            "Detailed inspection is currently available for transaction nodes.",
+                            "Detailed inspection is available for transaction and wallet nodes.",
                             "warning"
                         );
                     }

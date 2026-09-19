@@ -982,6 +982,11 @@
     // WALLET INVESTIGATION
     // ============================================================
 
+    window.inspectWalletFromGraph =
+        function (address) {
+            return inspectWallet(address);
+        };
+
     async function inspectWallet(
         address
     ) {
@@ -1147,6 +1152,13 @@
     function renderWalletInvestigation(
         data
     ) {
+
+        data =
+            data &&
+            data.investigation &&
+            typeof data.investigation === "object"
+                ? data.investigation
+                : data;
 
         const address =
             data.wallet ||
