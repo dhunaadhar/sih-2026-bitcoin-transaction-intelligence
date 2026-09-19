@@ -986,10 +986,15 @@
         address
     ) {
 
-        const clean =
+        const rawAddress =
             String(
                 address || ""
             ).trim();
+
+        const clean =
+            rawAddress.startsWith("wallet:")
+                ? rawAddress.slice(7)
+                : rawAddress;
 
 
         if (!clean) {

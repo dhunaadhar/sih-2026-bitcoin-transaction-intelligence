@@ -36,6 +36,7 @@ import csv
 import hashlib
 import ipaddress
 import json
+import os
 import xml.etree.ElementTree as ET
 
 from dataclasses import dataclass
