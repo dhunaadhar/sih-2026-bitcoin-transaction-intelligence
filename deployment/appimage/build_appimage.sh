@@ -239,10 +239,7 @@ export PYTHONPATH="${APP_ROOT}:${PYTHONPATH:-}"
 
 cd "${APP_ROOT}"
 
-exec "${VENV}/bin/python" -m uvicorn \
-    src.api.app:app \
-    --host "${SIH_HOST}" \
-    --port "${SIH_PORT}"
+exec "${VENV}/bin/python" "${APP_ROOT}/src/desktop.py"
 APPRUN
 
 chmod +x \
