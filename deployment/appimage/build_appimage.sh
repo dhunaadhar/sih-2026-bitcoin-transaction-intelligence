@@ -9,7 +9,9 @@ DIST_DIR="${APPIMAGE_DIR}/dist"
 VENV_DIR="${ROOT_DIR}/.venv-linux"
 
 APP_NAME="SIH-2026-Bitcoin-Transaction-Intelligence"
+
 APPIMAGETOOL="${HOME}/appimage-tools/appimagetool-x86_64.AppImage"
+RUNTIME_FILE="${APPIMAGE_RUNTIME_FILE:-${HOME}/appimage-tools/runtime-x86_64}"
 
 echo "=== SIH 2026 AppImage Builder ==="
 echo "ROOT: ${ROOT_DIR}"
@@ -25,6 +27,18 @@ echo "ROOT: ${ROOT_DIR}"
 
 [[ -x "${APPIMAGETOOL}" ]] || {
     echo "ERROR: AppImageTool not found."
+    echo "Expected:"
+    echo "  ${APPIMAGETOOL}"
+    exit 1
+}
+
+[[ -x "${RUNTIME_FILE}" ]] || {
+    echo "ERROR: AppImage runtime not found."
+    echo "Expected:"
+    echo "  ${RUNTIME_FILE}"
+    echo
+    echo "Place the x86_64 type2 runtime at that path,"
+    echo "or set APPIMAGE_RUNTIME_FILE to its location."
     exit 1
 }
 
@@ -33,6 +47,8 @@ GIT_BRANCH="$(git -C "${ROOT_DIR}" branch --show-current)"
 
 echo "Git branch: ${GIT_BRANCH}"
 echo "Git commit: ${GIT_COMMIT}"
+echo "AppImageTool: ${APPIMAGETOOL}"
+echo "Runtime: ${RUNTIME_FILE}"
 
 "${VENV_DIR}/bin/python" --version
 
@@ -93,6 +109,9 @@ PACKAGED_WALLET_JS="${APPDIR}/usr/share/${APP_NAME}/src/dashboard/wallet.js"
 SOURCE_IMPORT="${ROOT_DIR}/src/ingestion/investigator_import.py"
 PACKAGED_IMPORT="${APPDIR}/usr/share/${APP_NAME}/src/ingestion/investigator_import.py"
 
+SOURCE_DESKTOP="${ROOT_DIR}/src/desktop.py"
+PACKAGED_DESKTOP="${APPDIR}/usr/share/${APP_NAME}/src/desktop.py"
+
 cmp -s \
     "${SOURCE_APP_JS}" \
     "${PACKAGED_APP_JS}" || {
@@ -111,6 +130,13 @@ cmp -s \
     "${SOURCE_IMPORT}" \
     "${PACKAGED_IMPORT}" || {
         echo "ERROR: packaged investigator_import.py differs from source."
+        exit 1
+    }
+
+cmp -s \
+    "${SOURCE_DESKTOP}" \
+    "${PACKAGED_DESKTOP}" || {
+        echo "ERROR: packaged desktop.py differs from source."
         exit 1
     }
 
@@ -322,6 +348,7 @@ rm -f \
     "${OUTPUT}"
 
 "${APPIMAGETOOL}" \
+    --runtime-file "${RUNTIME_FILE}" \
     "${APPDIR}" \
     "${OUTPUT}"
 
@@ -338,6 +365,7 @@ echo "Application: ${APP_NAME}"
 echo "Git branch:  ${GIT_BRANCH}"
 echo "Git commit:  ${GIT_COMMIT}"
 echo "Data source: ${DATA_SOURCE}"
+echo "Runtime:     ${RUNTIME_FILE}"
 echo "Output:      ${OUTPUT}"
 echo
 
