@@ -1,4 +1,4 @@
-﻿"use strict";
+"use strict";
 
 /*
  * Bitcoin Transaction Intelligence Platform
@@ -60,6 +60,10 @@ const state = {
     selectedInvestigation: null,
 
     selectedGraph: null,
+
+    selectedImportId: null,
+
+    selectedDatasetAnalysis: null,
 
     summary: null,
 
@@ -129,6 +133,106 @@ function formatNumber(value, digits = 0) {
             maximumFractionDigits: digits
         }
     );
+}
+
+
+function formatDatasetNumber(value, digits = 0) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "Not available";
+    }
+
+    const number = Number(value);
+
+    if (!Number.isFinite(number)) {
+        return "Not available";
+    }
+
+    return number.toLocaleString(
+        "en-IN",
+        {
+            minimumFractionDigits: digits,
+            maximumFractionDigits: digits
+        }
+    );
+}
+
+
+function formatDatasetBtc(value, digits = 8) {
+
+    if (
+        value === null ||
+        value === undefined ||
+        value === ""
+    ) {
+        return "Not available";
+    }
+
+    const number = Number(value);
+
+    if (!Number.isFinite(number)) {
+        return "Not available";
+    }
+
+    return `${number.toLocaleString(
+        "en-IN",
+        {
+            minimumFractionDigits: digits,
+            maximumFractionDigits: digits
+        }
+    )} BTC`;
+}
+
+
+function formatDatasetBtcRange(
+    minimum,
+    maximum,
+    digits = 8
+) {
+
+    const minimumAvailable =
+        minimum !== null &&
+        minimum !== undefined &&
+        minimum !== "" &&
+        Number.isFinite(Number(minimum));
+
+    const maximumAvailable =
+        maximum !== null &&
+        maximum !== undefined &&
+        maximum !== "" &&
+        Number.isFinite(Number(maximum));
+
+    if (!minimumAvailable && !maximumAvailable) {
+        return "Not available";
+    }
+
+    const minimumText =
+        minimumAvailable
+            ? Number(minimum).toLocaleString(
+                "en-IN",
+                {
+                    minimumFractionDigits: digits,
+                    maximumFractionDigits: digits
+                }
+            )
+            : "Not available";
+
+    const maximumText =
+        maximumAvailable
+            ? Number(maximum).toLocaleString(
+                "en-IN",
+                {
+                    minimumFractionDigits: digits,
+                    maximumFractionDigits: digits
+                }
+            )
+            : "Not available";
+
+    return `${minimumText} – ${maximumText} BTC`;
 }
 
 
@@ -3743,6 +3847,15 @@ async function submitImport() {
             data
         );
 
+        if (data.import_id) {
+            state.selectedImportId =
+                data.import_id;
+
+            await loadImportedDatasetAnalysis(
+                data.import_id
+            );
+        }
+
 
         setMessage(
             "import-message",
@@ -4173,6 +4286,770 @@ function initializeReports() {
 
                 generateReport(
                     txid
+                );
+            }
+        );
+
+    $("generate-dataset-report")
+        ?.addEventListener(
+            "click",
+            () => {
+
+                const importId =
+                    String(
+                        $("report-import-id")
+                            ?.value ||
+                        state.selectedImportId ||
+                        ""
+                    ).trim();
+
+                if (!importId) {
+
+                    setMessage(
+                        "report-message",
+                        "Import a dataset first or enter an import ID.",
+                        "warning"
+                    );
+
+                    return;
+                }
+
+                loadImportedDatasetAnalysis(
+                    importId,
+                    true
+                );
+            }
+        );
+}
+
+
+async function loadImportedDatasetAnalysis(
+    importId,
+    navigateToReports = false
+) {
+
+    const normalized =
+        String(importId || "").trim();
+
+    if (!normalized) {
+        return;
+    }
+
+    state.selectedImportId =
+        normalized;
+
+    if (navigateToReports) {
+        navigateToSection(
+            "reports-section"
+        );
+    }
+
+    setMessage(
+        "report-message",
+        "Analyzing imported dataset..."
+    );
+
+    setLoading(
+        "dataset-report-result",
+        "Generating case-specific dataset analysis..."
+    );
+
+    try {
+
+        const data =
+            await apiFetch(
+                `/import/${encodeURIComponent(
+                    normalized
+                )}/analysis`
+            );
+
+        state.selectedDatasetAnalysis =
+            data;
+
+        const importInput =
+            $("report-import-id");
+
+        if (importInput) {
+            importInput.value =
+                normalized;
+        }
+
+        renderDatasetReport(
+            data
+        );
+
+        setMessage(
+            "report-message",
+            "Dataset report generated locally.",
+            "success"
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Dataset report error:",
+            error
+        );
+
+        setHtml(
+            "dataset-report-result",
+            `
+            <div class="error-panel">
+                Unable to generate dataset report.
+                <br>
+                ${escapeHtml(
+                    error.message
+                )}
+            </div>
+            `
+        );
+
+        setMessage(
+            "report-message",
+            error.message,
+            "error"
+        );
+    }
+}
+
+
+function renderDatasetReport(
+    data
+) {
+
+    const analysis =
+        data.analysis || {};
+
+    const records =
+        analysis.records || {};
+
+    const transactions =
+        analysis.transactions || {};
+
+    const wallets =
+        analysis.wallets || {};
+
+    const financial =
+        analysis.financial || {};
+
+    const time =
+        analysis.time || {};
+
+    const network =
+        analysis.network || {};
+
+    const distributions =
+        analysis.distributions || {};
+
+    const availability =
+        analysis.availability || {};
+
+    const countryRows =
+        distributions.countries || [];
+
+    const asnRows =
+        distributions.asns || [];
+
+    const scriptRows =
+        distributions.script_types || [];
+
+    const topWallets =
+        wallets.top_wallets || [];
+
+    const topTransactions =
+        analysis.top_transactions || [];
+
+    const countryHtml =
+        countryRows.length
+            ? countryRows
+                .slice(0, 8)
+                .map(
+                    row => `
+                    <div class="detail-list-row">
+                        <span>
+                            ${escapeHtml(row.value)}
+                        </span>
+                        <strong>
+                            ${escapeHtml(
+                                formatNumber(row.count)
+                            )}
+                            (${escapeHtml(
+                                String(row.percentage ?? 0)
+                            )}%)
+                        </strong>
+                    </div>
+                    `
+                )
+                .join("")
+            : `
+                <div class="empty-panel compact">
+                    No country data available.
+                </div>
+            `;
+
+    const asnHtml =
+        asnRows.length
+            ? asnRows
+                .slice(0, 8)
+                .map(
+                    row => `
+                    <div class="detail-list-row">
+                        <span>
+                            ${escapeHtml(row.value)}
+                        </span>
+                        <strong>
+                            ${escapeHtml(
+                                formatNumber(row.count)
+                            )}
+                            (${escapeHtml(
+                                String(row.percentage ?? 0)
+                            )}%)
+                        </strong>
+                    </div>
+                    `
+                )
+                .join("")
+            : `
+                <div class="empty-panel compact">
+                    No ASN data available.
+                </div>
+            `;
+
+    const scriptHtml =
+        scriptRows.length
+            ? scriptRows
+                .slice(0, 8)
+                .map(
+                    row => `
+                    <div class="detail-list-row">
+                        <span>
+                            ${escapeHtml(row.value)}
+                        </span>
+                        <strong>
+                            ${escapeHtml(
+                                formatNumber(row.count)
+                            )}
+                            (${escapeHtml(
+                                String(row.percentage ?? 0)
+                            )}%)
+                        </strong>
+                    </div>
+                    `
+                )
+                .join("")
+            : `
+                <div class="empty-panel compact">
+                    No script-type data available.
+                </div>
+            `;
+
+    const walletHtml =
+        topWallets.length
+            ? topWallets
+                .slice(0, 10)
+                .map(
+                    row => `
+                    <div class="detail-list-row">
+                        <span class="mono">
+                            ${escapeHtml(row.wallet)}
+                        </span>
+                        <strong>
+                            ${escapeHtml(
+                                formatNumber(
+                                    row.activity_count
+                                )
+                            )}
+                            ·
+                            ${escapeHtml(
+                                formatDatasetBtc(
+                                    row.associated_btc,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+                    `
+                )
+                .join("")
+            : `
+                <div class="empty-panel compact">
+                    No wallet activity available.
+                </div>
+            `;
+
+    const transactionHtml =
+        topTransactions.length
+            ? topTransactions
+                .slice(0, 10)
+                .map(
+                    row => `
+                    <div class="detail-list-row">
+                        <span class="mono">
+                            ${escapeHtml(
+                                normalizeTxid(row.txid)
+                            )}
+                        </span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetBtc(
+                                    row.input_amount,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+                    `
+                )
+                .join("")
+            : `
+                <div class="empty-panel compact">
+                    No transaction records available.
+                </div>
+            `;
+
+    setHtml(
+        "dataset-report-result",
+        `
+        <div class="generated-report">
+
+            <div class="generated-report-header">
+                <div>
+                    <div class="section-kicker">
+                        IMPORTED DATASET REPORT
+                    </div>
+
+                    <h3>
+                        ${escapeHtml(
+                            data.source_filename ||
+                            "Imported investigator dataset"
+                        )}
+                    </h3>
+
+                    <div class="mono">
+                        Import ID:
+                        ${escapeHtml(
+                            data.import_id
+                        )}
+                    </div>
+                </div>
+
+                <button
+                    id="download-dataset-report"
+                    class="button primary"
+                >
+                    Export JSON
+                </button>
+            </div>
+
+
+            <div class="report-risk-summary">
+
+                <div>
+                    <span>Records analyzed</span>
+                    <strong>
+                        ${escapeHtml(
+                            formatDatasetNumber(
+                                records.analyzed
+                            )
+                        )}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Unique TXIDs</span>
+                    <strong>
+                        ${escapeHtml(
+                            formatDatasetNumber(
+                                transactions.unique_txids
+                            )
+                        )}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Unique wallets</span>
+                    <strong>
+                        ${escapeHtml(
+                            formatDatasetNumber(
+                                wallets.unique_wallets
+                            )
+                        )}
+                    </strong>
+                </div>
+
+                <div>
+                    <span>Duplicates removed</span>
+                    <strong>
+                        ${escapeHtml(
+                            formatDatasetNumber(
+                                records.duplicates_removed
+                            )
+                        )}
+                    </strong>
+                </div>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <div class="panel-title">
+                    Validation and Scope
+                </div>
+
+                <div class="detail-list">
+
+                    <div class="detail-list-row">
+                        <span>Records read</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    records.records_read
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Valid records analyzed</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    records.analyzed
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Invalid records</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    records.invalid
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Unique input wallets</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    wallets.unique_input_wallets
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Unique output wallets</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    wallets.unique_output_wallets
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <div class="panel-title">
+                    Financial Summary
+                </div>
+
+                <div class="detail-list">
+
+                    <div class="detail-list-row">
+                        <span>Total input</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetBtc(
+                                    financial.input?.total,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Total output</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetBtc(
+                                    financial.output?.total,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Total fees</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetBtc(
+                                    financial.fees?.total,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Mean input</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetBtc(
+                                    financial.input?.mean,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Median input</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetBtc(
+                                    financial.input?.median,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Input range</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetBtcRange(
+                                    financial.input?.min,
+                                    financial.input?.max,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Conservation delta</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetBtc(
+                                    financial.conservation_delta,
+                                    8
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <div class="panel-title">
+                    Time and Network
+                </div>
+
+                <div class="detail-list">
+
+                    <div class="detail-list-row">
+                        <span>Time range</span>
+                        <strong>
+                            ${escapeHtml(
+                                time.start || "—"
+                            )}
+                            →
+                            ${escapeHtml(
+                                time.end || "—"
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Valid timestamps</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    time.records_with_valid_timestamp
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Source IPs</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    network.unique_source_ips
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Destination IPs</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    network.unique_destination_ips
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Source ports</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    network.unique_source_ports
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                    <div class="detail-list-row">
+                        <span>Destination ports</span>
+                        <strong>
+                            ${escapeHtml(
+                                formatDatasetNumber(
+                                    network.unique_destination_ports
+                                )
+                            )}
+                        </strong>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <div class="panel-title">
+                    Country Distribution
+                </div>
+
+                <div class="detail-list">
+                    ${countryHtml}
+                </div>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <div class="panel-title">
+                    ASN Distribution
+                </div>
+
+                <div class="detail-list">
+                    ${asnHtml}
+                </div>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <div class="panel-title">
+                    Script-Type Distribution
+                </div>
+
+                <div class="detail-list">
+                    ${scriptHtml}
+                </div>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <div class="panel-title">
+                    Top Wallet Activity
+                </div>
+
+                <div class="detail-list">
+                    ${walletHtml}
+                </div>
+
+            </div>
+
+
+            <div class="report-section">
+
+                <div class="panel-title">
+                    Largest Transactions by Input
+                </div>
+
+                <div class="detail-list">
+                    ${transactionHtml}
+                </div>
+
+            </div>
+
+
+            <div class="report-section report-limitation">
+
+                <div class="panel-title">
+                    Analysis Availability
+                </div>
+
+                <p>
+                    Risk analysis:
+                    <strong>
+                        ${availability.risk_analysis ? "AVAILABLE" : "NOT AVAILABLE"}
+                    </strong>
+                </p>
+
+                <p>
+                    Behavioral analysis:
+                    <strong>
+                        ${availability.behavioral_analysis ? "AVAILABLE" : "NOT AVAILABLE"}
+                    </strong>
+                </p>
+
+                <p>
+                    Graph analysis:
+                    <strong>
+                        ${availability.graph_analysis ? "AVAILABLE" : "NOT AVAILABLE"}
+                    </strong>
+                </p>
+
+                <p>
+                    ${escapeHtml(
+                        availability.reason ||
+                        "Only signals supported by the imported schema are reported."
+                    )}
+                </p>
+
+            </div>
+
+        </div>
+        `
+    );
+
+    $("download-dataset-report")
+        ?.addEventListener(
+            "click",
+            () => {
+                downloadJson(
+                    data,
+                    `bitcoin_dataset_${data.import_id}.json`
                 );
             }
         );

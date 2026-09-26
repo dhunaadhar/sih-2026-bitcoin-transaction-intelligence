@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import math
+import json
 import os
 import tempfile
 from pathlib import Path
@@ -22,6 +23,9 @@ from src.graph.investigation_queries import (
     InvestigationGraph,
     normalize_txid,
 )
+from src.analysis.dataset_analysis import analyze_dataset
+
+
 from src.ingestion.investigator_import import (
     DATA_TYPES,
     SUPPORTED_FORMATS,
@@ -1797,6 +1801,147 @@ async def investigator_import(
             "offline": True,
         }
     )
+
+
+# ============================================================================
+# Imported dataset analysis
+# ============================================================================
+
+@app.get(
+    "/api/import/{import_id}/analysis",
+    tags=["import"],
+)
+def imported_dataset_analysis(
+    import_id: str,
+) -> dict[str, Any]:
+
+    if not import_id or "/" in import_id or "\\" in import_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid import ID.",
+        )
+
+    # The importer may persist artifacts either directly under
+    # INVESTIGATOR_IMPORT_DIR or inside an import-specific directory.
+    flat_records_path = (
+        INVESTIGATOR_IMPORT_DIR
+        / f"{import_id}_normalized_records.json"
+    )
+
+    flat_manifest_path = (
+        INVESTIGATOR_IMPORT_DIR
+        / f"{import_id}_manifest.json"
+    )
+
+    flat_errors_path = (
+        INVESTIGATOR_IMPORT_DIR
+        / f"{import_id}_validation_errors.json"
+    )
+
+    nested_directory = (
+        INVESTIGATOR_IMPORT_DIR
+        / import_id
+    )
+
+    nested_records_path = (
+        nested_directory
+        / f"{import_id}_normalized_records.json"
+    )
+
+    nested_manifest_path = (
+        nested_directory
+        / f"{import_id}_manifest.json"
+    )
+
+    nested_errors_path = (
+        nested_directory
+        / f"{import_id}_validation_errors.json"
+    )
+
+    if flat_records_path.exists():
+        records_path = flat_records_path
+        manifest_path = flat_manifest_path
+        errors_path = flat_errors_path
+    elif nested_records_path.exists():
+        records_path = nested_records_path
+        manifest_path = nested_manifest_path
+        errors_path = nested_errors_path
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail="Imported dataset not found.",
+        )
+
+    try:
+        records = json.loads(
+            records_path.read_text(
+                encoding="utf-8"
+            )
+        )
+
+        manifest = {}
+
+        if manifest_path.exists():
+            manifest = json.loads(
+                manifest_path.read_text(
+                    encoding="utf-8"
+                )
+            )
+
+        invalid_records = []
+
+        if errors_path.exists():
+            invalid_records = json.loads(
+                errors_path.read_text(
+                    encoding="utf-8"
+                )
+            )
+
+        analysis = analyze_dataset(
+            records,
+            records_read=manifest.get(
+                "records_read",
+                len(records),
+            ),
+            invalid_records=len(
+                invalid_records
+            ),
+            duplicates_removed=manifest.get(
+                "duplicate_records_removed",
+                0,
+            ),
+        )
+
+        return _json_safe_value(
+            {
+                "status": "ok",
+                "import_id": import_id,
+                "data_type": manifest.get(
+                    "data_type"
+                ),
+                "source_filename": manifest.get(
+                    "source_filename"
+                ),
+                "analysis": analysis,
+            }
+        )
+
+    except json.JSONDecodeError as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Imported dataset artifact is invalid JSON.",
+        ) from exc
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "message": (
+                    "Imported dataset analysis failed."
+                ),
+                "error": str(exc),
+            },
+        ) from exc
 
 
 # ============================================================================

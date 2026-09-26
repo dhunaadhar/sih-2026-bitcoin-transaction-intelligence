@@ -1576,7 +1576,7 @@
              REPORTS
              ===================================================== -->
 
-        <section
+                <section
             id="reports-section"
             class="application-section"
         >
@@ -1586,7 +1586,7 @@
                 <div>
 
                     <div class="section-kicker">
-                        INVESTIGATION OUTPUT
+                        LOCAL EXPORT
                     </div>
 
                     <h2>
@@ -1595,16 +1595,15 @@
 
                 </div>
 
-
-                <div class="offline-badge">
-                    LOCAL EXPORT
-                </div>
-
             </div>
 
 
             <div class="report-grid">
 
+
+                <!-- =====================================================
+                     TRANSACTION REPORT
+                     ===================================================== -->
 
                 <div class="panel-card">
 
@@ -1654,6 +1653,59 @@
 
                 </div>
 
+
+                <!-- =====================================================
+                     DATASET REPORT
+                     ===================================================== -->
+
+                <div class="panel-card">
+
+                    <div class="panel-title">
+                        Analyze Imported Dataset
+                    </div>
+
+
+                    <p class="panel-description">
+                        Analyze a complete imported CSV, JSON, or XML
+                        dataset and generate an investigator-readable
+                        dataset report.
+                    </p>
+
+
+                    <div class="form-stack">
+
+
+                        <label>
+
+                            Import ID
+
+                            <input
+                                id="report-import-id"
+                                type="text"
+                                placeholder="Enter Import ID"
+                                autocomplete="off"
+                                spellcheck="false"
+                            >
+
+                        </label>
+
+
+                        <button
+                            id="generate-dataset-report"
+                            class="button primary"
+                        >
+                            Analyze Dataset
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- =====================================================
+                     REPORT CONTENTS
+                     ===================================================== -->
 
                 <div class="panel-card">
 
@@ -1709,8 +1761,72 @@
 
                 </div>
 
+
+                <!-- =====================================================
+                     DATASET REPORT SCOPE
+                     ===================================================== -->
+
+                <div class="panel-card">
+
+                    <div class="panel-title">
+                        Imported Dataset Analysis
+                    </div>
+
+
+                    <div class="report-contents">
+
+
+                        <div class="report-item">
+                            Validation and import statistics
+                        </div>
+
+
+                        <div class="report-item">
+                            Transaction and wallet activity
+                        </div>
+
+
+                        <div class="report-item">
+                            Financial statistics
+                        </div>
+
+
+                        <div class="report-item">
+                            Time-range analysis
+                        </div>
+
+
+                        <div class="report-item">
+                            Network activity
+                        </div>
+
+
+                        <div class="report-item">
+                            Country and ASN distribution
+                        </div>
+
+
+                        <div class="report-item">
+                            Script-type distribution
+                        </div>
+
+
+                        <div class="report-item">
+                            Investigator limitations
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
             </div>
 
+
+            <!-- =========================================================
+                 TRANSACTION REPORT RESULT
+                 ========================================================= -->
 
             <div
                 id="report-result"
@@ -1718,19 +1834,39 @@
             >
 
                 <div class="panel-title">
-                    Generated Report
+                    Generated Transaction Report
                 </div>
 
 
                 <div class="empty-panel compact">
-                    No report generated in this session.
+                    No transaction report generated in this session.
                 </div>
 
             </div>
 
+
+            <!-- =========================================================
+                 DATASET REPORT RESULT
+                 ========================================================= -->
+
+            <div
+                id="dataset-report-result"
+                class="panel-card report-result"
+            >
+
+                <div class="panel-title">
+                    Imported Dataset Report
+                </div>
+
+
+                <div class="empty-panel compact">
+                    Import a dataset to generate its analysis report.
+                </div>
+
+            </div>
+
+
         </section>
-
-
         <!-- =====================================================
              SYSTEM
              ===================================================== -->
