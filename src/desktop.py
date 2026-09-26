@@ -70,7 +70,7 @@ def main():
         resizable=True,
     )
 
-webview.start(gui="qt")
+    webview.start(gui="qt")
 
 
 if __name__ == "__main__":
