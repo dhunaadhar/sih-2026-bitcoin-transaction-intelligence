@@ -943,7 +943,7 @@ M31 — Process supervision, bounded restart handling and heartbeat support
 
 M32 — Reproducible synthetic CSV/JSON/XML investigator datasets
 
-M34 — Offline Local Investigation Assistant and dashboard integration
+M34 — Offline Local Investigation Assistant and dashboard integration (UNDER PROGRESS)
 
 Current Work
 
@@ -951,7 +951,7 @@ M33 — Final Linux/AppImage validation
 
 Final offline packaging and deployment validation remains part of the finalisation cycle.
 
-M34 — Offline Local Investigation Assistant
+M34 — Offline Local Investigation Assistant (UNDER PROGRESS)
 
 Backend and dashboard integration are implemented.
 
