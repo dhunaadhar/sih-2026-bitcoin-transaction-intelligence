@@ -14,8 +14,10 @@ from fastapi import (
     File,
     HTTPException,
     Query,
+    Request,
     UploadFile,
 )
+from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
@@ -31,6 +33,12 @@ from src.ingestion.investigator_import import (
     DATA_TYPES,
     SUPPORTED_FORMATS,
     import_investigator_data,
+)
+from src.security.authentication import (
+    authenticate,
+    create_session,
+    destroy_session,
+    get_session,
 )
 
 
@@ -222,6 +230,11 @@ class ImportResponse(BaseModel):
     offline: bool
 
 
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+
 app = FastAPI(
     title=APP_TITLE,
     description=(
@@ -233,8 +246,58 @@ app = FastAPI(
 
 
 # ============================================================================
-# Middleware
+# Authentication middleware
 # ============================================================================
+
+PUBLIC_API_PATHS = {
+    "/api/auth/login",
+    "/api/auth/logout",
+    "/api/auth/session",
+    "/api/health",
+}
+
+PUBLIC_PATH_PREFIXES = (
+    "/dashboard",
+    "/docs",
+    "/redoc",
+    "/openapi.json",
+)
+
+
+@app.middleware("http")
+async def authentication_middleware(
+    request: Request,
+    call_next,
+):
+    path = request.url.path
+
+    if (
+        request.method == "OPTIONS"
+        or not path.startswith("/api/")
+        or path in PUBLIC_API_PATHS
+        or any(
+            path.startswith(prefix)
+            for prefix in PUBLIC_PATH_PREFIXES
+        )
+    ):
+        return await call_next(request)
+
+    session_token = request.cookies.get("sih_session")
+    session = get_session(session_token)
+
+    if session is None:
+        return JSONResponse(
+            status_code=401,
+            content={
+                "status": "unauthenticated",
+                "detail": "Authentication required.",
+            },
+        )
+
+    request.state.authenticated_user = session
+
+    return await call_next(request)
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -243,6 +306,121 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+
+
+# ============================================================================
+# Authentication
+# ============================================================================
+
+@app.post(
+    "/api/auth/login",
+    tags=["authentication"],
+)
+def login(
+    credentials: LoginRequest,
+) -> JSONResponse:
+    identity = authenticate(
+        credentials.email,
+        credentials.password,
+    )
+
+    if identity is None:
+        return JSONResponse(
+            status_code=401,
+            content={
+                "status": "unauthenticated",
+                "detail": "Invalid email or password.",
+            },
+        )
+
+    session_token = create_session(
+        identity["username"],
+        identity["role"],
+    )
+
+    response = JSONResponse(
+        content={
+            "status": "authenticated",
+            "user": identity,
+            "expires_in_minutes": 60,
+            "offline": True,
+        }
+    )
+
+    response.set_cookie(
+        key="sih_session",
+        value=session_token,
+        max_age=60 * 60,
+        httponly=True,
+        samesite="lax",
+        secure=False,
+        path="/",
+    )
+
+    return response
+
+
+@app.post(
+    "/api/auth/logout",
+    tags=["authentication"],
+)
+def logout(
+    request: Request,
+) -> JSONResponse:
+    session_token = request.cookies.get(
+        "sih_session"
+    )
+
+    destroy_session(session_token)
+
+    response = JSONResponse(
+        content={
+            "status": "logged_out",
+            "offline": True,
+        }
+    )
+
+    response.delete_cookie(
+        key="sih_session",
+        path="/",
+    )
+
+    return response
+
+
+@app.get(
+    "/api/auth/session",
+    tags=["authentication"],
+)
+def authentication_session(
+    request: Request,
+) -> JSONResponse:
+    session_token = request.cookies.get(
+        "sih_session"
+    )
+
+    session = get_session(session_token)
+
+    if session is None:
+        return JSONResponse(
+            status_code=401,
+            content={
+                "status": "unauthenticated",
+                "detail": "No active authenticated session.",
+            },
+        )
+
+    return JSONResponse(
+        content={
+            "status": "authenticated",
+            "user": {
+                "username": session["username"],
+                "role": session["role"],
+            },
+            "expires_at": session["expires_at"],
+            "offline": True,
+        }
+    )
 
 
 # ============================================================================
