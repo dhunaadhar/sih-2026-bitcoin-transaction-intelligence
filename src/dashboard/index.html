@@ -344,6 +344,14 @@
 
         <button
             class="nav-button"
+            data-section="assistant-section"
+        >
+            Assistant
+        </button>
+
+
+        <button
+            class="nav-button"
             data-section="import-section"
         >
             Import
@@ -2402,6 +2410,159 @@
         </section>
 
 
+        <!-- =====================================================
+             INVESTIGATION ASSISTANT
+             ===================================================== -->
+        <section
+            id="assistant-section"
+            class="application-section"
+        >
+            <div class="section-heading">
+                <div>
+                    <div class="section-kicker">
+                        OFFLINE INVESTIGATION ASSISTANT
+                    </div>
+                    <h2>Investigation Assistant</h2>
+                    <p class="section-description">
+                        Evidence-based assistance using the selected imported case.
+                    </p>
+                </div>
+                <div class="offline-badge">LOCAL ONLY</div>
+            </div>
+
+            <div
+                class="assistant-workspace"
+                style="display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:20px; align-items:start;"
+            >
+                <div class="panel-card">
+                    <div
+                        class="assistant-toolbar"
+                        style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto; gap:12px; align-items:end;"
+                    >
+                        <label>
+                            <span class="metric-label">IMPORTED CASE ID</span>
+                            <input
+                                id="assistant-import-id"
+                                class="text-input"
+                                type="text"
+                                placeholder="Enter imported case ID"
+                                autocomplete="off"
+                            >
+                        </label>
+
+                        <label>
+                            <span class="metric-label">TRANSACTION ID (OPTIONAL)</span>
+                            <input
+                                id="assistant-txid"
+                                class="text-input"
+                                type="text"
+                                placeholder="Case-level investigation"
+                                autocomplete="off"
+                            >
+                        </label>
+
+                        <div id="assistant-status" class="offline-badge">
+                            Ready
+                        </div>
+                    </div>
+
+                    <div
+                        id="assistant-conversation"
+                        class="assistant-conversation"
+                        style="height:460px; overflow-y:auto; margin-top:18px; padding:18px; border:1px solid var(--border-color, #d8dee8); border-radius:10px;"
+                        aria-live="polite"
+                    ></div>
+
+                    <div
+                        class="assistant-input-row"
+                        style="display:flex; gap:10px; margin-top:14px;"
+                    >
+                        <textarea
+                            id="assistant-question"
+                            class="text-input"
+                            rows="2"
+                            placeholder="Ask an investigation question..."
+                            aria-label="Investigation question"
+                            style="resize:vertical; flex:1;"
+                        ></textarea>
+
+                        <button
+                            id="assistant-send"
+                            class="button"
+                            type="button"
+                        >
+                            Send
+                        </button>
+                    </div>
+                </div>
+
+                <aside class="panel-card">
+                    <div class="section-kicker">CASE CONTEXT</div>
+                    <h3>Active Investigation</h3>
+
+                    <dl style="margin-top:16px;">
+                        <dt class="metric-label">CASE</dt>
+                        <dd id="assistant-context-import">No case selected</dd>
+
+                        <dt class="metric-label" style="margin-top:14px;">
+                            TRANSACTION
+                        </dt>
+                        <dd id="assistant-context-txid">Case level</dd>
+                    </dl>
+
+                    <div style="margin-top:22px;">
+                        <div class="section-kicker">SUGGESTED QUESTIONS</div>
+
+                        <div
+                            style="display:flex; flex-direction:column; gap:8px; margin-top:10px;"
+                        >
+                            <button
+                                class="button secondary assistant-suggestion"
+                                type="button"
+                                data-question="Give me a professional overview of this case."
+                            >
+                                Review case overview
+                            </button>
+
+                            <button
+                                class="button secondary assistant-suggestion"
+                                type="button"
+                                data-question="What is the risk profile of this case?"
+                            >
+                                Review case risk
+                            </button>
+
+                            <button
+                                class="button secondary assistant-suggestion"
+                                type="button"
+                                data-question="What evidence channels are contributing to the case?"
+                            >
+                                Review evidence channels
+                            </button>
+
+                            <button
+                                class="button secondary assistant-suggestion"
+                                type="button"
+                                data-question="What behavioral indicators are present?"
+                            >
+                                Review behavioral indicators
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="notice" style="margin-top:22px;">
+                        <div class="notice-title">Investigation boundary</div>
+                        <p>
+                            Responses are generated from imported case intelligence.
+                            The assistant does not establish identity, ownership,
+                            intent or guilt from pseudonymous data.
+                        </p>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+
     </main>
 
 
@@ -2437,6 +2598,7 @@
 
 
 
+    <script src="/dashboard/assistant.js?v=20260928"></script>
 </body>
 
 </html>

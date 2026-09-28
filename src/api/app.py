@@ -41,6 +41,8 @@ from src.security.authentication import (
     get_session,
 )
 
+from src.api.assistant_routes import router as assistant_router
+
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -243,6 +245,8 @@ app = FastAPI(
     ),
     version=APP_VERSION,
 )
+
+app.include_router(assistant_router)
 
 
 # ============================================================================

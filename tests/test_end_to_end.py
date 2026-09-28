@@ -10,6 +10,18 @@ ROOT = Path(__file__).resolve().parents[1]
 client = TestClient(app)
 
 
+def login():
+    response = client.post(
+        "/api/auth/login",
+        json={
+            "email": "dhun.aadhar@gmail.com",
+            "password": "12345",
+        },
+    )
+
+    assert response.status_code == 200
+
+
 def test_end_to_end_health_to_summary():
     health = client.get("/api/health")
     assert health.status_code == 200
@@ -17,6 +29,8 @@ def test_end_to_end_health_to_summary():
     health_data = health.json()
     assert health_data["status"] == "healthy"
     assert health_data["mode"] == "offline"
+
+    login()
 
     summary = client.get("/api/summary")
     assert summary.status_code == 200
@@ -27,6 +41,8 @@ def test_end_to_end_health_to_summary():
 
 
 def test_end_to_end_alert_to_graph():
+    login()
+
     top = client.get("/api/top-risk?limit=1")
     assert top.status_code == 200
 
@@ -50,6 +66,8 @@ def test_end_to_end_alert_to_graph():
 
 
 def test_end_to_end_alert_to_shap():
+    login()
+
     top = client.get("/api/top-risk?limit=1")
     assert top.status_code == 200
 

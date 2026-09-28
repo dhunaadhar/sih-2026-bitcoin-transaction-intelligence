@@ -6,6 +6,18 @@ from src.api.app import app
 client = TestClient(app)
 
 
+def login():
+    response = client.post(
+        "/api/auth/login",
+        json={
+            "email": "dhun.aadhar@gmail.com",
+            "password": "12345",
+        },
+    )
+
+    assert response.status_code == 200
+
+
 def test_health():
     response = client.get("/api/health")
 
@@ -18,6 +30,8 @@ def test_health():
 
 
 def test_summary():
+    login()
+
     response = client.get("/api/summary")
 
     assert response.status_code == 200
@@ -29,6 +43,8 @@ def test_summary():
 
 
 def test_alerts():
+    login()
+
     response = client.get(
         "/api/alerts?page=1&page_size=5"
     )
@@ -42,6 +58,8 @@ def test_alerts():
 
 
 def test_top_risk():
+    login()
+
     response = client.get("/api/top-risk?limit=5")
 
     assert response.status_code == 200
@@ -55,6 +73,8 @@ def test_top_risk():
 
 
 def test_alert_detail():
+    login()
+
     response = client.get(
         "/api/alerts/126802668"
     )
@@ -67,6 +87,8 @@ def test_alert_detail():
 
 
 def test_temporal():
+    login()
+
     response = client.get(
         "/api/temporal?start=1&end=49"
     )
@@ -81,6 +103,8 @@ def test_temporal():
 
 
 def test_graph():
+    login()
+
     response = client.get(
         "/api/graph/126802668"
     )
@@ -94,6 +118,8 @@ def test_graph():
 
 
 def test_wallet_search():
+    login()
+
     response = client.get(
         "/api/wallets/search?query=1"
     )
