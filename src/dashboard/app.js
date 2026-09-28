@@ -65,6 +65,8 @@ const state = {
 
     selectedDatasetAnalysis: null,
 
+    selectedImportIntelligence: null,
+
     summary: null,
 
     health: null,
@@ -133,106 +135,6 @@ function formatNumber(value, digits = 0) {
             maximumFractionDigits: digits
         }
     );
-}
-
-
-function formatDatasetNumber(value, digits = 0) {
-
-    if (
-        value === null ||
-        value === undefined ||
-        value === ""
-    ) {
-        return "Not available";
-    }
-
-    const number = Number(value);
-
-    if (!Number.isFinite(number)) {
-        return "Not available";
-    }
-
-    return number.toLocaleString(
-        "en-IN",
-        {
-            minimumFractionDigits: digits,
-            maximumFractionDigits: digits
-        }
-    );
-}
-
-
-function formatDatasetBtc(value, digits = 8) {
-
-    if (
-        value === null ||
-        value === undefined ||
-        value === ""
-    ) {
-        return "Not available";
-    }
-
-    const number = Number(value);
-
-    if (!Number.isFinite(number)) {
-        return "Not available";
-    }
-
-    return `${number.toLocaleString(
-        "en-IN",
-        {
-            minimumFractionDigits: digits,
-            maximumFractionDigits: digits
-        }
-    )} BTC`;
-}
-
-
-function formatDatasetBtcRange(
-    minimum,
-    maximum,
-    digits = 8
-) {
-
-    const minimumAvailable =
-        minimum !== null &&
-        minimum !== undefined &&
-        minimum !== "" &&
-        Number.isFinite(Number(minimum));
-
-    const maximumAvailable =
-        maximum !== null &&
-        maximum !== undefined &&
-        maximum !== "" &&
-        Number.isFinite(Number(maximum));
-
-    if (!minimumAvailable && !maximumAvailable) {
-        return "Not available";
-    }
-
-    const minimumText =
-        minimumAvailable
-            ? Number(minimum).toLocaleString(
-                "en-IN",
-                {
-                    minimumFractionDigits: digits,
-                    maximumFractionDigits: digits
-                }
-            )
-            : "Not available";
-
-    const maximumText =
-        maximumAvailable
-            ? Number(maximum).toLocaleString(
-                "en-IN",
-                {
-                    minimumFractionDigits: digits,
-                    maximumFractionDigits: digits
-                }
-            )
-            : "Not available";
-
-    return `${minimumText} – ${maximumText} BTC`;
 }
 
 
@@ -3847,12 +3749,15 @@ async function submitImport() {
             data
         );
 
-        if (data.import_id) {
+        const importResult =
+            data.result || data;
+
+        if (importResult.import_id) {
             state.selectedImportId =
-                data.import_id;
+                importResult.import_id;
 
             await loadImportedDatasetAnalysis(
-                data.import_id
+                importResult.import_id
             );
         }
 
@@ -3917,21 +3822,29 @@ function renderImportResult(
     data
 ) {
 
-    const statistics =
-        data.statistics || {};
+    const importResult =
+        data.result || data;
 
-    const source =
-        data.source || {};
+    const statistics =
+        importResult.statistics || {};
 
     const provenance =
-        data.provenance || {};
+        importResult.provenance || {};
+
+    const source =
+        importResult.source || data.source || {
+            filename: provenance.source_filename,
+            format: provenance.source_format,
+            sha256: provenance.source_sha256
+        };
 
     const artifacts =
-        data.artifacts || {};
+        importResult.artifacts || data.artifacts || {};
 
 
     const status =
         String(
+            importResult.status ||
             data.status ||
             "UNKNOWN"
         );
@@ -3950,6 +3863,7 @@ function renderImportResult(
 
             <span class="mono">
                 ${escapeHtml(
+                    importResult.import_id ||
                     data.import_id ||
                     "—"
                 )}
@@ -4095,7 +4009,8 @@ function renderImportResult(
 
                     <strong class="mono">
                         ${escapeHtml(
-                            provenance.import_id
+                            provenance.import_id ||
+                            importResult.import_id
                         )}
                     </strong>
 
@@ -4211,6 +4126,7 @@ function renderImportResult(
 
 
     const invalid =
+        importResult.invalid_record_preview ||
         data.invalid_record_preview ||
         [];
 
@@ -4374,13 +4290,13 @@ async function loadImportedDatasetAnalysis(
                 normalized;
         }
 
-        renderDatasetReport(
-            data
+        await loadImportedCaseIntelligence(
+            normalized
         );
 
         setMessage(
             "report-message",
-            "Dataset report generated locally.",
+            "Dataset analysis and case intelligence generated locally.",
             "success"
         );
 
@@ -4410,6 +4326,476 @@ async function loadImportedDatasetAnalysis(
             "error"
         );
     }
+}
+
+
+async function loadImportedCaseIntelligence(
+    importId
+) {
+
+    const normalized =
+        String(importId || "").trim();
+
+    if (!normalized) {
+        return;
+    }
+
+    setLoading(
+        "dataset-report-result",
+        "Generating imported case intelligence and ranked queue..."
+    );
+
+    try {
+
+        const data =
+            await apiFetch(
+                `/import/${encodeURIComponent(
+                    normalized
+                )}/intelligence`
+            );
+
+        state.selectedImportIntelligence =
+            data;
+
+        /*
+         * The dataset summary was already rendered before this request.
+         * Do not render it a second time here. The intelligence response
+         * is appended to that existing report.
+         */
+        removeLegacyImportedAnalysisPanel();
+
+        renderImportedCaseIntelligence(
+            data
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Imported case intelligence error:",
+            error
+        );
+
+        const container =
+            $("dataset-report-result");
+
+        if (container) {
+            container.insertAdjacentHTML(
+                "beforeend",
+                `
+                <div class="report-section report-limitation">
+                    <div class="panel-title">
+                        Imported Case Intelligence
+                    </div>
+                    <div class="error-panel">
+                        Unable to generate imported case intelligence.
+                        <br>
+                        ${escapeHtml(error.message)}
+                    </div>
+                </div>
+                `
+            );
+        }
+
+        throw error;
+    }
+}
+
+
+function removeLegacyImportedAnalysisPanel() {
+
+    const container =
+        $("dataset-report-result");
+
+    if (!container) {
+        return;
+    }
+
+    const sections =
+        container.querySelectorAll(
+            ".report-section, .report-section-block, .report-limitation"
+        );
+
+    sections.forEach(
+        section => {
+
+            const heading =
+                section.querySelector(
+                    ".panel-title"
+                );
+
+            const headingText =
+                String(
+                    heading?.textContent || ""
+                )
+                .trim()
+                .toLowerCase();
+
+            if (
+                headingText ===
+                "analysis availability"
+            ) {
+                section.remove();
+                return;
+            }
+
+            const textContent =
+                String(
+                    section.textContent || ""
+                );
+
+            if (
+                textContent.toLowerCase().includes(
+                    "risk analysis:"
+                ) &&
+                textContent.toLowerCase().includes(
+                    "behavioral analysis:"
+                ) &&
+                textContent.toLowerCase().includes(
+                    "graph analysis:"
+                )
+            ) {
+                section.remove();
+            }
+        }
+    );
+}
+
+
+function renderImportedCaseIntelligence(
+    data
+) {
+
+    const container =
+        $("dataset-report-result");
+
+    if (!container) {
+        return;
+    }
+
+    const evidenceCounts =
+        data.evidence_channel_counts || {};
+
+    const riskSummary =
+        data.risk_summary || {};
+
+    const methodology =
+        data.risk_methodology || {};
+
+    const availability =
+        data.evidence_availability || {};
+
+    const rankedTransactions =
+        data.ranked_transactions || [];
+
+    const topRows =
+        rankedTransactions.slice(0, 25);
+
+    const riskTotal =
+        Number(data.records?.analyzed) ||
+        rankedTransactions.length;
+
+    const riskSummaryHtml =
+        [
+            ["VERY HIGH", riskSummary.very_high],
+            ["HIGH", riskSummary.high],
+            ["MODERATE", riskSummary.moderate],
+            ["GUARDED", riskSummary.guarded],
+            ["LOW", riskSummary.low]
+        ]
+        .map(
+            item => `
+            <div class="report-item">
+                <span>${escapeHtml(item[0])}</span>
+                <strong>${escapeHtml(formatNumber(item[1]))}</strong>
+            </div>
+            `
+        )
+        .join("");
+
+    const evidenceHtml =
+        [
+            ["ML", evidenceCounts.ml],
+            ["Anomaly", evidenceCounts.anomaly],
+            ["Behavioral", evidenceCounts.behavioral],
+            ["Entity", evidenceCounts.entity],
+            ["Network", evidenceCounts.network]
+        ]
+        .map(
+            item => `
+            <div class="report-item">
+                <span>${escapeHtml(item[0])}</span>
+                <strong>${escapeHtml(formatNumber(item[1]))}</strong>
+            </div>
+            `
+        )
+        .join("");
+
+    const queueHtml =
+        topRows.length
+            ? topRows
+                .map(
+                    row => {
+
+                        const channels =
+                            Number(
+                                row.effective_evidence_channel_count
+                            );
+
+                        const riskScore =
+                            Number(row.risk_score);
+
+                        const signal =
+                            value =>
+                                Number.isFinite(
+                                    Number(value)
+                                )
+                                    ? Number(value).toFixed(3)
+                                    : "—";
+
+                        return `
+                        <div class="report-section-block">
+
+                            <div class="detail-list-row">
+                                <span>
+                                    #${escapeHtml(row.rank)} · ${escapeHtml(row.risk_level || "LOW")}
+                                </span>
+                                <strong>
+                                    Risk ${escapeHtml(
+                                        Number.isFinite(riskScore)
+                                            ? riskScore.toFixed(2)
+                                            : "—"
+                                    )}
+                                </strong>
+                            </div>
+
+                            <div class="detail-list-row">
+                                <span>Transaction</span>
+                                <strong class="mono">
+                                    ${escapeHtml(row.txid)}
+                                </strong>
+                            </div>
+
+                            <div class="detail-list-row">
+                                <span>Evidence channels</span>
+                                <strong>
+                                    ${escapeHtml(
+                                        Number.isFinite(channels)
+                                            ? String(channels)
+                                            : "0"
+                                    )}
+                                </strong>
+                            </div>
+
+                            <div class="detail-list-row">
+                                <span>ML / Anomaly / Behavioral</span>
+                                <strong>
+                                    ${escapeHtml(signal(row.ml_signal))}
+                                    /
+                                    ${escapeHtml(signal(row.anomaly_signal))}
+                                    /
+                                    ${escapeHtml(signal(row.behavioral_signal))}
+                                </strong>
+                            </div>
+
+                            <div class="detail-list-row">
+                                <span>Entity / Network</span>
+                                <strong>
+                                    ${escapeHtml(signal(row.entity_signal))}
+                                    /
+                                    ${escapeHtml(signal(row.network_signal))}
+                                </strong>
+                            </div>
+
+                            <div class="detail-list-row">
+                                <span>Peeling / Mixing</span>
+                                <strong>
+                                    ${escapeHtml(signal(row.peeling_evidence_score))}
+                                    /
+                                    ${escapeHtml(signal(row.mixing_evidence_score))}
+                                </strong>
+                            </div>
+
+                            <div class="detail-list-row">
+                                <span>Input / Output / Fee</span>
+                                <strong>
+                                    ${escapeHtml(formatNumber(row.input_amount, 8))}
+                                    /
+                                    ${escapeHtml(formatNumber(row.output_amount, 8))}
+                                    /
+                                    ${escapeHtml(formatNumber(row.fee, 8))}
+                                </strong>
+                            </div>
+
+                            <div class="detail-list-row">
+                                <span>Explanation</span>
+                                <strong>
+                                    ${escapeHtml(row.explanation || "No explanation available.")}
+                                </strong>
+                            </div>
+
+                        </div>
+                        `;
+                    }
+                )
+                .join("")
+            : `
+                <div class="empty-panel compact">
+                    No imported transactions were available for case ranking.
+                </div>
+            `;
+
+    const availabilityRows =
+        [
+            ["ML", availability.ml],
+            ["Anomaly", availability.anomaly],
+            ["Behavioral", availability.behavioral],
+            ["Entity", availability.entity],
+            ["Network", availability.network]
+        ]
+        .map(
+            item => `
+            <div class="detail-list-row">
+                <span>${escapeHtml(item[0])}</span>
+                <strong>${item[1] ? "AVAILABLE" : "NEUTRAL / NO EVIDENCE"}</strong>
+            </div>
+            `
+        )
+        .join("");
+
+    const methodologyWeights =
+        methodology.weights || {};
+
+    const section =
+        document.createElement("div");
+
+    section.className =
+        "report-section";
+
+    section.id =
+        "imported-case-intelligence-section";
+
+    section.innerHTML = `
+        <div class="generated-report-header">
+            <div>
+                <div class="section-kicker">
+                    CASE-SPECIFIC INTELLIGENCE
+                </div>
+                <div class="panel-title">
+                    Imported Case Intelligence & Ranked Queue
+                </div>
+                <p class="panel-description">
+                    ${escapeHtml(String(riskTotal))} imported transactions were scored independently using the M11.4 weighted evidence-fusion methodology.
+                    This queue is case-specific and does not modify the canonical production ranked queue.
+                </p>
+            </div>
+
+            <button
+                id="download-imported-case-intelligence"
+                class="button secondary"
+                type="button"
+            >
+                Export Case Intelligence
+            </button>
+        </div>
+
+        <div class="report-risk-summary">
+            ${riskSummaryHtml}
+        </div>
+
+        <div class="report-grid">
+            <div class="panel-card">
+                <div class="panel-title">Evidence Channels</div>
+                <div class="report-list">
+                    ${evidenceHtml}
+                </div>
+            </div>
+
+            <div class="panel-card">
+                <div class="panel-title">Methodology</div>
+                <div class="detail-list">
+                    <div class="detail-list-row">
+                        <span>Scoring</span>
+                        <strong>${escapeHtml(methodology.type || "M11.4_weighted_evidence_fusion")}</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>ML weight</span>
+                        <strong>${escapeHtml(formatPercent(methodologyWeights.ml, 1))}</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>Anomaly weight</span>
+                        <strong>${escapeHtml(formatPercent(methodologyWeights.anomaly, 1))}</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>Behavioral weight</span>
+                        <strong>${escapeHtml(formatPercent(methodologyWeights.behavioral, 1))}</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>Entity weight</span>
+                        <strong>${escapeHtml(formatPercent(methodologyWeights.entity, 1))}</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>Network weight</span>
+                        <strong>${escapeHtml(formatPercent(methodologyWeights.network, 1))}</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>Canonical queue</span>
+                        <strong>${methodology.canonical_queue_untouched ? "UNCHANGED" : "NOT CONFIRMED"}</strong>
+                    </div>
+                    <div class="detail-list-row">
+                        <span>Case queue</span>
+                        <strong>${methodology.case_specific_queue ? "SEPARATE" : "NOT CONFIRMED"}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="report-section-block">
+            <div class="panel-title">
+                Evidence Availability
+            </div>
+            <div class="detail-list">
+                ${availabilityRows}
+            </div>
+        </div>
+
+        <div class="report-section-block">
+            <div class="panel-title">
+                Case-Specific Ranked Queue
+            </div>
+            <p class="panel-description">
+                Showing the top ${escapeHtml(String(topRows.length))} ranked transactions from this imported case.
+            </p>
+            ${queueHtml}
+        </div>
+    `;
+
+    container.appendChild(
+        section
+    );
+
+    $("download-imported-case-intelligence")
+        ?.addEventListener(
+            "click",
+            () => {
+                downloadJson(
+                    data,
+                    `imported_case_intelligence_${normalizedImportId(data.import_id)}.json`
+                );
+            }
+        );
+}
+
+
+function normalizedImportId(
+    importId
+) {
+    const value =
+        String(importId || "import").trim();
+
+    return value.replace(
+        /[^a-zA-Z0-9_-]/g,
+        "_"
+    );
 }
 
 
@@ -4561,11 +4947,11 @@ function renderDatasetReport(
                             )}
                             ·
                             ${escapeHtml(
-                                formatDatasetBtc(
+                                formatNumber(
                                     row.associated_btc,
                                     8
                                 )
-                            )}
+                            )} BTC
                         </strong>
                     </div>
                     `
@@ -4591,11 +4977,11 @@ function renderDatasetReport(
                         </span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetBtc(
+                                formatNumber(
                                     row.input_amount,
                                     8
                                 )
-                            )}
+                            )} BTC
                         </strong>
                     </div>
                     `
@@ -4648,7 +5034,7 @@ function renderDatasetReport(
                     <span>Records analyzed</span>
                     <strong>
                         ${escapeHtml(
-                            formatDatasetNumber(
+                            formatNumber(
                                 records.analyzed
                             )
                         )}
@@ -4659,7 +5045,7 @@ function renderDatasetReport(
                     <span>Unique TXIDs</span>
                     <strong>
                         ${escapeHtml(
-                            formatDatasetNumber(
+                            formatNumber(
                                 transactions.unique_txids
                             )
                         )}
@@ -4670,7 +5056,7 @@ function renderDatasetReport(
                     <span>Unique wallets</span>
                     <strong>
                         ${escapeHtml(
-                            formatDatasetNumber(
+                            formatNumber(
                                 wallets.unique_wallets
                             )
                         )}
@@ -4681,7 +5067,7 @@ function renderDatasetReport(
                     <span>Duplicates removed</span>
                     <strong>
                         ${escapeHtml(
-                            formatDatasetNumber(
+                            formatNumber(
                                 records.duplicates_removed
                             )
                         )}
@@ -4703,7 +5089,7 @@ function renderDatasetReport(
                         <span>Records read</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     records.records_read
                                 )
                             )}
@@ -4714,7 +5100,7 @@ function renderDatasetReport(
                         <span>Valid records analyzed</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     records.analyzed
                                 )
                             )}
@@ -4725,7 +5111,7 @@ function renderDatasetReport(
                         <span>Invalid records</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     records.invalid
                                 )
                             )}
@@ -4736,7 +5122,7 @@ function renderDatasetReport(
                         <span>Unique input wallets</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     wallets.unique_input_wallets
                                 )
                             )}
@@ -4747,7 +5133,7 @@ function renderDatasetReport(
                         <span>Unique output wallets</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     wallets.unique_output_wallets
                                 )
                             )}
@@ -4771,11 +5157,11 @@ function renderDatasetReport(
                         <span>Total input</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetBtc(
+                                formatNumber(
                                     financial.input?.total,
                                     8
                                 )
-                            )}
+                            )} BTC
                         </strong>
                     </div>
 
@@ -4783,11 +5169,11 @@ function renderDatasetReport(
                         <span>Total output</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetBtc(
+                                formatNumber(
                                     financial.output?.total,
                                     8
                                 )
-                            )}
+                            )} BTC
                         </strong>
                     </div>
 
@@ -4795,11 +5181,11 @@ function renderDatasetReport(
                         <span>Total fees</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetBtc(
+                                formatNumber(
                                     financial.fees?.total,
                                     8
                                 )
-                            )}
+                            )} BTC
                         </strong>
                     </div>
 
@@ -4807,11 +5193,11 @@ function renderDatasetReport(
                         <span>Mean input</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetBtc(
+                                formatNumber(
                                     financial.input?.mean,
                                     8
                                 )
-                            )}
+                            )} BTC
                         </strong>
                     </div>
 
@@ -4819,11 +5205,11 @@ function renderDatasetReport(
                         <span>Median input</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetBtc(
+                                formatNumber(
                                     financial.input?.median,
                                     8
                                 )
-                            )}
+                            )} BTC
                         </strong>
                     </div>
 
@@ -4831,12 +5217,18 @@ function renderDatasetReport(
                         <span>Input range</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetBtcRange(
+                                formatNumber(
                                     financial.input?.min,
-                                    financial.input?.max,
                                     8
                                 )
                             )}
+                            –
+                            ${escapeHtml(
+                                formatNumber(
+                                    financial.input?.max,
+                                    8
+                                )
+                            )} BTC
                         </strong>
                     </div>
 
@@ -4844,11 +5236,11 @@ function renderDatasetReport(
                         <span>Conservation delta</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetBtc(
+                                formatNumber(
                                     financial.conservation_delta,
                                     8
                                 )
-                            )}
+                            )} BTC
                         </strong>
                     </div>
 
@@ -4882,7 +5274,7 @@ function renderDatasetReport(
                         <span>Valid timestamps</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     time.records_with_valid_timestamp
                                 )
                             )}
@@ -4893,7 +5285,7 @@ function renderDatasetReport(
                         <span>Source IPs</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     network.unique_source_ips
                                 )
                             )}
@@ -4904,7 +5296,7 @@ function renderDatasetReport(
                         <span>Destination IPs</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     network.unique_destination_ips
                                 )
                             )}
@@ -4915,7 +5307,7 @@ function renderDatasetReport(
                         <span>Source ports</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     network.unique_source_ports
                                 )
                             )}
@@ -4926,7 +5318,7 @@ function renderDatasetReport(
                         <span>Destination ports</span>
                         <strong>
                             ${escapeHtml(
-                                formatDatasetNumber(
+                                formatNumber(
                                     network.unique_destination_ports
                                 )
                             )}
@@ -5002,42 +5394,6 @@ function renderDatasetReport(
 
             </div>
 
-
-            <div class="report-section report-limitation">
-
-                <div class="panel-title">
-                    Analysis Availability
-                </div>
-
-                <p>
-                    Risk analysis:
-                    <strong>
-                        ${availability.risk_analysis ? "AVAILABLE" : "NOT AVAILABLE"}
-                    </strong>
-                </p>
-
-                <p>
-                    Behavioral analysis:
-                    <strong>
-                        ${availability.behavioral_analysis ? "AVAILABLE" : "NOT AVAILABLE"}
-                    </strong>
-                </p>
-
-                <p>
-                    Graph analysis:
-                    <strong>
-                        ${availability.graph_analysis ? "AVAILABLE" : "NOT AVAILABLE"}
-                    </strong>
-                </p>
-
-                <p>
-                    ${escapeHtml(
-                        availability.reason ||
-                        "Only signals supported by the imported schema are reported."
-                    )}
-                </p>
-
-            </div>
 
         </div>
         `

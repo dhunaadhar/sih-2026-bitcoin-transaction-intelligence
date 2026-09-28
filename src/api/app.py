@@ -24,6 +24,7 @@ from src.graph.investigation_queries import (
     normalize_txid,
 )
 from src.analysis.dataset_analysis import analyze_dataset
+from src.analysis.imported_case_intelligence import analyze_import_artifact
 
 
 from src.ingestion.investigator_import import (
@@ -1939,6 +1940,69 @@ def imported_dataset_analysis(
                 "message": (
                     "Imported dataset analysis failed."
                 ),
+                "error": str(exc),
+            },
+        ) from exc
+
+
+# ============================================================================
+# Imported case intelligence
+# ============================================================================
+
+@app.get(
+    "/api/import/{import_id}/intelligence",
+    tags=["import"],
+)
+def imported_case_intelligence(
+    import_id: str,
+) -> dict[str, Any]:
+
+    if not import_id or "/" in import_id or "\\" in import_id:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid import ID.",
+        )
+
+    flat_records_path = (
+        INVESTIGATOR_IMPORT_DIR
+        / f"{import_id}_normalized_records.json"
+    )
+
+    nested_records_path = (
+        INVESTIGATOR_IMPORT_DIR
+        / import_id
+        / f"{import_id}_normalized_records.json"
+    )
+
+    if flat_records_path.exists():
+        records_path = flat_records_path
+    elif nested_records_path.exists():
+        records_path = nested_records_path
+    else:
+        raise HTTPException(
+            status_code=404,
+            detail="Imported dataset not found.",
+        )
+
+    try:
+        intelligence = analyze_import_artifact(
+            normalized_records_path=records_path,
+            import_id=import_id,
+        )
+
+        return _json_safe_value(intelligence)
+
+    except json.JSONDecodeError as exc:
+        raise HTTPException(
+            status_code=500,
+            detail="Imported dataset artifact is invalid JSON.",
+        ) from exc
+
+    except Exception as exc:
+        raise HTTPException(
+            status_code=500,
+            detail={
+                "message": "Imported case intelligence failed.",
                 "error": str(exc),
             },
         ) from exc
